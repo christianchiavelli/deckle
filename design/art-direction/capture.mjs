@@ -69,5 +69,42 @@ for (const theme of themes) {
   );
 }
 
+// C, modernised: the same page rebuilt as a contemporary shop, in two accents.
+const modern = [
+  ['c2-ultramarine', 'C2 · ultramarine'],
+  ['c2-magenta', 'C2 · magenta'],
+];
+for (const [direction] of modern) {
+  for (const theme of themes) {
+    const page = await browser.newPage({
+      viewport: { width: 1440, height: 900 },
+      colorScheme: theme,
+    });
+    await page.goto(`${pathToFileURL(`${here}modern.html`).href}?d=${direction}&theme=${theme}`, {
+      waitUntil: 'networkidle',
+    });
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: `${shots}/${direction}-${theme}.png` });
+    await page.screenshot({ path: `${shots}/${direction}-${theme}-full.png`, fullPage: true });
+    await page.close();
+  }
+}
+
+const proofAndModern = [['proof', 'C · Proof'], ...modern];
+await sheet(
+  'compare-c-first-screen',
+  3,
+  themes.flatMap((theme) =>
+    proofAndModern.map(([d, label]) => [`${label}, ${theme}`, `${d}-${theme}.png`]),
+  ),
+);
+for (const theme of themes) {
+  await sheet(
+    `compare-c-full-${theme}`,
+    3,
+    proofAndModern.map(([d, label]) => [`${label}, ${theme}`, `${d}-${theme}-full.png`]),
+  );
+}
+
 await browser.close();
 console.log(`captured ${directions.length * themes.length} pages into ${shots}`);

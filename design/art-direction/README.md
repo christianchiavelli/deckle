@@ -10,6 +10,10 @@ Three directions for the artwork page, drawn from how prints are made. The page 
 
 ![The three directions side by side, light and dark](shots/compare-first-screen.png)
 
+C was the owner's pick, with one note: it did not yet look like a shop of today. **C2** rebuilds the same page as a contemporary store on the same token architecture: one grotesk (Host Grotesk), a neutral system with a single accent, a gallery with detail views, sizes as tiles, a drop panel with a countdown and the fifty copies drawn out, and the proof's trim marks kept faint. It comes in two accents, ultramarine and magenta, which are two token sets for one page (`modern.html?d=c2-ultramarine` or `c2-magenta`).
+
+![C against C2 in both accents, light and dark](shots/compare-c-first-screen.png)
+
 ## Looking at them
 
 Open `index.html` in a browser for all three side by side, or `artwork.html?d=kento&theme=dark` for one. The comparison sheets in `shots/` come from `pnpm --filter @deckle/art-direction capture`.

@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en" data-direction="c2-ultramarine">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Melencolia I, Albrecht Dürer | Deckle</title>
+    <script>
+      // ?d=c2-ultramarine|c2-magenta picks the token set, ?theme=light|dark pins the scheme.
+      const params = new URLSearchParams(location.search);
+      const root = document.documentElement;
+      root.dataset.direction = params.get('d') ?? 'c2-ultramarine';
+      if (params.get('theme')) root.dataset.theme = params.get('theme');
+    </script>
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="build/tokens.css" />
+    <link rel="stylesheet" href="modern.css" />
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <defs>
+        <symbol id="i-deckle" viewBox="0 0 24 24">
+          <path
+            d="M3 3.2h11.8l2.1.9-1 1.5 1.7 1.3-1.4 1.8 1.7 1.4-1.3 1.3 1.5 1.8-1.8 1.4 1.1 1.7-1.6 1.1 1.4 1.8-1.6 1.6H3Z"
+            fill="currentColor"
+            stroke="none"
+          />
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 24 24">
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="m15.5 15.5 5 5" />
+        </symbol>
+        <symbol id="i-theme" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="8" />
+          <path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="8.5" r="3.5" />
+          <path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" />
+        </symbol>
+        <symbol id="i-bag" viewBox="0 0 24 24">
+          <path d="M5 8.5h14l-1 12H6Z" />
+          <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M5 12h13M13 7l5 5-5 5" />
+        </symbol>
+        <symbol id="i-out" viewBox="0 0 24 24">
+          <path d="M8 16 16 8M10 8h6v6" />
+        </symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24">
+          <path d="m10 7 5 5-5 5" />
+        </symbol>
+        <symbol id="i-zoom" viewBox="0 0 24 24">
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="m15.5 15.5 5 5M10.5 8v5M8 10.5h5" />
+        </symbol>
+        <symbol id="i-key" viewBox="0 0 24 24">
+          <circle cx="8" cy="12" r="3.5" />
+          <path d="M11.5 12H20M17 12v3M20 12v2.5" />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="M12 11v5.5" />
+          <circle cx="12" cy="7.75" r="0.6" fill="currentColor" />
+        </symbol>
+        <symbol id="i-tube" viewBox="0 0 24 24">
+          <ellipse cx="6.5" cy="12" rx="2.5" ry="4" />
+          <path d="M6.5 8H18a2.5 4 0 0 1 0 8H6.5" />
+        </symbol>
+        <symbol id="i-ppi" viewBox="0 0 24 24">
+          <path d="M4 4h16v16H4z" />
+          <path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16" />
+        </symbol>
+        <symbol id="i-open" viewBox="0 0 24 24">
+          <rect x="5" y="11" width="14" height="9.5" rx="1.5" />
+          <path d="M8.5 11V7.5a3.5 3.5 0 0 1 6.8-1.2" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="m6 12.5 4 4 8-8.5" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <a class="skip" href="#main">Skip to content</a>
+
+    <p class="announce">
+      <svg class="icon icon--small"><use href="#i-key" /></svg>
+      <span>A numbered edition of Melencolia I opens on Thursday at 18:00 UTC</span>
+      <a href="#edition">
+        See the drop
+        <svg class="icon icon--small"><use href="#i-arrow" /></svg>
+      </a>
+    </p>
+
+    <header class="header">
+      <a class="logo" href="#" aria-label="Deckle, home">
+        <svg class="icon logo__mark"><use href="#i-deckle" /></svg>
+        <span>Deckle</span>
+      </a>
+      <nav class="nav" aria-label="Shop">
+        <a href="#" aria-current="page">Prints</a>
+        <a href="#">Drops</a>
+        <a href="#">Collections</a>
+        <a href="#">Journal</a>
+      </nav>
+      <form class="search" role="search" action="#">
+        <label class="visually-hidden" for="q">Search</label>
+        <svg class="icon icon--small search__icon"><use href="#i-search" /></svg>
+        <input id="q" type="search" placeholder="Search prints, artists and techniques" />
+        <kbd>/</kbd>
+      </form>
+      <div class="tools">
+        <button class="icon-button" type="button" id="theme-toggle" aria-label="Theme">
+          <svg class="icon"><use href="#i-theme" /></svg>
+        </button>
+        <button class="icon-button" type="button" aria-label="Sign in with a passkey">
+          <svg class="icon"><use href="#i-user" /></svg>
+        </button>
+        <a class="icon-button cart" href="#" aria-label="Cart, 1 item">
+          <svg class="icon"><use href="#i-bag" /></svg>
+          <span class="cart__count" aria-hidden="true">1</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="band product" aria-labelledby="title">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="#">Prints</a></li>
+            <li>
+              <svg class="icon icon--tiny"><use href="#i-chevron" /></svg>
+              <a href="#">Engravings</a>
+            </li>
+            <li>
+              <svg class="icon icon--tiny"><use href="#i-chevron" /></svg>
+              <a href="#">Albrecht Dürer</a>
+            </li>
+          </ol>
+        </nav>
+
+        <div class="product__grid">
+          <div class="gallery">
+            <figure class="stage">
+              <div class="stage__area">
+                <div class="stage__print" style="--ratio: 0.7919">
+                  <img
+                    src="assets/img/melencolia.jpg"
+                    width="1267"
+                    height="1600"
+                    alt="A winged woman sits brooding among tools of geometry and carpentry, a compass in her hand, beneath a bell, an hourglass and a magic square; a bat-like creature carries the title banner across the sky."
+                  />
+                  <span class="crop crop--tl" aria-hidden="true"></span>
+                  <span class="crop crop--tr" aria-hidden="true"></span>
+                  <span class="crop crop--bl" aria-hidden="true"></span>
+                  <span class="crop crop--br" aria-hidden="true"></span>
+                </div>
+              </div>
+              <button class="stage__zoom icon-button" type="button" aria-label="Inspect the detail">
+                <svg class="icon"><use href="#i-zoom" /></svg>
+              </button>
+              <figcaption class="stage__scan chip">The Met's scan · 2,820 × 3,561 px</figcaption>
+            </figure>
+            <ul class="thumbs" aria-label="Views">
+              <li>
+                <button
+                  class="thumb thumb--fit"
+                  type="button"
+                  aria-pressed="true"
+                  aria-label="The whole print"
+                >
+                  <img src="assets/img/melencolia.jpg" alt="" width="1267" height="1600" />
+                </button>
+              </li>
+              <li>
+                <button
+                  class="thumb"
+                  type="button"
+                  aria-pressed="false"
+                  aria-label="Detail: the magic square"
+                >
+                  <img src="assets/img/melencolia-square.jpg" alt="" width="959" height="962" />
+                </button>
+              </li>
+              <li>
+                <button
+                  class="thumb"
+                  type="button"
+                  aria-pressed="false"
+                  aria-label="Detail: the face"
+                >
+                  <img src="assets/img/melencolia-face.jpg" alt="" width="733" height="730" />
+                </button>
+              </li>
+              <li>
+                <button
+                  class="thumb"
+                  type="button"
+                  aria-pressed="false"
+                  aria-label="Detail: the title banner"
+                >
+                  <img src="assets/img/melencolia-banner.jpg" alt="" width="987" height="658" />
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="buy">
+            <p class="artist">
+              <a href="#">Albrecht Dürer</a>
+              <span>German, 1471–1528</span>
+            </p>
+            <h1 class="title" id="title">Melencolia I</h1>
+            <p class="facts">1514 · Engraving · Plate 24 × 18.5 cm</p>
+
+            <p class="price">
+              <span class="price__amount">$90</span>
+              <span class="price__what">A3, unframed</span>
+            </p>
+
+            <fieldset class="sizes">
+              <div class="sizes__head">
+                <legend>Size</legend>
+                <a href="#">How we size prints</a>
+              </div>
+              <div class="sizes__grid">
+                <label class="size">
+                  <input class="visually-hidden" type="radio" name="size" value="a4" />
+                  <span class="size__name">A4</span>
+                  <span class="size__price">$55</span>
+                  <span class="size__dims">21 × 29.7 cm</span>
+                  <span class="size__ppi chip">447 ppi</span>
+                </label>
+                <label class="size">
+                  <input class="visually-hidden" type="radio" name="size" value="a3" checked />
+                  <span class="size__name">A3</span>
+                  <span class="size__price">$90</span>
+                  <span class="size__dims">29.7 × 42 cm</span>
+                  <span class="size__ppi chip">302 ppi</span>
+                  <svg class="icon icon--tiny size__check" aria-hidden="true">
+                    <use href="#i-check" />
+                  </svg>
+                </label>
+                <div class="size size--off">
+                  <span class="size__name">A2</span>
+                  <span class="size__price">Scan too small</span>
+                  <span class="size__dims">42 × 59.4 cm</span>
+                  <span class="size__ppi chip">210 ppi</span>
+                </div>
+                <div class="size size--off">
+                  <span class="size__name">A1</span>
+                  <span class="size__price">Scan too small</span>
+                  <span class="size__dims">59.4 × 84.1 cm</span>
+                  <span class="size__ppi chip">144 ppi</span>
+                </div>
+              </div>
+              <p class="note">
+                <svg class="icon icon--small"><use href="#i-info" /></svg>
+                <span>
+                  A2 would need 3,213 px across the image. The Met's scan has 2,820, and we never
+                  upscale.
+                </span>
+              </p>
+            </fieldset>
+
+            <button class="button button--primary" type="button">
+              <svg class="icon icon--small"><use href="#i-bag" /></svg>
+              Add to cart
+            </button>
+
+            <a class="callout" href="#edition">
+              <span class="callout__icon"
+                ><svg class="icon icon--small"><use href="#i-key" /></svg
+              ></span>
+              <span class="callout__text">
+                <strong>A numbered edition of 50</strong>
+                <span>Opens Thu 15 Oct, 18:00 UTC. One per person, with a passkey</span>
+              </span>
+              <svg class="icon icon--small callout__arrow"><use href="#i-chevron" /></svg>
+            </a>
+
+            <ul class="assurances">
+              <li>
+                <svg class="icon icon--small"><use href="#i-ppi" /></svg>
+                Printed at 302 ppi on A3, from the museum's own scan
+              </li>
+              <li>
+                <svg class="icon icon--small"><use href="#i-tube" /></svg>
+                Pigment print on cotton rag, shipped rolled in a tube
+              </li>
+              <li>
+                <svg class="icon icon--small"><use href="#i-open" /></svg>
+                Public domain, from The Met's Open Access collection
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="band band--feature edition" id="edition" aria-labelledby="edition-title">
+        <div class="edition__grid">
+          <div class="edition__copy">
+            <span class="chip chip--accent">Opens in 3 days</span>
+            <h2 id="edition-title">Melencolia I, in fifty numbered copies</h2>
+            <p>
+              Each copy is A3 and numbered in pencil, from 1/50 to 50/50. Claim one and it is held
+              for you for ten minutes while you pay; if you don't, it goes back for the next person.
+            </p>
+            <div
+              class="countdown"
+              role="timer"
+              aria-label="Opens in 3 days, 4 hours and 12 minutes"
+            >
+              <div><span class="countdown__n">03</span><span>days</span></div>
+              <div><span class="countdown__n">04</span><span>hours</span></div>
+              <div><span class="countdown__n">12</span><span>minutes</span></div>
+            </div>
+            <dl class="edition__facts">
+              <div>
+                <dt>Opens</dt>
+                <dd>Thu 15 Oct, 18:00 UTC</dd>
+              </div>
+              <div>
+                <dt>Price</dt>
+                <dd>$180</dd>
+              </div>
+              <div>
+                <dt>Limit</dt>
+                <dd>One per person</dd>
+              </div>
+            </dl>
+            <div class="edition__actions">
+              <a class="button button--primary" href="#">
+                <svg class="icon icon--small"><use href="#i-key" /></svg>
+                Join with a passkey
+              </a>
+              <a class="text-link text-link--on-dark" href="#">
+                How drops work
+                <svg class="icon icon--small"><use href="#i-arrow" /></svg>
+              </a>
+            </div>
+          </div>
+          <figure class="copies">
+            <ol class="copies__grid" aria-label="Copies 1 to 50, none claimed yet"></ol>
+            <figcaption>50 copies · none claimed yet</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="band story" aria-labelledby="story-title">
+        <div class="story__grid">
+          <div class="story__text">
+            <h2 id="story-title">About the engraving</h2>
+            <p class="lede">
+              Dürer cut Melencolia I into copper in 1514, a year after Knight, Death, and the Devil.
+              With Saint Jerome in His Study, the three are known as his master engravings.
+            </p>
+            <p>
+              A winged figure sits idle among the tools of measuring and making, a compass slack in
+              her hand. Above her hang an hourglass, a scale and a bell, beside a magic square in
+              which every row, column and diagonal adds up to 34. Its bottom row gives the year:
+              15&#8239;14.
+            </p>
+            <p class="source">Source: The Met, Melencolia I, 43.106.1</p>
+          </div>
+          <figure class="story__figure">
+            <img
+              src="assets/img/melencolia-square.jpg"
+              alt="Detail of the magic square, with the bell and the hourglass above it."
+              width="959"
+              height="962"
+              loading="lazy"
+            />
+            <figcaption>The magic square: every row, column and diagonal adds up to 34</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="band band--alt record" aria-labelledby="record-title">
+        <div class="section-head">
+          <h2 id="record-title">From the museum's record</h2>
+          <a class="text-link" href="#">
+            metmuseum.org
+            <svg class="icon icon--small"><use href="#i-out" /></svg>
+          </a>
+        </div>
+        <dl class="record__list">
+          <div>
+            <dt>Artist</dt>
+            <dd>Albrecht Dürer, German, Nuremberg 1471–1528 Nuremberg</dd>
+          </div>
+          <div>
+            <dt>Date</dt>
+            <dd>1514</dd>
+          </div>
+          <div>
+            <dt>Medium</dt>
+            <dd>Engraving</dd>
+          </div>
+          <div>
+            <dt>Dimensions</dt>
+            <dd>Plate: 9 7/16 × 7 5/16 in. (24 × 18.5 cm)</dd>
+          </div>
+          <div>
+            <dt>Culture</dt>
+            <dd class="missing" aria-label="Not recorded">—</dd>
+          </div>
+          <div>
+            <dt>Period</dt>
+            <dd class="missing" aria-label="Not recorded">—</dd>
+          </div>
+          <div>
+            <dt>Credit line</dt>
+            <dd>Harris Brisbane Dick Fund, 1943</dd>
+          </div>
+          <div>
+            <dt>Object number</dt>
+            <dd class="tabular">43.106.1</dd>
+          </div>
+          <div>
+            <dt>Rights</dt>
+            <dd>Public domain, Open Access (CC0)</dd>
+          </div>
+          <div>
+            <dt>Scan</dt>
+            <dd class="tabular">2,820 × 3,561 px, read from the file</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="band more" aria-labelledby="more-title">
+        <div class="section-head">
+          <h2 id="more-title">More prints</h2>
+          <a class="text-link" href="#">
+            See all 48 prints
+            <svg class="icon icon--small"><use href="#i-arrow" /></svg>
+          </a>
+        </div>
+        <ul class="more__grid">
+          <li class="tile">
+            <a href="#">
+              <span class="tile__stage"
+                ><img
+                  src="assets/img/rhinoceros.jpg"
+                  alt=""
+                  width="1600"
+                  height="1280"
+                  loading="lazy"
+              /></span>
+              <span class="tile__title">The Rhinoceros</span>
+              <span class="tile__meta">Albrecht Dürer, 1515</span>
+              <span class="tile__price">From $55</span>
+            </a>
+          </li>
+          <li class="tile">
+            <a href="#">
+              <span class="tile__stage"
+                ><img src="assets/img/knight.jpg" alt="" width="1249" height="1600" loading="lazy"
+              /></span>
+              <span class="tile__title">Knight, Death, and the Devil</span>
+              <span class="tile__meta">Albrecht Dürer, 1513</span>
+              <span class="tile__price">$55 <span class="chip chip--soft">A4 only</span></span>
+            </a>
+          </li>
+          <li class="tile">
+            <a href="#">
+              <span class="tile__stage"
+                ><img
+                  src="assets/img/sleep-of-reason.jpg"
+                  alt=""
+                  width="1174"
+                  height="1600"
+                  loading="lazy"
+              /></span>
+              <span class="tile__title">The Sleep of Reason Produces Monsters</span>
+              <span class="tile__meta">Goya, 1799</span>
+              <span class="tile__price">From $55</span>
+            </a>
+          </li>
+          <li class="tile">
+            <a href="#">
+              <span class="tile__stage"
+                ><img
+                  src="assets/img/great-wave.jpg"
+                  alt=""
+                  width="1600"
+                  height="1076"
+                  loading="lazy"
+              /></span>
+              <span class="tile__title">Under the Wave off Kanagawa</span>
+              <span class="tile__meta">Katsushika Hokusai, ca. 1830–32</span>
+              <span class="tile__price">From $55</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="band band--deep footer">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a class="logo logo--footer" href="#" aria-label="Deckle, home">
+            <svg class="icon logo__mark"><use href="#i-deckle" /></svg>
+            <span>Deckle</span>
+          </a>
+          <p>Prints of public-domain works from The Met, in the sizes their scans can hold.</p>
+        </div>
+        <nav class="footer__nav" aria-label="Shop">
+          <p>Shop</p>
+          <ul>
+            <li><a href="#">Prints</a></li>
+            <li><a href="#">Drops</a></li>
+            <li><a href="#">Collections</a></li>
+          </ul>
+        </nav>
+        <nav class="footer__nav" aria-label="About">
+          <p>About</p>
+          <ul>
+            <li><a href="#">How we size prints</a></li>
+            <li><a href="#">Numbered editions</a></li>
+            <li><a href="#">Journal</a></li>
+          </ul>
+        </nav>
+        <p class="footer__small">
+          Images: The Metropolitan Museum of Art, Open Access (CC0). Deckle is a portfolio project:
+          checkout is simulated and nothing ships.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Fifty copies, numbered as they would be in pencil.
+      const grid = document.querySelector('.copies__grid');
+      for (let n = 1; n <= 50; n += 1) {
+        const item = document.createElement('li');
+        item.textContent = String(n);
+        grid.append(item);
+      }
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+        const current = root.dataset.theme ?? (dark ? 'dark' : 'light');
+        root.dataset.theme = current === 'dark' ? 'light' : 'dark';
+      });
+    </script>
+  </body>
+</html>

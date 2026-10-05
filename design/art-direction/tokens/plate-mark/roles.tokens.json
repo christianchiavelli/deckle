@@ -249,6 +249,10 @@
     "frame": {
       "$type": "dimension",
       "$value": "{radius.frame}"
+    },
+    "chip": {
+      "$type": "dimension",
+      "$value": "{radius.round}"
     }
   },
   "stroke-width": {

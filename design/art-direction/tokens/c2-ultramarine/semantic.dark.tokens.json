@@ -1,0 +1,142 @@
+{
+  "surface": {
+    "page": {
+      "$type": "color",
+      "$value": "{color.graphite.950}"
+    },
+    "band": {
+      "$type": "color",
+      "$value": "{color.graphite.900}"
+    },
+    "sheet": {
+      "$type": "color",
+      "$value": "{color.graphite.850}"
+    },
+    "feature": {
+      "$type": "color",
+      "$value": "{color.ultramarine.950}"
+    },
+    "deep": {
+      "$type": "color",
+      "$value": "{color.graphite.950}"
+    }
+  },
+  "text": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.graphite.100}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.graphite.300}"
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "{color.graphite.400}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.ultramarine.300}"
+    },
+    "on-feature": {
+      "$type": "color",
+      "$value": "{color.stock.0}"
+    },
+    "on-deep": {
+      "$type": "color",
+      "$value": "{color.graphite.100}"
+    },
+    "on-deep-secondary": {
+      "$type": "color",
+      "$value": "{color.graphite.300}"
+    },
+    "on-action": {
+      "$type": "color",
+      "$value": "{color.stock.0}"
+    }
+  },
+  "icon": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.graphite.100}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.graphite.300}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.ultramarine.400}"
+    }
+  },
+  "stroke": {
+    "subtle": {
+      "$type": "color",
+      "$value": "{color.graphite.800}"
+    },
+    "default": {
+      "$type": "color",
+      "$value": "{color.graphite.700}"
+    },
+    "strong": {
+      "$type": "color",
+      "$value": "{color.graphite.100}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.ultramarine.400}"
+    }
+  },
+  "action": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.ultramarine.600}"
+    },
+    "primary-hover": {
+      "$type": "color",
+      "$value": "{color.ultramarine.500}"
+    },
+    "secondary-hover": {
+      "$type": "color",
+      "$value": "{color.graphite.850}"
+    }
+  },
+  "accent": {
+    "default": {
+      "$type": "color",
+      "$value": "{color.ultramarine.400}"
+    },
+    "subtle": {
+      "$type": "color",
+      "$value": "{color.ultramarine.950}"
+    }
+  },
+  "feedback": {
+    "success": {
+      "$type": "color",
+      "$value": "{color.green.300}"
+    },
+    "error": {
+      "$type": "color",
+      "$value": "{color.red.300}"
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{color.amber.300}"
+    }
+  },
+  "focus": {
+    "ring": {
+      "$type": "color",
+      "$value": "{color.ultramarine.300}"
+    }
+  },
+  "component": {
+    "proof": {
+      "mark": {
+        "$type": "color",
+        "$value": "{color.graphite.700}"
+      }
+    }
+  }
+}
