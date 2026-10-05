@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-05T17:40:34.325Z",
+  "source": "https://collectionapi.metmuseum.org/public/collection/v1",
+  "works": [
+    {
+      "objectId": 336228,
+      "slug": "melencolia-i",
+      "title": "Melencolia I",
+      "shortTitle": "Melencolia I",
+      "artist": {
+        "name": "Albrecht Dürer",
+        "bio": "German, Nuremberg 1471–1528 Nuremberg",
+        "nationality": "German",
+        "beginYear": 1471,
+        "endYear": 1528
+      },
+      "date": {
+        "display": "1514",
+        "beginYear": 1514,
+        "endYear": 1514
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "Plate: 9 7/16 × 7 5/16 in. (24 × 18.5 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1943",
+      "accessionNumber": "43.106.1",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336228",
+      "tags": [
+        "Contemplation",
+        "Putti",
+        "Dogs",
+        "Geometry"
+      ],
+      "image": {
+        "file": "336228.jpg",
+        "width": 1622,
+        "height": 2048,
+        "originalWidth": 2820,
+        "originalHeight": 3561,
+        "sha256": "5d09a7aa95a3dcef491c6a412ee246727f0a10f876a2bcd93e4c813a74795d09",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820348.jpg"
+      }
+    },
+    {
+      "objectId": 356497,
+      "slug": "the-rhinoceros",
+      "title": "The Rhinoceros",
+      "shortTitle": "The Rhinoceros",
+      "artist": {
+        "name": "Albrecht Dürer",
+        "bio": "German, Nuremberg 1471–1528 Nuremberg",
+        "nationality": "German",
+        "beginYear": 1471,
+        "endYear": 1528
+      },
+      "date": {
+        "display": "1515",
+        "beginYear": 1515,
+        "endYear": 1515
+      },
+      "medium": "Woodcut",
+      "dimensions": [
+        "image: 8 3/8 x 11 5/8 in. (21.3 x 29.5 cm) trimmed to block line except at top",
+        "sheet: 9 3/8 x 11 3/4 in. (23.8 x 29.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of Junius Spencer Morgan, 1919",
+      "accessionNumber": "19.73.159",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/356497",
+      "tags": [
+        "Rhinoceros"
+      ],
+      "image": {
+        "file": "356497.jpg",
+        "width": 2048,
+        "height": 1639,
+        "originalWidth": 3811,
+        "originalHeight": 3049,
+        "sha256": "5aa7fce362a711b1ce86f78ce35ca16a7cff37fab60eb0acbc005ed7429b6e72",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DT241450.jpg"
+      }
+    },
+    {
+      "objectId": 336223,
+      "slug": "knight-death-and-the-devil",
+      "title": "Knight, Death, and the Devil",
+      "shortTitle": "Knight, Death, and the Devil",
+      "artist": {
+        "name": "Albrecht Dürer",
+        "bio": "German, Nuremberg 1471–1528 Nuremberg",
+        "nationality": "German",
+        "beginYear": 1471,
+        "endYear": 1528
+      },
+      "date": {
+        "display": "1513",
+        "beginYear": 1513,
+        "endYear": 1513
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "Sheet: 9 13/16 x 7 11/16 in. (25 x 19.6 cm)",
+        "Plate: 9 9/16 x 7 3/8 in. (24.3 x 18.8 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1943",
+      "accessionNumber": "43.106.2",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336223",
+      "tags": [
+        "Skulls",
+        "Men",
+        "Dogs",
+        "Horses",
+        "Devil",
+        "Knights"
+      ],
+      "image": {
+        "file": "336223.jpg",
+        "width": 1566,
+        "height": 2006,
+        "originalWidth": 1566,
+        "originalHeight": 2006,
+        "sha256": "a0a2bed5292d6120250d44c3965804588d99a798144df50dd491819331fbecfa",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP102226.jpg"
+      }
+    },
+    {
+      "objectId": 338473,
+      "slug": "the-sleep-of-reason-produces-monsters",
+      "title": "Plate 43 from \"Los Caprichos\": The sleep of reason produces monsters (El sueño de la razon produce monstruos)",
+      "shortTitle": "The Sleep of Reason Produces Monsters",
+      "artist": {
+        "name": "Goya (Francisco de Goya y Lucientes)",
+        "bio": "Spanish, Fuendetodos 1746–1828 Bordeaux",
+        "nationality": "Spanish",
+        "beginYear": 1746,
+        "endYear": 1828
+      },
+      "date": {
+        "display": "1799",
+        "beginYear": 1799,
+        "endYear": 1799
+      },
+      "medium": "Etching, aquatint",
+      "dimensions": [
+        "Plate: 8 3/8 x 5 15/16 in. (21.2 x 15.1 cm)",
+        "Sheet: 11 5/8 x 8 1/4 in. (29.5 x 21 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of M. Knoedler & Co., 1918",
+      "accessionNumber": "18.64(43)",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/338473",
+      "tags": [
+        "Bats",
+        "Sleeping",
+        "Men",
+        "Owls"
+      ],
+      "image": {
+        "file": "338473.jpg",
+        "width": 1503,
+        "height": 2048,
+        "originalWidth": 2689,
+        "originalHeight": 3665,
+        "sha256": "8e9734ea23044c6e7743b12810c27023c827c9316b1dd7e1b439ca0279c529dd",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP816992.jpg"
+      }
+    },
+    {
+      "objectId": 45434,
+      "slug": "under-the-wave-off-kanagawa",
+      "title": "Under the Wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave, from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+      "shortTitle": "Under the Wave off Kanagawa",
+      "artist": {
+        "name": "Katsushika Hokusai",
+        "bio": "Japanese, Tokyo (Edo) 1760–1849 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1760,
+        "endYear": 1849
+      },
+      "date": {
+        "display": "ca. 1830–32",
+        "beginYear": 1820,
+        "endYear": 1842
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "10 1/8 x 14 15/16 in. (25.7 x 37.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "accessionNumber": "JP1847",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/45434",
+      "tags": [
+        "Waves",
+        "Boats"
+      ],
+      "image": {
+        "file": "45434.jpg",
+        "width": 2048,
+        "height": 1377,
+        "originalWidth": 3859,
+        "originalHeight": 2594,
+        "sha256": "2d8c4744bf347e8e14a9591e566dbf009ad230f784f3ddde042c54dd8b47f8e5",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg"
+      }
+    }
+  ]
+}
