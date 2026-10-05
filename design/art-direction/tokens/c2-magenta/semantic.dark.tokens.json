@@ -12,6 +12,10 @@
       "$type": "color",
       "$value": "{color.graphite.850}"
     },
+    "stage": {
+      "$type": "color",
+      "$value": "{color.graphite.850}"
+    },
     "feature": {
       "$type": "color",
       "$value": "{color.magenta.950}"
@@ -53,6 +57,10 @@
     "on-action": {
       "$type": "color",
       "$value": "{color.stock.0}"
+    },
+    "on-accent": {
+      "$type": "color",
+      "$value": "{color.graphite.950}"
     }
   },
   "icon": {
@@ -136,6 +144,16 @@
       "mark": {
         "$type": "color",
         "$value": "{color.graphite.700}"
+      }
+    },
+    "announce": {
+      "surface": {
+        "$type": "color",
+        "$value": "{color.magenta.600}"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.stock.0}"
       }
     }
   }

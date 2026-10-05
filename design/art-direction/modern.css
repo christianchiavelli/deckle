@@ -197,8 +197,8 @@
   }
 
   .chip--accent {
-    background: var(--action-primary);
-    color: var(--text-on-action);
+    background: var(--accent-default);
+    color: var(--text-on-accent);
   }
 
   .chip--soft {
@@ -249,6 +249,16 @@
     background: var(--action-primary-hover);
   }
 
+  /* What opens, counts down or is numbered: the drop's own colour. */
+  .button--accent {
+    background: var(--accent-default);
+    color: var(--text-on-accent);
+  }
+
+  .button--accent:hover {
+    background: color-mix(in srgb, var(--accent-default) 86%, var(--text-primary));
+  }
+
   .text-link {
     display: inline-flex;
     align-items: center;
@@ -275,8 +285,8 @@
     gap: var(--space-gap-xs);
     min-block-size: 2.5rem;
     padding-inline: var(--space-gap-lg);
-    background: var(--action-primary);
-    color: var(--text-on-action);
+    background: var(--component-announce-surface);
+    color: var(--component-announce-text);
     font-size: 0.875rem;
     font-weight: 500;
   }
@@ -416,8 +426,8 @@
     block-size: 1.125rem;
     padding-inline: 0.25rem;
     border-radius: var(--radius-chip);
-    background: var(--action-primary);
-    color: var(--text-on-action);
+    background: var(--accent-default);
+    color: var(--text-on-accent);
     font-size: 0.6875rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -465,7 +475,7 @@
     position: relative;
     aspect-ratio: 6 / 5;
     border-radius: var(--radius-frame);
-    background: var(--surface-sheet);
+    background: var(--surface-stage);
   }
 
   /* The print fits the stage whatever its proportions: the area is a size
@@ -596,7 +606,7 @@
     overflow: hidden;
     border: 0;
     border-radius: var(--radius-control);
-    background: var(--surface-sheet);
+    background: var(--surface-stage);
     cursor: pointer;
     box-shadow: inset 0 0 0 var(--stroke-width-hairline) var(--stroke-subtle);
   }
@@ -787,7 +797,7 @@
     padding: 0.1875rem;
     border-radius: 50%;
     background: var(--accent-default);
-    color: var(--text-on-action);
+    color: var(--text-on-accent);
     stroke-width: 2.4;
   }
 
@@ -1091,7 +1101,7 @@
     margin-block-end: var(--space-gap-sm);
     overflow: hidden;
     border-radius: var(--radius-frame);
-    background: var(--surface-sheet);
+    background: var(--surface-stage);
   }
 
   .tile__stage img {

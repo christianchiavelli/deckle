@@ -2,158 +2,158 @@
   "surface": {
     "page": {
       "$type": "color",
-      "$value": "{color.graphite.950}"
+      "$value": "{color.paper.0}"
     },
     "band": {
       "$type": "color",
-      "$value": "{color.graphite.900}"
+      "$value": "{color.paper.25}"
     },
     "sheet": {
       "$type": "color",
-      "$value": "{color.graphite.850}"
+      "$value": "{color.paper.50}"
     },
     "stage": {
       "$type": "color",
-      "$value": "{color.graphite.850}"
+      "$value": "{color.paper.50}"
     },
     "feature": {
       "$type": "color",
-      "$value": "{color.ultramarine.950}"
+      "$value": "{color.copper.900}"
     },
     "deep": {
       "$type": "color",
-      "$value": "{color.graphite.950}"
+      "$value": "{color.bistre.950}"
     }
   },
   "text": {
     "primary": {
       "$type": "color",
-      "$value": "{color.graphite.100}"
+      "$value": "{color.bistre.950}"
     },
     "secondary": {
       "$type": "color",
-      "$value": "{color.graphite.300}"
+      "$value": "{color.bistre.600}"
     },
     "muted": {
       "$type": "color",
-      "$value": "{color.graphite.400}"
+      "$value": "{color.bistre.500}"
     },
     "accent": {
       "$type": "color",
-      "$value": "{color.ultramarine.300}"
+      "$value": "{color.copper.700}"
     },
     "on-feature": {
       "$type": "color",
-      "$value": "{color.stock.0}"
+      "$value": "{color.paper.0}"
     },
     "on-deep": {
       "$type": "color",
-      "$value": "{color.graphite.100}"
+      "$value": "{color.bistre.100}"
     },
     "on-deep-secondary": {
       "$type": "color",
-      "$value": "{color.graphite.300}"
+      "$value": "{color.bistre.300}"
     },
     "on-action": {
       "$type": "color",
-      "$value": "{color.stock.0}"
+      "$value": "{color.paper.0}"
     },
     "on-accent": {
       "$type": "color",
-      "$value": "{color.graphite.950}"
+      "$value": "{color.paper.0}"
     }
   },
   "icon": {
     "primary": {
       "$type": "color",
-      "$value": "{color.graphite.100}"
+      "$value": "{color.bistre.950}"
     },
     "secondary": {
       "$type": "color",
-      "$value": "{color.graphite.300}"
+      "$value": "{color.bistre.600}"
     },
     "accent": {
       "$type": "color",
-      "$value": "{color.ultramarine.400}"
+      "$value": "{color.copper.600}"
     }
   },
   "stroke": {
     "subtle": {
       "$type": "color",
-      "$value": "{color.graphite.800}"
+      "$value": "{color.paper.100}"
     },
     "default": {
       "$type": "color",
-      "$value": "{color.graphite.700}"
+      "$value": "{color.paper.300}"
     },
     "strong": {
       "$type": "color",
-      "$value": "{color.graphite.100}"
+      "$value": "{color.bistre.950}"
     },
     "accent": {
       "$type": "color",
-      "$value": "{color.ultramarine.400}"
+      "$value": "{color.copper.600}"
     }
   },
   "action": {
     "primary": {
       "$type": "color",
-      "$value": "{color.ultramarine.600}"
+      "$value": "{color.bistre.950}"
     },
     "primary-hover": {
       "$type": "color",
-      "$value": "{color.ultramarine.500}"
+      "$value": "{color.bistre.700}"
     },
     "secondary-hover": {
       "$type": "color",
-      "$value": "{color.graphite.850}"
+      "$value": "{color.paper.50}"
     }
   },
   "accent": {
     "default": {
       "$type": "color",
-      "$value": "{color.ultramarine.400}"
+      "$value": "{color.copper.600}"
     },
     "subtle": {
       "$type": "color",
-      "$value": "{color.ultramarine.950}"
-    }
-  },
-  "feedback": {
-    "success": {
-      "$type": "color",
-      "$value": "{color.green.300}"
-    },
-    "error": {
-      "$type": "color",
-      "$value": "{color.red.300}"
-    },
-    "warning": {
-      "$type": "color",
-      "$value": "{color.amber.300}"
+      "$value": "{color.copper.50}"
     }
   },
   "focus": {
     "ring": {
       "$type": "color",
-      "$value": "{color.ultramarine.300}"
+      "$value": "{color.copper.600}"
+    }
+  },
+  "feedback": {
+    "success": {
+      "$type": "color",
+      "$value": "{color.green.600}"
+    },
+    "error": {
+      "$type": "color",
+      "$value": "{color.red.600}"
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{color.amber.600}"
     }
   },
   "component": {
     "proof": {
       "mark": {
         "$type": "color",
-        "$value": "{color.graphite.700}"
+        "$value": "{color.paper.300}"
       }
     },
     "announce": {
       "surface": {
         "$type": "color",
-        "$value": "{color.ultramarine.600}"
+        "$value": "{color.copper.700}"
       },
       "text": {
         "$type": "color",
-        "$value": "{color.stock.0}"
+        "$value": "{color.paper.0}"
       }
     }
   }

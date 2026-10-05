@@ -14,6 +14,16 @@ C was the owner's pick, with one note: it did not yet look like a shop of today.
 
 ![C against C2 in both accents, light and dark](shots/compare-c-first-screen.png)
 
+A plain accent connects nobody to the shop, so C2 was then coloured three ways from the trade itself (`modern.html?d=c2-vermilion`, `c2-gallery` or `c2-copper`):
+
+| Palette | The story | How it is used |
+| --- | --- | --- |
+| Ink and vermilion | Black and red, the two colours printing began with | The interface is ink on paper; red marks only what is numbered, limited or about to open, as a printer's seal would |
+| Gallery wall | The deep green of the rooms old masters hang in | Every work is shown on the wall before it is bought, and the dark theme is the gallery at night |
+| Copper plate | The copper an engraving is cut into, on rag paper with bistre ink | Copper marks what is precious: the edition, the chosen size, the drop |
+
+![The three palettes from the trade, light and dark](shots/compare-trade-first-screen.png)
+
 ## Looking at them
 
 Open `index.html` in a browser for all three side by side, or `artwork.html?d=kento&theme=dark` for one. The comparison sheets in `shots/` come from `pnpm --filter @deckle/art-direction capture`.

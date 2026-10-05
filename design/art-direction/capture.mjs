@@ -69,12 +69,18 @@ for (const theme of themes) {
   );
 }
 
-// C, modernised: the same page rebuilt as a contemporary shop, in two accents.
+// C, modernised: the same page rebuilt as a contemporary shop, first in two
+// plain accents, then in three palettes that each tell a story from the trade.
 const modern = [
   ['c2-ultramarine', 'C2 · ultramarine'],
   ['c2-magenta', 'C2 · magenta'],
 ];
-for (const [direction] of modern) {
+const trade = [
+  ['c2-vermilion', 'Ink and vermilion'],
+  ['c2-gallery', 'Gallery wall'],
+  ['c2-copper', 'Copper plate'],
+];
+for (const [direction] of [...modern, ...trade]) {
   for (const theme of themes) {
     const page = await browser.newPage({
       viewport: { width: 1440, height: 900 },
@@ -106,5 +112,19 @@ for (const theme of themes) {
   );
 }
 
+await sheet(
+  'compare-trade-first-screen',
+  3,
+  themes.flatMap((theme) => trade.map(([d, label]) => [`${label}, ${theme}`, `${d}-${theme}.png`])),
+);
+for (const theme of themes) {
+  await sheet(
+    `compare-trade-full-${theme}`,
+    3,
+    trade.map(([d, label]) => [`${label}, ${theme}`, `${d}-${theme}-full.png`]),
+  );
+}
+
 await browser.close();
-console.log(`captured ${directions.length * themes.length} pages into ${shots}`);
+const pages = (directions.length + modern.length + trade.length) * themes.length;
+console.log(`captured ${pages} pages into ${shots}`);
