@@ -1,0 +1,150 @@
+{
+  "surface": {
+    "page": {
+      "$type": "color",
+      "$value": "{color.bistre.900}"
+    },
+    "band": {
+      "$type": "color",
+      "$value": "{color.bistre.850}"
+    },
+    "sheet": {
+      "$type": "color",
+      "$value": "{color.bistre.800}"
+    },
+    "feature": {
+      "$type": "color",
+      "$value": "{color.copper.900}"
+    },
+    "deep": {
+      "$type": "color",
+      "$value": "{color.bistre.950}"
+    }
+  },
+  "text": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.bistre.100}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.bistre.300}"
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "{color.bistre.400}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.copper.300}"
+    },
+    "on-feature": {
+      "$type": "color",
+      "$value": "{color.bistre.100}"
+    },
+    "on-deep": {
+      "$type": "color",
+      "$value": "{color.bistre.100}"
+    },
+    "on-deep-secondary": {
+      "$type": "color",
+      "$value": "{color.bistre.300}"
+    },
+    "on-action": {
+      "$type": "color",
+      "$value": "{color.bistre.950}"
+    }
+  },
+  "icon": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.bistre.100}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.bistre.300}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.copper.400}"
+    }
+  },
+  "stroke": {
+    "subtle": {
+      "$type": "color",
+      "$value": "{color.bistre.800}"
+    },
+    "default": {
+      "$type": "color",
+      "$value": "{color.bistre.700}"
+    },
+    "strong": {
+      "$type": "color",
+      "$value": "{color.bistre.100}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.copper.400}"
+    }
+  },
+  "action": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.bistre.100}"
+    },
+    "primary-hover": {
+      "$type": "color",
+      "$value": "{color.bistre.200}"
+    },
+    "secondary-hover": {
+      "$type": "color",
+      "$value": "{color.bistre.800}"
+    }
+  },
+  "accent": {
+    "default": {
+      "$type": "color",
+      "$value": "{color.copper.400}"
+    },
+    "subtle": {
+      "$type": "color",
+      "$value": "{color.copper.900}"
+    }
+  },
+  "feedback": {
+    "success": {
+      "$type": "color",
+      "$value": "{color.moss.300}"
+    },
+    "error": {
+      "$type": "color",
+      "$value": "{color.oxide.300}"
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{color.ochre.300}"
+    }
+  },
+  "focus": {
+    "ring": {
+      "$type": "color",
+      "$value": "{color.copper.300}"
+    }
+  },
+  "component": {
+    "plate-mark": {
+      "shade": {
+        "$type": "color",
+        "$value": "{color.bistre.950}"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.bistre.700}"
+      },
+      "tone": {
+        "$type": "color",
+        "$value": "{color.bistre.800}"
+      }
+    }
+  }
+}

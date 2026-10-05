@@ -1,0 +1,152 @@
+{
+  "surface": {
+    "page": {
+      "$type": "color",
+      "$value": "{color.bero.950}"
+    },
+    "band": {
+      "$type": "color",
+      "$value": "{color.bero.900}"
+    },
+    "sheet": {
+      "$type": "color",
+      "$value": "{color.bero.850}"
+    },
+    "feature": {
+      "$type": "color",
+      "$value": "{color.bero.800}"
+    },
+    "deep": {
+      "$type": "color",
+      "$value": "{color.sumi.950}"
+    }
+  },
+  "text": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.sumi.100}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.bero.200}"
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "{color.bero.300}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.bero.300}"
+    },
+    "on-feature": {
+      "$type": "color",
+      "$value": "{color.kozo.50}"
+    },
+    "on-deep": {
+      "$type": "color",
+      "$value": "{color.sumi.100}"
+    },
+    "on-deep-secondary": {
+      "$type": "color",
+      "$value": "{color.sumi.300}"
+    },
+    "on-action": {
+      "$type": "color",
+      "$value": "{color.bero.950}"
+    }
+  },
+  "icon": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.sumi.100}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.bero.200}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.shu.400}"
+    }
+  },
+  "stroke": {
+    "subtle": {
+      "$type": "color",
+      "$value": "{color.bero.850}"
+    },
+    "default": {
+      "$type": "color",
+      "$value": "{color.bero.700}"
+    },
+    "strong": {
+      "$type": "color",
+      "$value": "{color.sumi.100}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.bero.300}"
+    }
+  },
+  "action": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.kozo.50}"
+    },
+    "primary-hover": {
+      "$type": "color",
+      "$value": "{color.kozo.100}"
+    },
+    "secondary-hover": {
+      "$type": "color",
+      "$value": "{color.bero.900}"
+    }
+  },
+  "accent": {
+    "default": {
+      "$type": "color",
+      "$value": "{color.bero.300}"
+    },
+    "subtle": {
+      "$type": "color",
+      "$value": "{color.bero.900}"
+    }
+  },
+  "feedback": {
+    "success": {
+      "$type": "color",
+      "$value": "{color.matsu.300}"
+    },
+    "error": {
+      "$type": "color",
+      "$value": "{color.shu.300}"
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{color.kihada.300}"
+    }
+  },
+  "focus": {
+    "ring": {
+      "$type": "color",
+      "$value": "{color.shu.400}"
+    }
+  },
+  "component": {
+    "seal": {
+      "ink": {
+        "$type": "color",
+        "$value": "{color.shu.400}"
+      },
+      "on-ink": {
+        "$type": "color",
+        "$value": "{color.bero.950}"
+      }
+    },
+    "kento": {
+      "mark": {
+        "$type": "color",
+        "$value": "{color.sumi.100}"
+      }
+    }
+  }
+}

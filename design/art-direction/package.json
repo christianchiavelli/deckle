@@ -1,0 +1,17 @@
+{
+  "name": "@deckle/art-direction",
+  "version": "0.0.0",
+  "description": "Three art directions for the artwork page, each a DTCG token set, in static HTML",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tokens": "node build-tokens.mjs",
+    "capture": "node build-tokens.mjs && node capture.mjs",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@deckle/eslint-config": "workspace:*",
+    "eslint": "catalog:",
+    "playwright": "catalog:"
+  }
+}

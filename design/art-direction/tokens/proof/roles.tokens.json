@@ -1,0 +1,296 @@
+{
+  "type": {
+    "display": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.display}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.80}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.600}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.solid}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.display}"
+      }
+    },
+    "heading-1": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.display}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.48}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.600}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.tight}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.heading}"
+      }
+    },
+    "heading-2": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.display}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.34}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.600}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.snug}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.heading}"
+      }
+    },
+    "heading-3": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.display}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.22}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.600}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.snug}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.none}"
+      }
+    },
+    "body": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.text}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.17}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.400}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.relaxed}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.none}"
+      }
+    },
+    "body-small": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.text}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.15}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.400}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.normal}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.none}"
+      }
+    },
+    "caption": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.text}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.13}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.400}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.normal}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.none}"
+      }
+    },
+    "label": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.text}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.14}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.600}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.snug}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.label}"
+      }
+    },
+    "numeral": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.numeral}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.148}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.300}"
+      },
+      "leading": {
+        "$type": "number",
+        "$value": "{font.leading.solid}"
+      },
+      "tracking": {
+        "$type": "number",
+        "$value": "{font.tracking.display}"
+      }
+    }
+  },
+  "space": {
+    "gap-2xs": {
+      "$type": "dimension",
+      "$value": "{space.4}"
+    },
+    "gap-xs": {
+      "$type": "dimension",
+      "$value": "{space.8}"
+    },
+    "gap-sm": {
+      "$type": "dimension",
+      "$value": "{space.12}"
+    },
+    "gap-md": {
+      "$type": "dimension",
+      "$value": "{space.16}"
+    },
+    "gap-lg": {
+      "$type": "dimension",
+      "$value": "{space.24}"
+    },
+    "gap-xl": {
+      "$type": "dimension",
+      "$value": "{space.32}"
+    },
+    "gap-2xl": {
+      "$type": "dimension",
+      "$value": "{space.48}"
+    },
+    "gap-3xl": {
+      "$type": "dimension",
+      "$value": "{space.64}"
+    },
+    "section": {
+      "$type": "dimension",
+      "$value": "{space.96}"
+    },
+    "section-tight": {
+      "$type": "dimension",
+      "$value": "{space.64}"
+    }
+  },
+  "radius": {
+    "control": {
+      "$type": "dimension",
+      "$value": "{radius.control}"
+    },
+    "frame": {
+      "$type": "dimension",
+      "$value": "{radius.frame}"
+    }
+  },
+  "stroke-width": {
+    "hairline": {
+      "$type": "dimension",
+      "$value": "{stroke-width.hairline}"
+    },
+    "rule": {
+      "$type": "dimension",
+      "$value": "{stroke-width.rule}"
+    }
+  },
+  "layout": {
+    "max-width": {
+      "$type": "dimension",
+      "$value": "{grid.max-width}"
+    },
+    "gutter": {
+      "$type": "dimension",
+      "$value": "{grid.gutter}"
+    },
+    "columns": {
+      "$type": "number",
+      "$value": "{grid.columns}"
+    }
+  },
+  "motion": {
+    "feedback": {
+      "$type": "duration",
+      "$value": "{motion.duration.quick}"
+    },
+    "enter": {
+      "$type": "duration",
+      "$value": "{motion.duration.moderate}"
+    },
+    "exit": {
+      "$type": "duration",
+      "$value": "{motion.duration.quick}"
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "$value": "{motion.easing.standard}"
+    }
+  }
+}

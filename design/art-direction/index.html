@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Art directions | Deckle</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font:
+          15px/1.4 system-ui,
+          sans-serif;
+      }
+
+      body {
+        margin: 0;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        block-size: 100vh;
+        background: light-dark(#e8e6e2, #1b1a19);
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 0.75rem 1.25rem;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+        padding: 0 0.75rem 0.75rem;
+        min-block-size: 0;
+      }
+
+      section {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-block-size: 0;
+      }
+
+      h2 {
+        margin: 0 0 0.4rem;
+        font-size: 1rem;
+      }
+
+      iframe {
+        inline-size: 100%;
+        block-size: 100%;
+        border: 0;
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Deckle: three art directions for the artwork page</strong>
+      <label><input type="radio" name="theme" value="light" checked /> Light</label>
+      <label><input type="radio" name="theme" value="dark" /> Dark</label>
+    </header>
+    <main>
+      <section>
+        <h2>A · Plate mark</h2>
+        <iframe data-direction="plate-mark" title="Plate mark"></iframe>
+      </section>
+      <section>
+        <h2>B · Kento</h2>
+        <iframe data-direction="kento" title="Kento"></iframe>
+      </section>
+      <section>
+        <h2>C · Proof</h2>
+        <iframe data-direction="proof" title="Proof"></iframe>
+      </section>
+    </main>
+    <script>
+      const frames = document.querySelectorAll('iframe');
+      const show = (theme) =>
+        frames.forEach((frame) => {
+          frame.src = `artwork.html?d=${frame.dataset.direction}&theme=${theme}`;
+        });
+      document
+        .querySelectorAll('input[name=theme]')
+        .forEach((input) => input.addEventListener('change', () => show(input.value)));
+      show('light');
+    </script>
+  </body>
+</html>
