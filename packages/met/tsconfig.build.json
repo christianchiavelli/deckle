@@ -9,5 +9,8 @@
     "types": ["node"]
   },
   "include": ["src"],
-  "exclude": ["src/**/*.spec.ts"]
+  // The importer and the candidates script are tools run from source with tsx,
+  // and src/test only serves the specs: the build is the library the services
+  // read the data set with, and it never loads sharp.
+  "exclude": ["src/**/*.spec.ts", "src/import", "src/candidates", "src/test"]
 }

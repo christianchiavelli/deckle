@@ -1,0 +1,99 @@
+{
+  "objectID": 356497,
+  "isHighlight": false,
+  "accessionNumber": "19.73.159",
+  "accessionYear": "1919",
+  "isPublicDomain": true,
+  "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DT241450.jpg",
+  "primaryImageSmall": "https://images.metmuseum.org/CRDImages/dp/web-large/DT241450.jpg",
+  "additionalImages": ["https://images.metmuseum.org/CRDImages/dp/original/MM2134.jpg"],
+  "constituents": [
+    {
+      "constituentID": 161857,
+      "role": "Artist",
+      "name": "Albrecht Dürer",
+      "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500115493",
+      "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q5580",
+      "gender": ""
+    }
+  ],
+  "department": "Drawings and Prints",
+  "objectName": "Print",
+  "title": "The Rhinoceros",
+  "culture": "",
+  "period": "",
+  "dynasty": "",
+  "reign": "",
+  "portfolio": "",
+  "artistRole": "Artist",
+  "artistPrefix": "",
+  "artistDisplayName": "Albrecht Dürer",
+  "artistDisplayBio": "German, Nuremberg 1471–1528 Nuremberg",
+  "artistSuffix": "",
+  "artistAlphaSort": "Dürer, Albrecht",
+  "artistNationality": "German",
+  "artistBeginDate": "1471",
+  "artistEndDate": "1528",
+  "artistGender": "",
+  "artistWikidata_URL": "https://www.wikidata.org/wiki/Q5580",
+  "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500115493",
+  "objectDate": "1515",
+  "objectBeginDate": 1515,
+  "objectEndDate": 1515,
+  "medium": "Woodcut",
+  "dimensions": "image: 8 3/8 x 11 5/8 in. (21.3 x 29.5 cm) trimmed to block line except at top\r\nsheet: 9 3/8 x 11 3/4 in. (23.8 x 29.9 cm)",
+  "measurements": [
+    {
+      "elementName": "Image",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Height": 21.2725,
+        "Width": 29.5276
+      }
+    },
+    {
+      "elementName": "Framed",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Height": 40.64008,
+        "Width": 53.340107
+      }
+    },
+    {
+      "elementName": "Sheet",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Height": 23.8,
+        "Width": 29.9
+      }
+    }
+  ],
+  "creditLine": "Gift of Junius Spencer Morgan, 1919",
+  "geographyType": "",
+  "city": "",
+  "state": "",
+  "county": "",
+  "country": "",
+  "region": "",
+  "subregion": "",
+  "locale": "",
+  "locus": "",
+  "excavation": "",
+  "river": "",
+  "classification": "Prints",
+  "rightsAndReproduction": "",
+  "linkResource": "",
+  "metadataDate": "2026-08-28T04:59:40.517Z",
+  "repository": "Metropolitan Museum of Art, New York, NY",
+  "objectURL": "https://www.metmuseum.org/art/collection/search/356497",
+  "tags": [
+    {
+      "term": "Rhinoceros",
+      "AAT_URL": "http://vocab.getty.edu/page/aat/300250315",
+      "Wikidata_URL": "https://www.wikidata.org/wiki/Q34718"
+    }
+  ],
+  "objectWikidata_URL": "",
+  "isTimelineWork": false,
+  "GalleryNumber": ""
+}

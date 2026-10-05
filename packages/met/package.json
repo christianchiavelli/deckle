@@ -18,16 +18,20 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "candidates": "tsx src/candidates/main.ts"
   },
   "dependencies": {
     "zod": "catalog:"
   },
   "devDependencies": {
     "@deckle/eslint-config": "workspace:*",
+    "@deckle/print-sizes": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
+    "sharp": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
