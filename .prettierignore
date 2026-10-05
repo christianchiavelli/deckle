@@ -1,0 +1,14 @@
+pnpm-lock.yaml
+dist
+build
+coverage
+.next
+node_modules
+# Generated from the code-first resolvers, and diffed as a contract in CI
+services/gateway/schema.gql
+# The Met data set as the importer wrote it
+data/met
+design/art-direction/assets
+design/art-direction/shots
+test-results
+playwright-report

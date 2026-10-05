@@ -1,0 +1,32 @@
+# Dependencies and build output
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+next-env.d.ts
+
+# Tests
+coverage/
+test-results/
+playwright-report/
+blob-report/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# The importer's download cache: originals are hundreds of MB and never committed
+data/met/.cache/
+
+# Art direction: the comparison sheets are kept, the single captures are rebuilt on demand
+design/art-direction/shots/*.png
+!design/art-direction/shots/compare-*.png
+
+# Editors and systems
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+.playwright-mcp/

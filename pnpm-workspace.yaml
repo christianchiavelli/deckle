@@ -1,0 +1,114 @@
+packages:
+  - apps/*
+  - services/*
+  - packages/*
+  - design/*
+
+# One version of each dependency for the whole repository, checked at the
+# source on 5 October 2026. A package names `catalog:` instead of a range, so
+# an upgrade is one line here, reviewed once.
+#
+# Some versions are held back on purpose, each with its reason in docs/adr:
+# TypeScript 6.0 (the Nest CLI and typescript-eslint refuse 7.0), graphql 16
+# (Apollo Server 5 accepts nothing newer), Vendure 3.7.4 exactly, Drizzle
+# before 1.0 and a styled-components prerelease.
+catalog:
+  # Language and tooling
+  typescript: 6.0.3
+  '@types/node': 24.19.1
+  prettier: 3.9.9
+  eslint: 10.12.0
+  '@eslint/js': 10.0.1
+  typescript-eslint: 8.71.0
+  globals: 17.13.0
+  vitest: 5.0.3
+  '@vitest/coverage-v8': 5.0.3
+  vite: 8.3.2
+  tsx: 4.23.15
+  testcontainers: 12.2.0
+  '@testcontainers/postgresql': 12.2.0
+  playwright: 1.63.0
+  '@playwright/test': 1.63.0
+
+  # Contracts and data
+  zod: 4.6.5
+  graphql: 16.14.2
+  pg: 8.23.1
+  '@types/pg': 8.23.1
+  drizzle-orm: 0.45.3
+  drizzle-kit: 0.31.11
+  sharp: 0.35.5
+  jose: 6.2.12
+
+  # Commerce
+  '@vendure/core': 3.7.4
+  '@vendure/common': 3.7.4
+  '@vendure/asset-server-plugin': 3.7.4
+  '@vendure/email-plugin': 3.7.4
+  '@vendure/dashboard': 3.7.4
+  '@vendure/testing': 3.7.4
+
+  # CMS
+  payload: 3.90.2
+  '@payloadcms/next': 3.90.2
+  '@payloadcms/db-postgres': 3.90.2
+  '@payloadcms/richtext-lexical': 3.90.2
+  '@payloadcms/ui': 3.90.2
+  next: 16.3.8
+  react: 19.3.0
+  react-dom: 19.3.0
+  '@types/react': 19.3.0
+  '@types/react-dom': 19.3.0
+
+  # Gateway
+  '@nestjs/common': 12.1.2
+  '@nestjs/core': 12.1.2
+  '@nestjs/platform-express': 12.1.2
+  '@nestjs/testing': 12.1.2
+  '@nestjs/cli': 12.0.8
+  '@nestjs/config': 12.0.1
+  '@nestjs/terminus': 12.1.0
+  '@nestjs/graphql': 14.0.3
+  '@nestjs/apollo': 14.0.3
+  '@apollo/server': 5.5.1
+  '@as-integrations/express5': 1.1.2
+  graphql-ws: 6.3.0
+  ws: 8.22.0
+  '@types/ws': 8.18.2
+  graphql-query-complexity: 2.0.0
+  '@escape.tech/graphql-armor': 3.2.0
+  dataloader: 2.2.3
+  '@simplewebauthn/server': 14.0.3
+  rxjs: 7.8.2
+  reflect-metadata: 0.2.2
+  supertest: 7.3.1
+  '@types/supertest': 7.2.1
+  '@graphql-inspector/cli': 7.0.0
+  '@graphql-codegen/cli': 7.4.4
+  '@graphql-codegen/typescript': 6.1.1
+  '@graphql-codegen/typescript-operations': 6.1.10
+  '@graphql-codegen/typed-document-node': 7.1.1
+
+# A version reaches this repository a day after it is published (pnpm's
+# default since 11), which keeps out the releases that get pulled within hours.
+# These were a day old or less when the repository started, and are pinned
+# exactly in the catalog: Vendure 3.7.4 fixes overselling in concurrent
+# checkouts, and the codegen packages are what the store's types are generated with.
+minimumReleaseAgeExclude:
+  - '@vendure/core@3.7.4'
+  - '@vendure/common@3.7.4'
+  - '@vendure/asset-server-plugin@3.7.4'
+  - '@vendure/email-plugin@3.7.4'
+  - '@vendure/dashboard@3.7.4'
+  - '@vendure/testing@3.7.4'
+  - '@graphql-codegen/cli@7.4.4'
+  - '@graphql-codegen/typescript@6.1.1'
+  - '@graphql-codegen/typescript-operations@6.1.10'
+
+# Dependency build scripts are opt-in: a postinstall is arbitrary code run at
+# install time. Each package that needs one is listed with its reason.
+allowBuilds:
+  # sharp downloads libvips for the platform; image resizing fails without it.
+  sharp: true
+  # esbuild ships its native binary through an install script.
+  esbuild: true

@@ -1,0 +1,26 @@
+{
+  "name": "@deckle/eslint-config",
+  "version": "0.0.0",
+  "description": "The lint rules every package shares; each package adds its own boundaries on top",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@eslint/js": "catalog:",
+    "globals": "catalog:",
+    "typescript-eslint": "catalog:"
+  },
+  "devDependencies": {
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0",
+    "typescript": "^6.0.0"
+  }
+}
