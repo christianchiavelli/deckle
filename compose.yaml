@@ -1,0 +1,219 @@
+# The whole of Deckle on one machine: `docker compose up --wait`.
+#
+# The application images are the ones CI publishes to GHCR, so a visitor
+# compiles nothing; `docker compose build` builds them from this checkout
+# instead. `DECKLE_TAG` picks a published build (default: the latest on main).
+#
+# Every secret below has a default that is fine on a laptop and nowhere else.
+# They are defaults, not code: the services refuse to start without a value,
+# and a `.env` file next to this one overrides any of them (see .env.example).
+name: deckle
+
+x-app: &app
+  init: true
+  restart: unless-stopped
+  pull_policy: missing
+
+# What the services must agree on, written once.
+x-secrets:
+  commerce-hook: &commerce-hook-secret ${COMMERCE_HOOK_SECRET:-local-only-commerce-hook-secret}
+  cms-hook: &cms-hook-secret ${CMS_HOOK_SECRET:-local-only-cms-hook-secret}
+  commerce-api-key: &commerce-api-key ${COMMERCE_API_KEY:-local-only-commerce-api-key}
+  cms-api-key: &cms-api-key ${CMS_API_KEY:-local-only-cms-api-key}
+
+x-commerce: &commerce
+  <<: *app
+  image: ghcr.io/christianchiavelli/deckle-commerce:${DECKLE_TAG:-latest}
+  build:
+    context: .
+    dockerfile: services/commerce/Dockerfile
+  environment:
+    DATABASE_URL: postgres://commerce:commerce@postgres:5432/commerce
+    PORT: '3000'
+    SUPERADMIN_USERNAME: ${COMMERCE_SUPERADMIN_USERNAME:-superadmin}
+    SUPERADMIN_PASSWORD: ${COMMERCE_SUPERADMIN_PASSWORD:-superadmin}
+    ASSET_URL_PREFIX: http://localhost:8080/assets/
+    GATEWAY_JWKS_URL: http://gateway:4000/internal/jwks.json
+    GATEWAY_HOOK_URL: http://gateway:4000/hooks/commerce
+    HOOK_SECRET: *commerce-hook-secret
+    GATEWAY_API_KEY: *commerce-api-key
+    SMTP_HOST: mailpit
+    SMTP_PORT: '1025'
+    # Vendure reports anonymous usage by default since 3.6.
+    VENDURE_DISABLE_TELEMETRY: 'true'
+  volumes:
+    - commerce-assets:/app/assets
+
+x-cms: &cms
+  <<: *app
+  image: ghcr.io/christianchiavelli/deckle-cms:${DECKLE_TAG:-latest}
+  build:
+    context: .
+    dockerfile: apps/cms/Dockerfile
+  environment:
+    DATABASE_URL: postgres://cms:cms@postgres:5432/cms
+    PORT: '3000'
+    PAYLOAD_SECRET: ${PAYLOAD_SECRET:-local-only-payload-secret}
+    GATEWAY_HOOK_URL: http://gateway:4000/hooks/cms
+    HOOK_SECRET: *cms-hook-secret
+    STORE_PREVIEW_URL: http://localhost:8080/api/preview
+    PREVIEW_SECRET: ${PREVIEW_SECRET:-local-only-preview-secret}
+    GATEWAY_API_KEY: *cms-api-key
+    ADMIN_EMAIL: ${CMS_ADMIN_EMAIL:-editor@deckle.localhost}
+    ADMIN_PASSWORD: ${CMS_ADMIN_PASSWORD:-deckle-editor}
+  volumes:
+    - cms-media:/app/media
+
+# A healthcheck without curl: the Node images have Node, so Node asks.
+x-node-health: &node-health
+  interval: 10s
+  timeout: 5s
+  retries: 12
+  start_period: 30s
+
+services:
+  postgres:
+    image: postgres:18.6-alpine3.24@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      # Postgres 18's image keeps its data under a directory named for the
+      # major version, inside this volume, so a later pg_upgrade can --link.
+      - postgres:/var/lib/postgresql
+      - ./infra/postgres/initdb:/docker-entrypoint-initdb.d:ro
+    ports:
+      # For running a service from the checkout against the stack's database.
+      - 127.0.0.1:5432:5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready --username postgres --dbname postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  mailpit:
+    image: axllent/mailpit:v1.31.4@sha256:b68349e3a014b90c5610bfb26b2ae36f3892d7b8cf25ee140c6c71c98d2fcf48
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8025:8025
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  # Loads The Met's works into Vendure once, then exits; a no-op when they are there.
+  commerce-seed:
+    <<: *commerce
+    restart: 'no'
+    command: ['node', 'dist/seed.js']
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  commerce:
+    <<: *commerce
+    command: ['node', 'dist/index.js']
+    ports:
+      # Vendure's dashboard, at http://localhost:8082/dashboard
+      - 127.0.0.1:8082:3000
+    healthcheck:
+      <<: *node-health
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+    depends_on:
+      commerce-seed:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_healthy
+
+  commerce-worker:
+    <<: *commerce
+    command: ['node', 'dist/index-worker.js']
+    depends_on:
+      commerce-seed:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_healthy
+
+  cms:
+    <<: *cms
+    ports:
+      # Payload's admin, at http://localhost:8081/admin
+      - 127.0.0.1:8081:3000
+    healthcheck:
+      <<: *node-health
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  gateway:
+    <<: *app
+    image: ghcr.io/christianchiavelli/deckle-gateway:${DECKLE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    deploy:
+      # Two replicas for the drop's load test: `GATEWAY_REPLICAS=2 docker compose up --wait`.
+      # Caddy finds every replica through Docker's DNS, so nothing else changes.
+      replicas: ${GATEWAY_REPLICAS:-1}
+    environment:
+      DATABASE_URL: postgres://gateway:gateway@postgres:5432/gateway
+      PORT: '4000'
+      PUBLIC_ORIGIN: http://localhost:8080
+      COMMERCE_SHOP_API_URL: http://commerce:3000/shop-api
+      COMMERCE_ADMIN_API_URL: http://commerce:3000/admin-api
+      COMMERCE_API_KEY: *commerce-api-key
+      CMS_API_URL: http://cms:3000/api
+      CMS_API_KEY: *cms-api-key
+      COMMERCE_HOOK_SECRET: *commerce-hook-secret
+      CMS_HOOK_SECRET: *cms-hook-secret
+      STORE_REVALIDATE_SECRET: ${STORE_REVALIDATE_SECRET:-local-only-revalidate-secret}
+    healthcheck:
+      <<: *node-health
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+    # The gateway calls commerce and the CMS on demand, so it only needs its
+    # database to start; they in turn reach it with webhooks that retry.
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2.11.6-alpine@sha256:d44355d3c2149dc580ce2cac735955d1c08d3d00882c30489c241aa51a5c10d9
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8080:80
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    healthcheck:
+      test: ['CMD', 'wget', '--quiet', '--spider', 'http://127.0.0.1/healthz']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    depends_on:
+      gateway:
+        condition: service_healthy
+      commerce:
+        condition: service_healthy
+
+volumes:
+  postgres:
+  commerce-assets:
+  cms-media:
+  caddy-data:
+  caddy-config:

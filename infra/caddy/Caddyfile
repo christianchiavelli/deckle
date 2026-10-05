@@ -1,0 +1,62 @@
+# The only door the browser knows: the store, its GraphQL API and the product
+# images all come from http://localhost:8080, so there is no CORS to configure
+# and the session cookie is first-party.
+#
+# Plain HTTP on purpose. A passkey needs a secure context, and the browser
+# treats http://localhost as one; HTTPS would mean trusting Caddy's local CA.
+{
+	auto_https off
+	admin off
+}
+
+:80 {
+	encode zstd gzip
+
+	log {
+		output stdout
+		format json
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		# The store asks for passkeys on its own origin, and for nothing else.
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), publickey-credentials-get=(self), publickey-credentials-create=(self)"
+		-Server
+	}
+
+	# For the container's own healthcheck.
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	# Queries over HTTP and subscriptions over WebSocket, which Caddy upgrades by
+	# itself. The gateway's /hooks and /internal routes are never matched here:
+	# only Docker's network reaches them.
+	handle /graphql {
+		reverse_proxy {
+			# Every replica Docker's DNS knows, looked up again every few seconds,
+			# so `GATEWAY_REPLICAS=2` needs no change here.
+			dynamic a {
+				name gateway
+				port 4000
+				refresh 5s
+			}
+			lb_policy round_robin
+			health_uri /health
+			health_interval 5s
+			health_timeout 2s
+			fail_duration 10s
+		}
+	}
+
+	# Product images, resized by Vendure's asset server.
+	handle /assets/* {
+		reverse_proxy commerce:3000
+	}
+
+	# The store is built once its design is approved.
+	handle {
+		respond "The Deckle store is not built yet. The GraphQL API is at /graphql." 503
+	}
+}
