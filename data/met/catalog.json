@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T17:40:34.325Z",
+  "generatedAt": "2026-10-05T18:58:16.365Z",
   "source": "https://collectionapi.metmuseum.org/public/collection/v1",
   "works": [
     {
@@ -38,12 +38,12 @@
         "Geometry"
       ],
       "image": {
-        "file": "336228.jpg",
-        "width": 1622,
-        "height": 2048,
+        "file": "336228.webp",
+        "width": 1901,
+        "height": 2400,
         "originalWidth": 2820,
         "originalHeight": 3561,
-        "sha256": "5d09a7aa95a3dcef491c6a412ee246727f0a10f876a2bcd93e4c813a74795d09",
+        "sha256": "55b7db9ce5bb4b7510f4e64db2ca8580493eda067830069afd860ff20177e95b",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820348.jpg"
       }
     },
@@ -80,12 +80,12 @@
         "Rhinoceros"
       ],
       "image": {
-        "file": "356497.jpg",
-        "width": 2048,
-        "height": 1639,
+        "file": "356497.webp",
+        "width": 2400,
+        "height": 1920,
         "originalWidth": 3811,
         "originalHeight": 3049,
-        "sha256": "5aa7fce362a711b1ce86f78ce35ca16a7cff37fab60eb0acbc005ed7429b6e72",
+        "sha256": "1b27c72ab8f64fc7c03fbce554c6825b9dae6db26410cfbb10f004e2a04fa86f",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DT241450.jpg"
       }
     },
@@ -127,12 +127,12 @@
         "Knights"
       ],
       "image": {
-        "file": "336223.jpg",
+        "file": "336223.webp",
         "width": 1566,
         "height": 2006,
         "originalWidth": 1566,
         "originalHeight": 2006,
-        "sha256": "a0a2bed5292d6120250d44c3965804588d99a798144df50dd491819331fbecfa",
+        "sha256": "5f26c66801c8edac7c23102f2fda6b1786aa38cec801e64025de040b461b1997",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP102226.jpg"
       }
     },
@@ -172,12 +172,12 @@
         "Owls"
       ],
       "image": {
-        "file": "338473.jpg",
-        "width": 1503,
-        "height": 2048,
+        "file": "338473.webp",
+        "width": 1761,
+        "height": 2400,
         "originalWidth": 2689,
         "originalHeight": 3665,
-        "sha256": "8e9734ea23044c6e7743b12810c27023c827c9316b1dd7e1b439ca0279c529dd",
+        "sha256": "4c45199cd51d08af3041211e408efd5c8c30434306288d35a2dfde384484c498",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP816992.jpg"
       }
     },
@@ -214,13 +214,1861 @@
         "Boats"
       ],
       "image": {
-        "file": "45434.jpg",
-        "width": 2048,
-        "height": 1377,
+        "file": "45434.webp",
+        "width": 2400,
+        "height": 1613,
         "originalWidth": 3859,
         "originalHeight": 2594,
-        "sha256": "2d8c4744bf347e8e14a9591e566dbf009ad230f784f3ddde042c54dd8b47f8e5",
+        "sha256": "9f973d8650ce7f2aeb1793bd2e32e217cdead7fcf7300b36fe598759bc75a76e",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg"
+      }
+    },
+    {
+      "objectId": 336142,
+      "slug": "saint-anthony-tormented-by-demons",
+      "title": "Saint Anthony Tormented by Demons",
+      "shortTitle": "Saint Anthony Tormented by Demons",
+      "artist": {
+        "name": "Martin Schongauer",
+        "bio": "German, Colmar ca. 1435/50–1491 Breisach",
+        "nationality": "German",
+        "beginYear": 1435,
+        "endYear": 1491
+      },
+      "date": {
+        "display": "1470–74",
+        "beginYear": 1470,
+        "endYear": 1474
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "sheet: 11 13/16 x 8 9/16 in. (30 x 21.8 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Rogers Fund, 1920",
+      "accessionNumber": "20.5.2",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336142",
+      "tags": [
+        "Suffering",
+        "Saint Anthony",
+        "Demons"
+      ],
+      "image": {
+        "file": "336142.webp",
+        "width": 1829,
+        "height": 2400,
+        "originalWidth": 2736,
+        "originalHeight": 3591,
+        "sha256": "bf3fb0b9fd976ff1e52e24b98e8e837c0a56680832d2bbcbc0a62b024bbc5b99",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP819996.jpg"
+      }
+    },
+    {
+      "objectId": 336194,
+      "slug": "shield-with-greyhound",
+      "title": "Shield with Greyhound Held by Wild Man",
+      "shortTitle": "Shield with Greyhound Held by Wild Man",
+      "artist": {
+        "name": "Martin Schongauer",
+        "bio": "German, Colmar ca. 1435/50–1491 Breisach",
+        "nationality": "German",
+        "beginYear": 1435,
+        "endYear": 1491
+      },
+      "date": {
+        "display": "1470–1491",
+        "beginYear": 1470,
+        "endYear": 1491
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "Sheet: 3 1/16 × 3 1/16 in. (7.8 × 7.8 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1940",
+      "accessionNumber": "40.8.5",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336194",
+      "tags": [
+        "Shields",
+        "Men",
+        "Dogs"
+      ],
+      "image": {
+        "file": "336194.webp",
+        "width": 2400,
+        "height": 2283,
+        "originalWidth": 4000,
+        "originalHeight": 3805,
+        "sha256": "a1390a69329d1e3898bba2b6f1a32ac73a2e35a9c508daff566fd626a4630da3",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-29035-001.jpg"
+      }
+    },
+    {
+      "objectId": 336141,
+      "slug": "the-elephant",
+      "title": "The Elephant",
+      "shortTitle": "The Elephant",
+      "artist": {
+        "name": "Martin Schongauer",
+        "bio": "German, Colmar ca. 1435/50–1491 Breisach",
+        "nationality": "German",
+        "beginYear": 1435,
+        "endYear": 1491
+      },
+      "date": {
+        "display": "1470–1491",
+        "beginYear": 1470,
+        "endYear": 1491
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "Sheet: 4 1/8 × 5 1/2 in. (10.4 × 13.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift from the daughters of Roland L. Redmond, in his memory, 1986",
+      "accessionNumber": "1986.1241.2",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336141",
+      "tags": [
+        "Elephants"
+      ],
+      "image": {
+        "file": "336141.webp",
+        "width": 2290,
+        "height": 1751,
+        "originalWidth": 2290,
+        "originalHeight": 1751,
+        "sha256": "7949b187b62f2466ae93c203eb5b01041bc60f51a7e9f324aa62ef168adab77c",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820024.jpg"
+      }
+    },
+    {
+      "objectId": 391257,
+      "slug": "saint-jerome-in-his-study",
+      "title": "Saint Jerome in His Study",
+      "shortTitle": "Saint Jerome in His Study",
+      "artist": {
+        "name": "Albrecht Dürer",
+        "bio": "German, Nuremberg 1471–1528 Nuremberg",
+        "nationality": "German",
+        "beginYear": 1471,
+        "endYear": 1528
+      },
+      "date": {
+        "display": "1514",
+        "beginYear": 1514,
+        "endYear": 1514
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "Sheet: 13 9/16 × 7 3/8 in. (34.5 × 18.8 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "The George Khuner Collection, Gift of Mrs. George Khuner, 1968",
+      "accessionNumber": "68.793.28",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/391257",
+      "tags": [
+        "Interiors",
+        "Skulls",
+        "Lions",
+        "Saint Jerome"
+      ],
+      "image": {
+        "file": "391257.webp",
+        "width": 1845,
+        "height": 2400,
+        "originalWidth": 2821,
+        "originalHeight": 3669,
+        "sha256": "3ff4258a752606f0ae6a23b6ca5a201a73bc03f49da8a556ec0cc42cd25282fa",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP815747.jpg"
+      }
+    },
+    {
+      "objectId": 364693,
+      "slug": "the-milkmaid",
+      "title": "The Milkmaid",
+      "shortTitle": "The Milkmaid",
+      "artist": {
+        "name": "Lucas van Leyden",
+        "bio": "Netherlandish, Leiden ca. 1494–1533 Leiden",
+        "nationality": "Netherlandish",
+        "beginYear": 1494,
+        "endYear": 1533
+      },
+      "date": {
+        "display": "1510",
+        "beginYear": 1510,
+        "endYear": 1510
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "sheet: 4 11/16 x 6 3/16 in. (11.9 x 15.7 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1926",
+      "accessionNumber": "26.64.4",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/364693",
+      "tags": [
+        "Men",
+        "Women",
+        "Cows"
+      ],
+      "image": {
+        "file": "364693.webp",
+        "width": 2400,
+        "height": 1789,
+        "originalWidth": 2703,
+        "originalHeight": 2015,
+        "sha256": "d118fca0a023a72fdff7f960368091f3135ca8c20090c2c4ba99672d636ee2d8",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP819084.jpg"
+      }
+    },
+    {
+      "objectId": 336235,
+      "slug": "the-witches",
+      "title": "The Witches",
+      "shortTitle": "The Witches",
+      "artist": {
+        "name": "Hans Baldung (called Hans Baldung Grien)",
+        "bio": "German, Schwäbisch Gmünd (?) 1484/85–1545 Strasbourg",
+        "nationality": "German",
+        "beginYear": 1484,
+        "endYear": 1545
+      },
+      "date": {
+        "display": "1510",
+        "beginYear": 1510,
+        "endYear": 1510
+      },
+      "medium": "Chiaroscuro woodcut in two blocks, printed in gray and black; second of two states",
+      "dimensions": [
+        "Sheet: 15 5/16 × 10 5/8 in. (38.9 × 27 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of Felix M. Warburg and his family, 1941",
+      "accessionNumber": "41.1.201",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336235",
+      "tags": [
+        "Animals",
+        "Female Nudes",
+        "Witches"
+      ],
+      "image": {
+        "file": "336235.webp",
+        "width": 1680,
+        "height": 2400,
+        "originalWidth": 2579,
+        "originalHeight": 3685,
+        "sha256": "6fb7c44d9764de0ac484f4346f2269d92e54cfb0026154296b86eb21eebc8476",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP826750.jpg"
+      }
+    },
+    {
+      "objectId": 354611,
+      "slug": "diogenes",
+      "title": "Diogenes, seated before his barrel, reading from a book, a plucked hen standing behind him at right",
+      "shortTitle": "Diogenes",
+      "artist": {
+        "name": "Ugo da Carpi",
+        "bio": "Italian, Carpi ca. 1480–1532 Bologna",
+        "nationality": "Italian",
+        "beginYear": 1480,
+        "endYear": 1532
+      },
+      "date": {
+        "display": "ca. 1527–30",
+        "beginYear": 1522,
+        "endYear": 1532
+      },
+      "medium": "Chiaroscuro woodcut printed from four blocks in gray-green ink",
+      "dimensions": [
+        "Image: 18 11/16 x 13 5/8 in. (47.5 x 34.6 cm)",
+        "Mount: 28 x 22 in. (71.1 x 55.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Purchase, Joseph Pulitzer Bequest, 1917",
+      "accessionNumber": "17.50.1",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/354611",
+      "tags": [
+        "Chickens",
+        "Diogenes",
+        "Reading"
+      ],
+      "image": {
+        "file": "354611.webp",
+        "width": 1766,
+        "height": 2400,
+        "originalWidth": 2739,
+        "originalHeight": 3722,
+        "sha256": "ec80ea815ef1d00518c23a5d0279b0010efaf3e1f30169d10f3480ebbf3d2eed",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DT5032.jpg"
+      }
+    },
+    {
+      "objectId": 632135,
+      "slug": "the-colossus-of-rhodes",
+      "title": "The Colossus of Rhodes, plate 4 from \"The Eight Wonders of the World\"",
+      "shortTitle": "The Colossus of Rhodes",
+      "artist": {
+        "name": "Philips Galle",
+        "bio": "Netherlandish, Haarlem 1537–1612 Antwerp",
+        "nationality": "Netherlandish",
+        "beginYear": 1537,
+        "endYear": 1612
+      },
+      "date": {
+        "display": "1572",
+        "beginYear": 1572,
+        "endYear": 1572
+      },
+      "medium": "Engraving; second state of two",
+      "dimensions": [
+        "Sheet: 8 1/4 × 10 1/16 in. (21 × 25.5 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1953",
+      "accessionNumber": "53.601.20(189)",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/632135",
+      "tags": [],
+      "image": {
+        "file": "632135.webp",
+        "width": 2400,
+        "height": 1972,
+        "originalWidth": 4000,
+        "originalHeight": 3287,
+        "sha256": "972289a09f98c4873130e99ceaff13d58c98040494bbf9511ea258a5b203a49a",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-41692-001.jpg"
+      }
+    },
+    {
+      "objectId": 383482,
+      "slug": "horatio-cocles",
+      "title": "Horatio Coclès Saving Himself by Swimming",
+      "shortTitle": "Horatio Coclès Saving Himself by Swimming",
+      "artist": {
+        "name": "Diana Scultori",
+        "bio": "Italian, Mantua ca. 1535?–after 1588 Rome",
+        "nationality": "Italian",
+        "beginYear": 1535,
+        "endYear": 1588
+      },
+      "date": {
+        "display": "16th century",
+        "beginYear": 1530,
+        "endYear": 1599
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "9 1/8 x 10 1/2 in. (23.2 x 26.7 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Purchase, Joseph Pulitzer Bequest, 1917",
+      "accessionNumber": "17.50.16-124",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/383482",
+      "tags": [
+        "Battles",
+        "Shields",
+        "Swords",
+        "Men"
+      ],
+      "image": {
+        "file": "383482.webp",
+        "width": 2400,
+        "height": 2096,
+        "originalWidth": 4000,
+        "originalHeight": 3493,
+        "sha256": "b5b9ce62b9e1449b096809b9ff46a4d0831899f5148f6f0c64ae061360409527",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP168655.jpg"
+      }
+    },
+    {
+      "objectId": 336753,
+      "slug": "lucretia-and-her-women-spinning",
+      "title": "Lucretia and Her Women Spinning",
+      "shortTitle": "Lucretia and Her Women Spinning",
+      "artist": {
+        "name": "Hendrick Goltzius",
+        "bio": "Netherlandish, Mühlbracht 1558–1617 Haarlem",
+        "nationality": "Netherlandish",
+        "beginYear": 1558,
+        "endYear": 1617
+      },
+      "date": {
+        "display": "1578–79",
+        "beginYear": 1578,
+        "endYear": 1579
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "Sheet (cut to platemark): 8 3/16 × 9 13/16 in. (20.8 × 24.9 cm)",
+        "Image: 7 9/16 × 9 3/4 in. (19.2 × 24.7 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1953",
+      "accessionNumber": "53.601.20(61)",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336753",
+      "tags": [
+        "Men",
+        "Women",
+        "Sewing",
+        "Spinning Wheel"
+      ],
+      "image": {
+        "file": "336753.webp",
+        "width": 2400,
+        "height": 2012,
+        "originalWidth": 4000,
+        "originalHeight": 3353,
+        "sha256": "bfb27f87e6ae750f023107f66c6fef25680abc475165412ba554c4bfbefc0848",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/MM64989.jpg"
+      }
+    },
+    {
+      "objectId": 338919,
+      "slug": "the-feast-of-the-gods",
+      "title": "The Feast of the Gods at the Marriage of Cupid and Psyche",
+      "shortTitle": "The Feast of the Gods at the Marriage of Cupid and Psyche",
+      "artist": {
+        "name": "Hendrick Goltzius",
+        "bio": "Netherlandish, Mühlbracht 1558–1617 Haarlem",
+        "nationality": "Netherlandish",
+        "beginYear": 1558,
+        "endYear": 1617
+      },
+      "date": {
+        "display": "1587",
+        "beginYear": 1587,
+        "endYear": 1587
+      },
+      "medium": "Engraving printed from three plates; second state",
+      "dimensions": [
+        "16 15/16 x 33 5/8in. (43 x 85.4cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Purchase, The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, Martha Feltenstein Gift, and A. Hyatt Mayor Purchase Fund, Marjorie Phelps Starr Bequest, 2000",
+      "accessionNumber": "2000.113",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/338919",
+      "tags": [
+        "Cupid",
+        "Psyche",
+        "Satyrs"
+      ],
+      "image": {
+        "file": "338919.webp",
+        "width": 2400,
+        "height": 1232,
+        "originalWidth": 4000,
+        "originalHeight": 2054,
+        "sha256": "af95c37a1382d02128db307154ed4d2c1d549a20a56befe66e284976182a7211",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP102206.jpg"
+      }
+    },
+    {
+      "objectId": 387971,
+      "slug": "a-woman-spinning",
+      "title": "A Woman Spinning, Plate 4 from \"Five Feminine Occupations\"",
+      "shortTitle": "A Woman Spinning",
+      "artist": {
+        "name": "Geertruydt Roghman",
+        "bio": "Dutch, Amsterdam 1625–1651/57 Amsterdam (?)",
+        "nationality": "Dutch",
+        "beginYear": 1625,
+        "endYear": 1657
+      },
+      "date": {
+        "display": "ca. 1640–57",
+        "beginYear": 1635,
+        "endYear": 1657
+      },
+      "medium": "Engraving",
+      "dimensions": [
+        "Plate: 8 3/16 x 6 1/2 in. (20.8 x 16.5 cm)",
+        "Sheet: 11 5/16 x 8 5/16 in. (28.7 x 21.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1956",
+      "accessionNumber": "56.550.5",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/387971",
+      "tags": [
+        "Children",
+        "Women",
+        "Working",
+        "Spinning Wheel"
+      ],
+      "image": {
+        "file": "387971.webp",
+        "width": 1780,
+        "height": 2400,
+        "originalWidth": 2967,
+        "originalHeight": 4000,
+        "sha256": "859dedb379c84ef0d9c9dea5c103a207516fa506a2ef3b8f3ab78ca1b671734c",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-12295-001.jpg"
+      }
+    },
+    {
+      "objectId": 368058,
+      "slug": "self-portrait-leaning-on-a-stone-sill",
+      "title": "Self-Portrait Leaning on a Stone Sill",
+      "shortTitle": "Self-Portrait Leaning on a Stone Sill",
+      "artist": {
+        "name": "Rembrandt (Rembrandt van Rijn)",
+        "bio": "Dutch, Leiden 1606–1669 Amsterdam",
+        "nationality": "Dutch",
+        "beginYear": 1606,
+        "endYear": 1669
+      },
+      "date": {
+        "display": "1639",
+        "beginYear": 1639,
+        "endYear": 1639
+      },
+      "medium": "Etching, drypoint and burin; second state of two",
+      "dimensions": [
+        "Plate: 7 7/8 x 6 5/16 in. (20 x 16 cm)",
+        "Sheet: 8 5/16 x 6 5/8 in. (21.1 x 16.8 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "accessionNumber": "29.107.25",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/368058",
+      "tags": [
+        "Men",
+        "Self-portraits"
+      ],
+      "image": {
+        "file": "368058.webp",
+        "width": 1898,
+        "height": 2400,
+        "originalWidth": 2676,
+        "originalHeight": 3383,
+        "sha256": "e06c643a20d5202703f2c2dd99775c80a0788af4cb84e6f45f728219cfd15139",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP147767.jpg"
+      }
+    },
+    {
+      "objectId": 354633,
+      "slug": "the-three-trees",
+      "title": "The Three Trees",
+      "shortTitle": "The Three Trees",
+      "artist": {
+        "name": "Rembrandt (Rembrandt van Rijn)",
+        "bio": "Dutch, Leiden 1606–1669 Amsterdam",
+        "nationality": "Dutch",
+        "beginYear": 1606,
+        "endYear": 1669
+      },
+      "date": {
+        "display": "1643",
+        "beginYear": 1643,
+        "endYear": 1643
+      },
+      "medium": "Etching, engraving and drypoint",
+      "dimensions": [
+        "plate: 8 3/8 x 10 15/16 in. (21.3 x 27.8 cm)",
+        "sheet: 8 3/8 x 11 1/8 in. (21.3 x 28.3 cm)",
+        "mount: 14 1/4 x 19 1/4 in. (36.2 x 48.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "accessionNumber": "29.107.31",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/354633",
+      "tags": [
+        "Landscapes",
+        "Trees"
+      ],
+      "image": {
+        "file": "354633.webp",
+        "width": 2400,
+        "height": 1842,
+        "originalWidth": 3730,
+        "originalHeight": 2863,
+        "sha256": "3f7b7d940201ff38518da05fb8360858b80b609d11a0c99aed59bc6cdaae6416",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP814596.jpg"
+      }
+    },
+    {
+      "objectId": 392608,
+      "slug": "the-laughing-audience",
+      "title": "The Laughing Audience",
+      "shortTitle": "The Laughing Audience",
+      "artist": {
+        "name": "William Hogarth",
+        "bio": "British, London 1697–1764 London",
+        "nationality": "British",
+        "beginYear": 1697,
+        "endYear": 1764
+      },
+      "date": {
+        "display": "December 1733",
+        "beginYear": 1733,
+        "endYear": 1733
+      },
+      "medium": "Etching; fourth state four",
+      "dimensions": [
+        "plate: 7 1/2 x 6 13/16 in. (19 x 17.3 cm)",
+        "sheet: 7 15/16 x 7 1/8 in. (20.1 x 18.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of Sarah Lazarus, 1891",
+      "accessionNumber": "91.1.37",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/392608",
+      "tags": [
+        "Men",
+        "Women",
+        "Spectators"
+      ],
+      "image": {
+        "file": "392608.webp",
+        "width": 2146,
+        "height": 2400,
+        "originalWidth": 3048,
+        "originalHeight": 3408,
+        "sha256": "5b23bee8dae81226bfef3c9b059b2c2c1f466562b6214b038399f0b1705e9580",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP824977.jpg"
+      }
+    },
+    {
+      "objectId": 335285,
+      "slug": "portico-with-an-open-lantern",
+      "title": "A three-arched portico with an open lantern hanging at center, a triumphal arch and ruins of a classical temple in the background, from \"Views\" (Vedute altre prese da i luoghi altre ideate da Antonio Canal)",
+      "shortTitle": "A Three-Arched Portico with an Open Lantern",
+      "artist": {
+        "name": "Canaletto (Giovanni Antonio Canal)",
+        "bio": "Italian, Venice 1697–1768 Venice",
+        "nationality": "Italian",
+        "beginYear": 1697,
+        "endYear": 1768
+      },
+      "date": {
+        "display": "1735–46",
+        "beginYear": 1735,
+        "endYear": 1746
+      },
+      "medium": "Etching; second state of three",
+      "dimensions": [
+        "Plate: 11 13/16 × 16 15/16 in. (30 × 43 cm)",
+        "Sheet: 17 9/16 × 23 9/16 in. (44.6 × 59.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Rogers Fund, 1918",
+      "accessionNumber": "18.65.1(10)",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/335285",
+      "tags": [
+        "Arches",
+        "Buildings",
+        "Ruins"
+      ],
+      "image": {
+        "file": "335285.webp",
+        "width": 2400,
+        "height": 1816,
+        "originalWidth": 3911,
+        "originalHeight": 2959,
+        "sha256": "782569ab70a9b4f41b6e05bd69a2d16aec1ca6b4343b393be95d8d54676ee7d4",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP232847.jpg"
+      }
+    },
+    {
+      "objectId": 337060,
+      "slug": "the-drawbridge",
+      "title": "The Drawbridge, from \"Carceri d'invenzione\" (Imaginary Prisons)",
+      "shortTitle": "The Drawbridge",
+      "artist": {
+        "name": "Giovanni Battista Piranesi",
+        "bio": "Italian, Mogliano Veneto 1720–1778 Rome",
+        "nationality": "Italian",
+        "beginYear": 1720,
+        "endYear": 1778
+      },
+      "date": {
+        "display": "ca. 1749–50",
+        "beginYear": 1744,
+        "endYear": 1755
+      },
+      "medium": "Etching, engraving, scratching; first state of six (Robison)",
+      "dimensions": [
+        "plate: 21 5/8 x 16 1/8 in. (54.9 x 40.9 cm)",
+        "sheet: 24 15/16 x 19 7/16 in. (63.4 x 49.3 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1937",
+      "accessionNumber": "37.45.3(23)",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/337060",
+      "tags": [
+        "Prisons",
+        "Stairs",
+        "Bridges"
+      ],
+      "image": {
+        "file": "337060.webp",
+        "width": 1816,
+        "height": 2400,
+        "originalWidth": 2847,
+        "originalHeight": 3762,
+        "sha256": "1ea370a6105210b2c358a24c4d135268a7c8cbf23cd90d7cf1f72f02dd726105",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP828200.jpg"
+      }
+    },
+    {
+      "objectId": 338658,
+      "slug": "girl-and-pigs",
+      "title": "Girl and Pigs",
+      "shortTitle": "Girl and Pigs",
+      "artist": {
+        "name": "Richard Earlom",
+        "bio": "British, London 1743–1822 London",
+        "nationality": "British",
+        "beginYear": 1743,
+        "endYear": 1822
+      },
+      "date": {
+        "display": "1783",
+        "beginYear": 1783,
+        "endYear": 1783
+      },
+      "medium": "Mezzotint",
+      "dimensions": [
+        "15-13/16 x 18-1/2 in.  (40.2 x 47.0 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of Leo Steinberg, 1999",
+      "accessionNumber": "1999.509.5",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/338658",
+      "tags": [
+        "Girls",
+        "Pigs"
+      ],
+      "image": {
+        "file": "338658.webp",
+        "width": 2400,
+        "height": 2024,
+        "originalWidth": 3765,
+        "originalHeight": 3175,
+        "sha256": "3dffae1e255e5e1df13b7330a344e4b8f11d33ff17c0d4e84c5ea02c764d2cbf",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820211.jpg"
+      }
+    },
+    {
+      "objectId": 395106,
+      "slug": "the-blue-egyptian-water-lily",
+      "title": "The Blue Egyptian Water Lily, from \"The Temple of Flora, or Garden of Nature\"",
+      "shortTitle": "The Blue Egyptian Water Lily",
+      "artist": {
+        "name": "Joseph Constantine Stadler",
+        "bio": "German, active London, 1780–1822",
+        "nationality": "German",
+        "beginYear": 1780,
+        "endYear": 1822
+      },
+      "date": {
+        "display": "September 11, 1804",
+        "beginYear": 1804,
+        "endYear": 1804
+      },
+      "medium": "Aquatint and stipple engraving printed in color with hand coloring",
+      "dimensions": [
+        "Image: 17 1/8 x 14 in. (43.5 x 35.6 cm)",
+        "Plate: 20 1/2 × 19 5/8 in. (52 × 49.8 cm)",
+        "Sheet: 22 7/16 × 17 13/16 in. (57 × 45.2 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of Joyce Bullock Darrell, 2014",
+      "accessionNumber": "2014.596.2",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/395106",
+      "tags": [
+        "Buildings",
+        "Leaves",
+        "Trees",
+        "Water Lilies"
+      ],
+      "image": {
+        "file": "395106.webp",
+        "width": 1912,
+        "height": 2400,
+        "originalWidth": 3004,
+        "originalHeight": 3770,
+        "sha256": "02affd42e9f943a137ff03ee2aca6c6f4c11980f9cc1d8ae3c5948caeb229de0",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP861134.jpg"
+      }
+    },
+    {
+      "objectId": 382947,
+      "slug": "calm",
+      "title": "Calm, part IX, plate 44 from \"Liber Studiorum\"",
+      "shortTitle": "Calm",
+      "artist": {
+        "name": "Joseph Mallord William Turner",
+        "bio": "British, London 1775–1851 London",
+        "nationality": "British",
+        "beginYear": 1775,
+        "endYear": 1851
+      },
+      "date": {
+        "display": "April 23, 1812",
+        "beginYear": 1812,
+        "endYear": 1812
+      },
+      "medium": "Etching, aquatint and mezzotint; third state of seven (Finberg)",
+      "dimensions": [
+        "plate: 7 x 10 9/16 in. (17.8 x 26.8 cm)",
+        "sheet: 8 1/2 x 12 in. (21.6 x 30.5 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1928",
+      "accessionNumber": "28.97.44",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/382947",
+      "tags": [
+        "Boats"
+      ],
+      "image": {
+        "file": "382947.webp",
+        "width": 2400,
+        "height": 1735,
+        "originalWidth": 2640,
+        "originalHeight": 1909,
+        "sha256": "165a596bea2174eb7cdf59d48c55954545ea4c1c6cc211dd178a5f79e4e9cabd",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP821477.jpg"
+      }
+    },
+    {
+      "objectId": 334002,
+      "slug": "seated-giant",
+      "title": "Seated Giant",
+      "shortTitle": "Seated Giant",
+      "artist": {
+        "name": "Goya (Francisco de Goya y Lucientes)",
+        "bio": "Spanish, Fuendetodos 1746–1828 Bordeaux",
+        "nationality": "Spanish",
+        "beginYear": 1746,
+        "endYear": 1828
+      },
+      "date": {
+        "display": "by 1818 (possibly 1814–18)",
+        "beginYear": 1818,
+        "endYear": 1818
+      },
+      "medium": "Burnished aquatint, scaper, roulette, lavis (along the top of the landscape and within the landscape)",
+      "dimensions": [
+        "Plate: 11 3/16 × 8 3/16 in. (28.4 × 20.8 cm)",
+        "Framed: 21 3/4 × 19 in. (55.2 × 48.3 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1935",
+      "accessionNumber": "35.42",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/334002",
+      "tags": [
+        "Men",
+        "Male Nudes"
+      ],
+      "image": {
+        "file": "334002.webp",
+        "width": 1682,
+        "height": 2400,
+        "originalWidth": 2534,
+        "originalHeight": 3616,
+        "sha256": "7a6388df8a3e02296452eaf67a090025e6d008ae3eb865e5b831302fc76c4abb",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP819677.jpg"
+      }
+    },
+    {
+      "objectId": 373640,
+      "slug": "belshazzars-feast",
+      "title": "Belshazzar's Feast (First Plate)",
+      "shortTitle": "Belshazzar's Feast (First Plate)",
+      "artist": {
+        "name": "John Martin",
+        "bio": "British, Haydon Bridge, Northumberland 1789–1854 Douglas, Isle of Man",
+        "nationality": "British",
+        "beginYear": 1789,
+        "endYear": 1854
+      },
+      "date": {
+        "display": "June 1, 1826",
+        "beginYear": 1826,
+        "endYear": 1826
+      },
+      "medium": "Mezzotint with etching; proof",
+      "dimensions": [
+        "Image: 18 1/2 x 28 5/16 in. (47 x 71.9 cm)",
+        "Plate: 23 1/2 x 32 in. (59.7 x 81.3 cm)",
+        "Sheet: 24 1/2 x 33 1/16 in. (62.2 x 84 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949",
+      "accessionNumber": "49.40.262",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/373640",
+      "tags": [],
+      "image": {
+        "file": "373640.webp",
+        "width": 2400,
+        "height": 1820,
+        "originalWidth": 4000,
+        "originalHeight": 3033,
+        "sha256": "e2d26726d239f2a01c07907a589a047483887cca0c7ea4eef87f7b6df329d7fd",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP322045.jpg"
+      }
+    },
+    {
+      "objectId": 415909,
+      "slug": "mill-river-scenery",
+      "title": "Mill River Scenery",
+      "shortTitle": "Mill River Scenery",
+      "artist": {
+        "name": "Frances Flora Bond Palmer",
+        "bio": "American (born England), Leicester 1812–1876 New York",
+        "nationality": "American, born England",
+        "beginYear": 1812,
+        "endYear": 1876
+      },
+      "date": {
+        "display": "1857–68",
+        "beginYear": 1857,
+        "endYear": 1868
+      },
+      "medium": "Hand-colored lithograph",
+      "dimensions": [
+        "Image: 17 3/4 × 14 3/8 in. (45.1 × 36.5 cm)",
+        "Image with text: 18 1/2 × 14 3/8 in. (47 × 36.5 cm)",
+        "Sheet: 19 11/16 × 16 7/8 in. (50 × 42.8 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of A. S. Colgate, 1951",
+      "accessionNumber": "51.567.63",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/415909",
+      "tags": [
+        "Watermills"
+      ],
+      "image": {
+        "file": "415909.webp",
+        "width": 2074,
+        "height": 2400,
+        "originalWidth": 3335,
+        "originalHeight": 3859,
+        "sha256": "e970726747a31eeb74589da2ed19578f242b67b13939b56b36558d5cd1f50751",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-39489-001.jpg"
+      }
+    },
+    {
+      "objectId": 372701,
+      "slug": "black-lion-wharf",
+      "title": "Black Lion Wharf",
+      "shortTitle": "Black Lion Wharf",
+      "artist": {
+        "name": "James McNeill Whistler",
+        "bio": "American, Lowell, Massachusetts 1834–1903 London",
+        "nationality": "American",
+        "beginYear": 1834,
+        "endYear": 1903
+      },
+      "date": {
+        "display": "1859",
+        "beginYear": 1859,
+        "endYear": 1859
+      },
+      "medium": "Etching; fourth state of four (Glasgow), printed in black ink on fine off-white laid Japan paper",
+      "dimensions": [
+        "plate: 6 x 8 15/16 in. (15.2 x 22.7 cm)",
+        "sheet: 7 5/8 x 10 7/16 in. (19.4 x 26.5 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Gift of Edna H. Sachs, 1964",
+      "accessionNumber": "64.695.11",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/372701",
+      "tags": [
+        "Buildings",
+        "Men",
+        "Boats"
+      ],
+      "image": {
+        "file": "372701.webp",
+        "width": 2400,
+        "height": 1622,
+        "originalWidth": 3802,
+        "originalHeight": 2569,
+        "sha256": "375a306dd66070342946a6fe81e1563e11f63913c7907e9f022ea19c00293130",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP813304.jpg"
+      }
+    },
+    {
+      "objectId": 337823,
+      "slug": "the-drama-of-the-sea-brittany",
+      "title": "The Drama of the Sea, Brittany, from the \"Volpini Suite: Dessins lithographiques\"",
+      "shortTitle": "The Drama of the Sea, Brittany",
+      "artist": {
+        "name": "Paul Gauguin",
+        "bio": "French, Paris 1848–1903 Atuona, Hiva Oa, Marquesas Islands",
+        "nationality": "French",
+        "beginYear": 1848,
+        "endYear": 1903
+      },
+      "date": {
+        "display": "1889",
+        "beginYear": 1889,
+        "endYear": 1889
+      },
+      "medium": "Zincograph on chrome yellow wove paper; first edition",
+      "dimensions": [
+        "6 9/16 x 8 7/8 in.  (16.7 x 22.5 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Rogers Fund, 1922",
+      "accessionNumber": "22.82.2(6)",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/337823",
+      "tags": [
+        "Women"
+      ],
+      "image": {
+        "file": "337823.webp",
+        "width": 1810,
+        "height": 1532,
+        "originalWidth": 1810,
+        "originalHeight": 1532,
+        "sha256": "a233a90e0413183569fed3caa8931f02212b54409de542f607573fb230ed6d73",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DR349.jpg"
+      }
+    },
+    {
+      "objectId": 336670,
+      "slug": "the-drawing-lesson",
+      "title": "The Drawing Lesson (Berthe Morisot and her Daughter)",
+      "shortTitle": "The Drawing Lesson (Berthe Morisot and her Daughter)",
+      "artist": {
+        "name": "Berthe Morisot",
+        "bio": "French, Bourges 1841–1895 Paris",
+        "nationality": "French",
+        "beginYear": 1841,
+        "endYear": 1895
+      },
+      "date": {
+        "display": "1889",
+        "beginYear": 1889,
+        "endYear": 1889
+      },
+      "medium": "Drypoint on wove paper",
+      "dimensions": [
+        "sheet: 14 1/16 x 10 15/16 in. (35.7 x 27.8 cm)",
+        "plate: 7 1/2 x 5 1/2 in. (19 x 13.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Purchase, Rogers Fund and Jacob H. Schiff Bequest, 1922",
+      "accessionNumber": "22.60.93",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336670",
+      "tags": [
+        "Self-portraits",
+        "Women"
+      ],
+      "image": {
+        "file": "336670.webp",
+        "width": 1907,
+        "height": 2400,
+        "originalWidth": 2877,
+        "originalHeight": 3621,
+        "sha256": "5f6ffb0edad3a346cc064a3fb2cccbc5f98a6a812759daff033824ef745f89c9",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP884481.jpg"
+      }
+    },
+    {
+      "objectId": 356778,
+      "slug": "eyes-closed",
+      "title": "Eyes Closed",
+      "shortTitle": "Eyes Closed",
+      "artist": {
+        "name": "Odilon Redon",
+        "bio": "French, Bordeaux 1840–1916 Paris",
+        "nationality": "French",
+        "beginYear": 1840,
+        "endYear": 1916
+      },
+      "date": {
+        "display": "1890",
+        "beginYear": 1890,
+        "endYear": 1890
+      },
+      "medium": "Lithograph",
+      "dimensions": [
+        "image: 8 9/16 x 7 1/4 in. (21.7 x 18.4 cm)",
+        "sheet: 14 x 10 13/16 in. (35.6 x 27.5 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1925",
+      "accessionNumber": "25.80",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/356778",
+      "tags": [
+        "Eyes",
+        "Heads"
+      ],
+      "image": {
+        "file": "356778.webp",
+        "width": 1965,
+        "height": 2400,
+        "originalWidth": 2830,
+        "originalHeight": 3457,
+        "sha256": "55d348a847cd2b6d1e6f3a8667793cf4231cdb2126752fc79d67ff7a7ed03960",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP824897.jpg"
+      }
+    },
+    {
+      "objectId": 333848,
+      "slug": "at-the-curtain",
+      "title": "At the Curtain (Au Rideau), from \"L'Estampe Originale\"",
+      "shortTitle": "At the Curtain",
+      "artist": {
+        "name": "Henri de Toulouse-Lautrec",
+        "bio": "French, Albi 1864–1901 Saint-André-du-Bois",
+        "nationality": "French",
+        "beginYear": 1864,
+        "endYear": 1901
+      },
+      "date": {
+        "display": "1895",
+        "beginYear": 1895,
+        "endYear": 1895
+      },
+      "medium": "Crayon, brush, and spatter lithograph printed in two colors; only state",
+      "dimensions": [
+        "Image: 23 1/8 × 43 13/16 in. (58.7 × 111.3 cm)",
+        "Sheet: 23 3/4 × 33 9/16 in. (60.3 × 85.2 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Rogers Fund, 1922",
+      "accessionNumber": "22.82.1-81",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/333848",
+      "tags": [
+        "Theatre",
+        "Men",
+        "Women",
+        "Elephants"
+      ],
+      "image": {
+        "file": "333848.webp",
+        "width": 2400,
+        "height": 1712,
+        "originalWidth": 3913,
+        "originalHeight": 2791,
+        "sha256": "e939c752853d067113c84f19693be869732a52042672c59ed9fb2d5ec382edec",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP337818.jpg"
+      }
+    },
+    {
+      "objectId": 333898,
+      "slug": "the-jockey",
+      "title": "The Jockey",
+      "shortTitle": "The Jockey",
+      "artist": {
+        "name": "Henri de Toulouse-Lautrec",
+        "bio": "French, Albi 1864–1901 Saint-André-du-Bois",
+        "nationality": "French",
+        "beginYear": 1864,
+        "endYear": 1901
+      },
+      "date": {
+        "display": "1899",
+        "beginYear": 1899,
+        "endYear": 1899
+      },
+      "medium": "Lithograph on China paper",
+      "dimensions": [
+        "20-1/16 x 14-3/16 in.  (51.0 x 36.0 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1928",
+      "accessionNumber": "28.81.2",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/333898",
+      "tags": [
+        "Horses",
+        "Jockeys"
+      ],
+      "image": {
+        "file": "333898.webp",
+        "width": 1686,
+        "height": 2400,
+        "originalWidth": 2637,
+        "originalHeight": 3753,
+        "sha256": "531366f59e3ae39b12e99da504ad61ad62931160983b671e455e901200942414",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP835936.jpg"
+      }
+    },
+    {
+      "objectId": 36633,
+      "slug": "two-young-women-on-a-verandah",
+      "title": "Two Young Women on a Verandah",
+      "shortTitle": "Two Young Women on a Verandah",
+      "artist": {
+        "name": "Suzuki Harunobu",
+        "bio": "Japanese, 1725–1770",
+        "nationality": "Japanese",
+        "beginYear": 1725,
+        "endYear": 1770
+      },
+      "date": {
+        "display": "ca.1766–70",
+        "beginYear": 1766,
+        "endYear": 1770
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "11 1/4 x 8 7/16 in. (28.6 x 21.4 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Rogers Fund, 1914",
+      "accessionNumber": "JP154",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/36633",
+      "tags": [
+        "Women",
+        "Trees"
+      ],
+      "image": {
+        "file": "36633.webp",
+        "width": 2103,
+        "height": 2400,
+        "originalWidth": 3505,
+        "originalHeight": 4000,
+        "sha256": "e50f67c6d3fff367a2c4388137421e22e3a59bb90a5b8118618ff27e04ffd071",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP114902.jpg"
+      }
+    },
+    {
+      "objectId": 36636,
+      "slug": "a-girl-as-a-komuso",
+      "title": "A Girl as a Komuso",
+      "shortTitle": "A Girl as a Komuso",
+      "artist": {
+        "name": "Suzuki Harunobu",
+        "bio": "Japanese, 1725–1770",
+        "nationality": "Japanese",
+        "beginYear": 1725,
+        "endYear": 1770
+      },
+      "date": {
+        "display": "ca. 1768",
+        "beginYear": 1758,
+        "endYear": 1778
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "25 1/2 x 4 3/4 in. (64.8 x 12.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Rogers Fund, 1914",
+      "accessionNumber": "JP157",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/36636",
+      "tags": [
+        "Girls"
+      ],
+      "image": {
+        "file": "36636.webp",
+        "width": 488,
+        "height": 2400,
+        "originalWidth": 814,
+        "originalHeight": 4000,
+        "sha256": "66b77f17941a0ec64e6851056e8c921610ba31eb12b0ad61bf5157fcf0a1e601",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP144637.jpg"
+      }
+    },
+    {
+      "objectId": 36607,
+      "slug": "merrymakers-at-shinagawa",
+      "title": "A Party of Merrymakers in a Tea-house at Shinagawa",
+      "shortTitle": "A Party of Merrymakers in a Tea-house at Shinagawa",
+      "artist": {
+        "name": "Torii Kiyonaga",
+        "bio": "Japanese, 1752–1815",
+        "nationality": "Japanese",
+        "beginYear": 1752,
+        "endYear": 1815
+      },
+      "date": {
+        "display": "ca. 1783",
+        "beginYear": 1773,
+        "endYear": 1793
+      },
+      "medium": "Diptych of woodblock prints; ink and color on paper",
+      "dimensions": [
+        "15 x 20 3/8 in. (38.1 x 51.8 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Rogers Fund, 1914",
+      "accessionNumber": "JP128",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/36607",
+      "tags": [
+        "Women",
+        "Musicians",
+        "Boats",
+        "Eating",
+        "Tea Houses"
+      ],
+      "image": {
+        "file": "36607.webp",
+        "width": 2400,
+        "height": 1785,
+        "originalWidth": 3916,
+        "originalHeight": 2913,
+        "sha256": "9bae7f8b70670163320aa744a519d5f47cd2ec23d5341619ea35566abd789eb5",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP144654.jpg"
+      }
+    },
+    {
+      "objectId": 36673,
+      "slug": "ichikawa-omezo-i-as-yakko-ippei",
+      "title": "Ichikawa Omezō I in the Role of Yakko Ippei from the Play \"Koinyōbō somewake tazuna\"",
+      "shortTitle": "Ichikawa Omezō I in the Role of Yakko Ippei",
+      "artist": {
+        "name": "Tōshūsai Sharaku",
+        "bio": "Japanese, active 1794–95",
+        "nationality": "Japanese",
+        "beginYear": 1794,
+        "endYear": 1795
+      },
+      "date": {
+        "display": "1794",
+        "beginYear": 1792,
+        "endYear": 1796
+      },
+      "medium": "Woodblock print; ink, color, white mica on paper",
+      "dimensions": [
+        "14 7/8 x 9 7/8 in. (37.8 x 25.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Rogers Fund, 1914",
+      "accessionNumber": "JP196",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/36673",
+      "tags": [
+        "Swords",
+        "Men",
+        "Actors"
+      ],
+      "image": {
+        "file": "36673.webp",
+        "width": 1614,
+        "height": 2400,
+        "originalWidth": 2590,
+        "originalHeight": 3852,
+        "sha256": "638e7ce7c2c91e48211f7d1124955832321555aa1a8185027bf29a6034c1091a",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130177.jpg"
+      }
+    },
+    {
+      "objectId": 36624,
+      "slug": "takashima-ohisa",
+      "title": "Takashima Ohisa Using Two Mirrors to Observe Her Coiffure",
+      "shortTitle": "Takashima Ohisa Using Two Mirrors to Observe Her Coiffure",
+      "artist": {
+        "name": "Kitagawa Utamaro",
+        "bio": "Japanese, ca. 1754–1806",
+        "nationality": "Japanese",
+        "beginYear": 1754,
+        "endYear": 1806
+      },
+      "date": {
+        "display": "ca. 1795",
+        "beginYear": 1785,
+        "endYear": 1805
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "13 3/4 x 9 7/8 in. (34.9 x 25.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Rogers Fund, 1914",
+      "accessionNumber": "JP145",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/36624",
+      "tags": [
+        "Women",
+        "Mirrors"
+      ],
+      "image": {
+        "file": "36624.webp",
+        "width": 1744,
+        "height": 2400,
+        "originalWidth": 2796,
+        "originalHeight": 3848,
+        "sha256": "442a8be84790f8a8d1ea7edb90eab54035e9efc2c1fc2c1fe5533ab654f6e883",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP135639.jpg"
+      }
+    },
+    {
+      "objectId": 57007,
+      "slug": "south-wind-clear-sky",
+      "title": "South Wind, Clear Sky (Gaifū kaisei), also known as Red Fuji, from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+      "shortTitle": "South Wind, Clear Sky",
+      "artist": {
+        "name": "Katsushika Hokusai",
+        "bio": "Japanese, Tokyo (Edo) 1760–1849 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1760,
+        "endYear": 1849
+      },
+      "date": {
+        "display": "ca. 1830–32",
+        "beginYear": 1820,
+        "endYear": 1842
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "Oban nishiki-e triptych: 10 x 15 in. (25.4 x 38.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
+      "accessionNumber": "JP2568",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/57007",
+      "tags": [
+        "Mountains"
+      ],
+      "image": {
+        "file": "57007.webp",
+        "width": 2400,
+        "height": 1654,
+        "originalWidth": 3979,
+        "originalHeight": 2743,
+        "sha256": "2553a3b2fa4cac89f9e9c89fac1a4f62c0869d3151c1b281507716b8df78b2ec",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP140971.jpg"
+      }
+    },
+    {
+      "objectId": 56229,
+      "slug": "storm-below-mount-fuji",
+      "title": "Storm below Mount Fuji (Sanka no haku u), from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+      "shortTitle": "Storm below Mount Fuji",
+      "artist": {
+        "name": "Katsushika Hokusai",
+        "bio": "Japanese, Tokyo (Edo) 1760–1849 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1760,
+        "endYear": 1849
+      },
+      "date": {
+        "display": "ca. 1830–32",
+        "beginYear": 1830,
+        "endYear": 1832
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "10 x 14 3/4 in. (25.4 x 37.5 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Henry L. Phillips Collection, Bequest of Henry L. Phillips, 1939",
+      "accessionNumber": "JP2961",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/56229",
+      "tags": [
+        "Volcanoes"
+      ],
+      "image": {
+        "file": "56229.webp",
+        "width": 2400,
+        "height": 1639,
+        "originalWidth": 3859,
+        "originalHeight": 2636,
+        "sha256": "c605fd153e1a907f963bda5b106e0b20ababa97fc706fdc47a6c028ab331586c",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP141054.jpg"
+      }
+    },
+    {
+      "objectId": 36493,
+      "slug": "ejiri-in-suruga-province",
+      "title": "Ejiri in Suruga Province (Sunshū Ejiri), from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+      "shortTitle": "Ejiri in Suruga Province",
+      "artist": {
+        "name": "Katsushika Hokusai",
+        "bio": "Japanese, Tokyo (Edo) 1760–1849 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1760,
+        "endYear": 1849
+      },
+      "date": {
+        "display": "ca. 1830–32",
+        "beginYear": 1820,
+        "endYear": 1842
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "10 x 14 3/5 in. (25.4 x 37.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Rogers Fund, 1914",
+      "accessionNumber": "JP12",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/36493",
+      "tags": [
+        "Human Figures",
+        "Landscapes",
+        "Working"
+      ],
+      "image": {
+        "file": "36493.webp",
+        "width": 2400,
+        "height": 1675,
+        "originalWidth": 4000,
+        "originalHeight": 2791,
+        "sha256": "fbdfd2fa8ac73acae24f0a8450cbe116dd49076b83d8b08661131f2927847084",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP140977.jpg"
+      }
+    },
+    {
+      "objectId": 56139,
+      "slug": "kirifuri-waterfall",
+      "title": "Kirifuri Waterfall at Kurokami Mountain in Shimotsuke (Shimotsuke Kurokamiyama Kirifuri no taki), from the series A Tour of Waterfalls in Various Provinces (Shokoku taki meguri)",
+      "shortTitle": "Kirifuri Waterfall at Kurokami Mountain in Shimotsuke",
+      "artist": {
+        "name": "Katsushika Hokusai",
+        "bio": "Japanese, Tokyo (Edo) 1760–1849 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1760,
+        "endYear": 1849
+      },
+      "date": {
+        "display": "ca. 1832",
+        "beginYear": 1827,
+        "endYear": 1837
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "14 5/8 x 10 5/16 in. (37.1 x 26.2 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Henry L. Phillips Collection, Bequest of Henry L. Phillips, 1939",
+      "accessionNumber": "JP2924",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/56139",
+      "tags": [
+        "Human Figures",
+        "Waterfalls",
+        "Mountains",
+        "Trees"
+      ],
+      "image": {
+        "file": "56139.webp",
+        "width": 1696,
+        "height": 2400,
+        "originalWidth": 2716,
+        "originalHeight": 3844,
+        "sha256": "2d417ef6dc3e6de06b991eb5b6bb39ae925e4fd20284d95048c2d6608763be61",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP141256.jpg"
+      }
+    },
+    {
+      "objectId": 56915,
+      "slug": "evening-snow-at-kanbara",
+      "title": "Evening Snow at Kanbara, from the series \"Fifty-three Stations of the Tōkaidō\"",
+      "shortTitle": "Evening Snow at Kanbara",
+      "artist": {
+        "name": "Utagawa Hiroshige",
+        "bio": "Japanese, Tokyo (Edo) 1797–1858 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1797,
+        "endYear": 1858
+      },
+      "date": {
+        "display": "ca. 1833–34",
+        "beginYear": 1823,
+        "endYear": 1844
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "8 7/8 x 13 3/4 in. (22.5 x 34.9 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
+      "accessionNumber": "JP2492",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/56915",
+      "tags": [
+        "Houses",
+        "Mountains",
+        "Snow"
+      ],
+      "image": {
+        "file": "56915.webp",
+        "width": 2400,
+        "height": 1596,
+        "originalWidth": 3926,
+        "originalHeight": 2610,
+        "sha256": "89ae9562a2a408ce8901f44bd0c7dd2c9b62fb4a89571fe04cf05e0b9ddc5478",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP109333.jpg"
+      }
+    },
+    {
+      "objectId": 37094,
+      "slug": "sudden-shower-over-shin-ohashi",
+      "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei)",
+      "shortTitle": "Sudden Shower over Shin-Ōhashi Bridge and Atake",
+      "artist": {
+        "name": "Utagawa Hiroshige",
+        "bio": "Japanese, Tokyo (Edo) 1797–1858 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1797,
+        "endYear": 1858
+      },
+      "date": {
+        "display": "1857",
+        "beginYear": 1857,
+        "endYear": 1857
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "14 3/8 x 9 9/16 in. (36.5 x 24.3 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Purchase, Joseph Pulitzer Bequest, 1918",
+      "accessionNumber": "JP644",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/37094",
+      "tags": [
+        "Human Figures",
+        "Bridges",
+        "Rain",
+        "Boats"
+      ],
+      "image": {
+        "file": "37094.webp",
+        "width": 1616,
+        "height": 2400,
+        "originalWidth": 2562,
+        "originalHeight": 3806,
+        "sha256": "863fb806a606a60ea60d117aa38cf0daa90ed10431383fa9625723f2850a3205",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP121526.jpg"
+      }
+    },
+    {
+      "objectId": 37093,
+      "slug": "fireworks-at-ryogoku-bridge",
+      "title": "Fireworks at Ryōgoku Bridge, from the series One Hundred Famous Views of Edo",
+      "shortTitle": "Fireworks at Ryōgoku Bridge",
+      "artist": {
+        "name": "Utagawa Hiroshige",
+        "bio": "Japanese, Tokyo (Edo) 1797–1858 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1797,
+        "endYear": 1858
+      },
+      "date": {
+        "display": "1858",
+        "beginYear": 1858,
+        "endYear": 1858
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "Image: 13 1/4 × 8 3/4 in. (33.7 × 22.2 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Purchase, Joseph Pulitzer Bequest, 1918",
+      "accessionNumber": "JP642",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/37093",
+      "tags": [
+        "Bridges",
+        "Fireworks",
+        "Boats"
+      ],
+      "image": {
+        "file": "37093.webp",
+        "width": 1602,
+        "height": 2400,
+        "originalWidth": 2617,
+        "originalHeight": 3921,
+        "sha256": "710615560b9751842dfad67ba971b2660e42c80ef0cefae02156a38de75196dc",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP121524.jpg"
+      }
+    },
+    {
+      "objectId": 73613,
+      "slug": "six-poetic-sages-at-kameido",
+      "title": "Six Poetic Sages as Young Women at the Plum Garden at Kameido",
+      "shortTitle": "Six Poetic Sages as Young Women at the Plum Garden at Kameido",
+      "artist": {
+        "name": "Utagawa Kunisada",
+        "bio": "Japanese, 1786–1864",
+        "nationality": "Japanese",
+        "beginYear": 1786,
+        "endYear": 1864
+      },
+      "date": {
+        "display": "19th century",
+        "beginYear": 1800,
+        "endYear": 1865
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "Image: 14 1/8 x 9 1/2 in. (35.9 x 24.1 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "Bequest of William S. Lieberman, 2005",
+      "accessionNumber": "2007.49.273",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/73613",
+      "tags": [
+        "Girls",
+        "Women"
+      ],
+      "image": {
+        "file": "73613.webp",
+        "width": 1664,
+        "height": 2400,
+        "originalWidth": 2773,
+        "originalHeight": 4000,
+        "sha256": "a4e51f5f3e45a6f9e88a0fc25bd3e576016badbee2feb7b308baae243d936114",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP148126.jpg"
+      }
+    },
+    {
+      "objectId": 712976,
+      "slug": "fireworks-at-ikenohata",
+      "title": "Fireworks at Ikenohata",
+      "shortTitle": "Fireworks at Ikenohata",
+      "artist": {
+        "name": "Kobayashi Kiyochika",
+        "bio": "Japanese, 1847–1915",
+        "nationality": "Japanese",
+        "beginYear": 1847,
+        "endYear": 1915
+      },
+      "date": {
+        "display": "1881 (Meiji 14)",
+        "beginYear": 1881,
+        "endYear": 1881
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": [
+        "Image: 8 × 12 3/8 in. (20.3 × 31.4 cm)",
+        "Sheet: 9 1/4 × 13 1/2 in. (23.5 × 34.3 cm)"
+      ],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Meiji period (1868–1912)",
+      "creditLine": "Gift of Sebastian and Miki Izzard, 2016",
+      "accessionNumber": "2016.577",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/712976",
+      "tags": [
+        "Fireworks",
+        "Lanterns"
+      ],
+      "image": {
+        "file": "712976.webp",
+        "width": 2400,
+        "height": 1679,
+        "originalWidth": 3999,
+        "originalHeight": 2797,
+        "sha256": "668d005f5c3c3364011f23e19fd1f3e5cfba5d128fd87a1a60743251f68388ab",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP-603-001.jpg"
       }
     }
   ]
