@@ -1,0 +1,108 @@
+/*
+ * What every page of the store, and every story, starts from: the tokens, the
+ * fonts, a reset and the base elements. Components bring their own styles.
+ */
+@import '@deckle/tokens/tokens.css';
+@import './fonts.css';
+
+@layer reset, base;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd,
+  ol,
+  ul,
+  fieldset,
+  legend {
+    margin: 0;
+    padding: 0;
+  }
+
+  fieldset {
+    border: 0;
+    min-inline-size: 0;
+  }
+
+  ol,
+  ul {
+    list-style: none;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  img {
+    block-size: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer base {
+  body {
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--type-body-family);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    letter-spacing: var(--type-body-tracking);
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+  }
+
+  :focus-visible {
+    outline: var(--stroke-width-rule) solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent-subtle);
+    color: var(--text-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

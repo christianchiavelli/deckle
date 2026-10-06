@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# Deckle design system
+
+A print shop for engravings and woodcuts from The Met. The interface is the studio the prints come from: rag paper, bistre ink, and the copper an engraving is cut into. Copper marks only what is precious: the edition, the size you chose, the drop that is about to open.
+
+## How it is built
+
+- **Tokens** are DTCG files in `packages/tokens`, laid out as Figma exports them. Primitives hold the raw palettes and scales; semantic tokens give each a job, in light and dark; roles set the type scale, spacing and motion.
+- **Components** read semantic tokens only, through the typed module `@deckle/tokens`. A primitive used directly fails the lint.
+- **Every story is a test.** It renders in Chromium, plays its interactions and passes axe, in both themes.
+
+## Rules the system keeps
+
+- A missing value shows a dash, never a zero or an empty string.
+- Every pair of text and surface keeps its contrast floor in both themes, checked when the tokens build.
+- Motion is short and stops for readers who ask for less of it.

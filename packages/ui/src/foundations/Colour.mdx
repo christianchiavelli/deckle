@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Palettes, SemanticColours } from './blocks.tsx';
+
+<Meta title="Foundations/Colour" />
+
+# Colour
+
+Components never read a palette directly: they read a semantic token, which points at a different step in light and dark. Each row below shows the same token resolving in both themes.
+
+## Surfaces
+
+<SemanticColours group="surface" />
+
+## Text
+
+<SemanticColours group="text" />
+
+## Icons, strokes and focus
+
+<SemanticColours group="icon" />
+<SemanticColours group="stroke" />
+<SemanticColours group="focus" />
+
+## Actions and accent
+
+The action is bistre ink; copper is kept for what is precious, so it never competes with the button that buys.
+
+<SemanticColours group="action" />
+<SemanticColours group="accent" />
+
+## Feedback
+
+<SemanticColours group="feedback" />
+
+## Component exceptions
+
+<SemanticColours group="component" />
+
+## Palettes
+
+The primitives the semantic tokens point at.
+
+<Palettes />

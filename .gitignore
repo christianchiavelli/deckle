@@ -4,6 +4,7 @@ dist/
 .next/
 *.tsbuildinfo
 next-env.d.ts
+storybook-static/
 
 # Tests
 coverage/

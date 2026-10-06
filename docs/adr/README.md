@@ -42,3 +42,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0036](0036-commerce-sessions-api-keys-and-gateway-sign-in.md) | Commerce sessions: cookies for the dashboard, bearer for the gateway, API keys for the Admin API |
 | [0037](0037-commerce-catalogue-hooks.md) | Catalogue hooks: coalesced in memory, delivered through Vendure's job queue |
 | [0038](0038-tokens-collections-as-namespaces.md) | Tokens: Figma's collections as namespaces, checked as they build |
+| [0039](0039-ui-components-and-stories-in-both-themes.md) | UI components: typed stories, both themes in every test |

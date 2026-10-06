@@ -3,6 +3,7 @@ dist
 build
 coverage
 .next
+storybook-static
 node_modules
 # Generated from the code-first resolvers, and diffed as a contract in CI
 services/gateway/schema.gql

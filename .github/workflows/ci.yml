@@ -108,10 +108,34 @@ jobs:
             echo "No schema at the base commit: nothing to compare."
           fi
 
+  stories:
+    name: Stories in Chromium, audited in both themes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Chromium
+        run: pnpm --filter @deckle/ui exec playwright install --with-deps chromium
+
+      # Each story renders, plays its interactions and passes axe, light and dark side by side.
+      - name: Stories
+        run: pnpm --filter @deckle/ui test:stories
+
   images:
     name: Publish ${{ matrix.service }}
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [verify, integration, contract]
+    needs: [verify, integration, contract, stories]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:

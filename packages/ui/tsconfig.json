@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // The store and Storybook bundle these sources; nothing is emitted here.
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "lib": ["es2025", "dom", "dom.iterable"],
+    "types": ["node", "react", "react-dom", "vite/client"],
+    "rootDir": ".",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["src", "scripts", ".storybook/**/*", "*.config.ts"]
+}

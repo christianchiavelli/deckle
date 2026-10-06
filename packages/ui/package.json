@@ -1,0 +1,59 @@
+{
+  "name": "@deckle/ui",
+  "version": "0.0.0",
+  "description": "Deckle's components, on the design tokens, shown in Storybook",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#storybook/preview": "./.storybook/preview.tsx"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./global.css": "./src/styles/global.css"
+  },
+  "scripts": {
+    "storybook": "storybook dev --port 6006",
+    "build": "storybook build --output-dir storybook-static --quiet",
+    "fonts": "node scripts/fonts.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --project unit --coverage",
+    "test:stories": "vitest run --project storybook"
+  },
+  "dependencies": {
+    "@deckle/tokens": "workspace:*",
+    "styled-components": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@capsizecss/core": "catalog:",
+    "@capsizecss/metrics": "catalog:",
+    "@capsizecss/unpack": "catalog:",
+    "@deckle/eslint-config": "workspace:*",
+    "@deckle/print-sizes": "workspace:*",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-docs": "catalog:",
+    "@storybook/addon-vitest": "catalog:",
+    "@storybook/nextjs-vite": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-storybook": "catalog:",
+    "next": "catalog:",
+    "playwright": "catalog:",
+    "prettier": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "storybook": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}
