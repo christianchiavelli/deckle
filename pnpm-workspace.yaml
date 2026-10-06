@@ -47,6 +47,9 @@ catalog:
   '@vendure/email-plugin': 3.7.4
   '@vendure/dashboard': 3.7.4
   '@vendure/testing': 3.7.4
+  # The migrations import TypeORM's types. Held on the 0.3 line Vendure 3.7
+  # depends on (^0.3.21), at the version it resolves, so there is one copy.
+  typeorm: 0.3.31
 
   # CMS
   payload: 3.90.2
@@ -95,6 +98,14 @@ catalog:
   # Express ships no types, and the Nest Express adapter's own declarations import them.
   '@types/express': 5.0.6
 
+# Named catalogs hold a second line of a package that one service is pinned to.
+catalogs:
+  # Vendure 3.7.4 runs on NestJS 11 while the gateway is on 12. A Vendure plugin's
+  # decorators must come from the @nestjs/common instance Vendure itself loads, so
+  # commerce names it at the exact version Vendure resolves and pnpm keeps one copy.
+  vendure:
+    '@nestjs/common': 11.2.7
+
 # A version reaches this repository a day after it is published (pnpm's
 # default since 11), which keeps out the releases that get pulled within hours.
 # These were a day old or less when the repository started, and are pinned
@@ -118,6 +129,10 @@ allowBuilds:
   sharp: true
   # esbuild ships its native binary through an install script.
   esbuild: true
+  # Vendure hashes passwords with bcrypt, which ships prebuilt binaries for
+  # every platform we run on (musl and glibc included) and loads them at run
+  # time; its install script would only compile from source with node-gyp.
+  bcrypt: false
   # Denied: their postinstall only warns about the version scheme of dependents
   # (Apollo Server's usage reporting, and gRPC under Testcontainers and Terminus).
   '@apollo/protobufjs': false
@@ -126,3 +141,5 @@ allowBuilds:
   # local Docker socket never uses; ssh2 falls back to plain JavaScript.
   ssh2: false
   cpu-features: false
+  # Vitest's mocker: the postinstall copies a browser service worker we never use.
+  msw: false

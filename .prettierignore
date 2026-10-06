@@ -18,3 +18,5 @@ playwright-report
 apps/cms/src/payload-types.ts
 apps/cms/src/migrations
 apps/cms/src/app/(payload)/admin/importMap.js
+# Printed by the commerce schema tool, and compared byte for byte in CI
+services/commerce/schema/shop-api.graphql

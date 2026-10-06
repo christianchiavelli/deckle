@@ -1,0 +1,53 @@
+{
+  "name": "@deckle/commerce",
+  "version": "0.0.0",
+  "description": "Vendure 3.7.4, server and worker: catalogue, cart, checkout and orders, reached only by the gateway",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm run build:server && pnpm run build:dashboard",
+    "build:server": "tsc -p tsconfig.build.json",
+    "build:dashboard": "vite build --config vite.dashboard.config.mts",
+    "start": "node --enable-source-maps dist/index.js",
+    "start:worker": "node --enable-source-maps dist/index-worker.js",
+    "seed": "pnpm run build:server && node --enable-source-maps dist/seed.js ../../data/met",
+    "schema": "pnpm run build:server && node --enable-source-maps dist/tools/shop-schema.js write",
+    "schema:check": "pnpm run build:server && node --enable-source-maps dist/tools/shop-schema.js check",
+    "migration:generate": "pnpm run build:server && node --enable-source-maps dist/tools/migration.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
+  },
+  "dependencies": {
+    "@deckle/met": "workspace:*",
+    "@deckle/print-sizes": "workspace:*",
+    "@nestjs/common": "catalog:vendure",
+    "@vendure/asset-server-plugin": "catalog:",
+    "@vendure/common": "catalog:",
+    "@vendure/core": "catalog:",
+    "@vendure/dashboard": "catalog:",
+    "@vendure/email-plugin": "catalog:",
+    "graphql": "catalog:",
+    "jose": "catalog:",
+    "pg": "catalog:",
+    "typeorm": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@deckle/eslint-config": "workspace:*",
+    "@testcontainers/postgresql": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@vendure/testing": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "testcontainers": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

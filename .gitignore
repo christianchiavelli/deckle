@@ -33,3 +33,6 @@ design/art-direction/shots/*.png
 .DS_Store
 Thumbs.db
 .playwright-mcp/
+
+# Commerce's asset store in development: seeded images and their cached transforms
+services/commerce/assets/
