@@ -154,6 +154,8 @@ jobs:
             dockerfile: apps/cms/Dockerfile
           - service: gateway
             dockerfile: services/gateway/Dockerfile
+          - service: store
+            dockerfile: apps/store/Dockerfile
     env:
       IMAGE: ghcr.io/${{ github.repository_owner }}/deckle-${{ matrix.service }}
     steps:
@@ -224,6 +226,10 @@ jobs:
             --header 'content-type: application/json' \
             --data '{"query":"{ artworks(first: 1) { totalCount } }"}' \
             | jq --exit-status '.data.artworks.totalCount > 0'
+          curl --fail --silent --show-error --output /dev/null http://localhost:8080/
+          # Only the gateway, from inside Docker's network, may drop the store's cache.
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' \
+            --request POST http://localhost:8080/api/revalidate)" = 404
 
       # Node and pnpm only to drive a browser: the stack itself is the published images.
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
