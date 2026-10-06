@@ -19,7 +19,10 @@ export function dropPages({ previewLink }: ContentCollectionOptions): Collection
 
   return {
     slug: 'drop-pages',
-    labels: { singular: 'Drop page', plural: 'Drop pages' },
+    labels: {
+      singular: { en: 'Drop page', pt: 'Página de drop' },
+      plural: { en: 'Drop pages', pt: 'Páginas de drop' },
+    },
     admin: {
       useAsTitle: 'headline',
       defaultColumns: ['headline', 'slug', 'artworkSlug', '_status', 'updatedAt'],
@@ -40,7 +43,12 @@ export function dropPages({ previewLink }: ContentCollectionOptions): Collection
         unique: true,
         index: true,
         validate: validateSlug,
-        admin: { description: `The drop's address in the store: ${slugHint}.` },
+        admin: {
+          description: {
+            en: `The drop's address in the store: ${slugHint.en}.`,
+            pt: `O endereço do drop na loja: ${slugHint.pt}.`,
+          },
+        },
       },
       {
         name: 'artworkSlug',
@@ -48,13 +56,22 @@ export function dropPages({ previewLink }: ContentCollectionOptions): Collection
         required: true,
         index: true,
         validate: validateSlug,
-        admin: { description: 'The artwork this drop prints.' },
+        label: { en: 'Artwork slug', pt: 'Slug da obra' },
+        admin: {
+          description: { en: 'The artwork this drop prints.', pt: 'A obra que este drop imprime.' },
+        },
       },
-      { name: 'headline', type: 'text', required: true },
+      {
+        name: 'headline',
+        type: 'text',
+        required: true,
+        label: { en: 'Headline', pt: 'Título' },
+      },
       {
         name: 'body',
         type: 'richText',
         required: true,
+        label: { en: 'Body', pt: 'Texto' },
         editor: proseEditor,
         validate: validateProse,
       },

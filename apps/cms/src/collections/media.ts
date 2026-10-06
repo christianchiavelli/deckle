@@ -11,6 +11,10 @@ export const mediaDir = path.resolve(process.cwd(), 'media');
 /** Editorial images: photographs and details the stories and drop pages use. */
 export const media: CollectionConfig = {
   slug: 'media',
+  labels: {
+    singular: { en: 'Image', pt: 'Imagem' },
+    plural: { en: 'Media', pt: 'Mídia' },
+  },
   access: {
     read: anyone,
     create: writeContent,
@@ -26,7 +30,13 @@ export const media: CollectionConfig = {
       name: 'alt',
       type: 'text',
       required: true,
-      admin: { description: 'What the image shows, for readers who cannot see it.' },
+      label: { en: 'Alt text', pt: 'Texto alternativo' },
+      admin: {
+        description: {
+          en: 'What the image shows, for readers who cannot see it.',
+          pt: 'O que a imagem mostra, para quem não pode vê-la.',
+        },
+      },
     },
   ],
 };

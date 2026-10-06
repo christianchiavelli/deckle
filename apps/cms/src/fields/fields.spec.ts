@@ -14,6 +14,13 @@ const options = (required: boolean) =>
 const manyOptions = (required: boolean) =>
   options(required) as unknown as Parameters<typeof validateSlugList>[1];
 
+/** The same call from an editor who reads the admin in Portuguese. */
+const inPortuguese = (required: boolean) =>
+  ({
+    required,
+    req: { payload: { config: {} }, t: (key: string) => key, i18n: { language: 'pt' } },
+  }) as unknown as Parameters<typeof validateSlug>[1] & TextField;
+
 describe('slugs', () => {
   it.each(['melencolia-i', 'the-rhinoceros', 'a', '1830-32', 'under-the-wave-off-kanagawa'])(
     'accepts %s',
@@ -92,6 +99,25 @@ describe('http URLs', () => {
   it("leaves a missing value to Payload's required check", () => {
     expect(validateHttpUrl('', options(true))).toBe('validation:required');
     expect(validateHttpUrl(null, options(false))).toBe(true);
+  });
+});
+
+describe("messages in the editor's language", () => {
+  const many = inPortuguese(true) as unknown as Parameters<typeof validateSlugList>[1];
+
+  it('explains a malformed slug or URL in Portuguese', () => {
+    expect(validateSlug('The_Rhinoceros', inPortuguese(true))).toMatch(/^Use letras minúsculas/);
+    expect(validateHttpUrl('javascript:alert(1)', inPortuguese(true))).toMatch(
+      /^Use uma URL absoluta/,
+    );
+  });
+
+  it('words every slug list problem in Portuguese', () => {
+    expect(validateSlugList([], many)).toBe('Adicione ao menos uma obra');
+    expect(validateSlugList(['Bad Slug'], many)).toMatch(/^Não é um slug: Bad Slug\. Use letras/);
+    expect(validateSlugList(['melencolia-i', 'melencolia-i'], many)).toBe(
+      'Repetido na lista: melencolia-i',
+    );
   });
 });
 

@@ -12,6 +12,7 @@ export default defineConfig({
       provider: 'v8',
       include: [
         'src/env.ts',
+        'src/admin/**/*.ts',
         'src/access/**/*.ts',
         'src/fields/**/*.ts',
         'src/preview/**/*.ts',

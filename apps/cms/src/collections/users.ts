@@ -1,5 +1,6 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload';
 import { type Role, roles } from '../access/policy';
+import type { AdminText } from '../admin/text';
 import {
   administer,
   administerField,
@@ -8,10 +9,10 @@ import {
   useAdminPanel,
 } from '../access/rules';
 
-const roleLabels: Record<Role, string> = {
-  admin: 'Admin',
-  editor: 'Editor',
-  gateway: 'Gateway (read only)',
+const roleLabels: Record<Role, AdminText> = {
+  admin: { en: 'Admin', pt: 'Administrador' },
+  editor: { en: 'Editor', pt: 'Editor' },
+  gateway: { en: 'Gateway (read only)', pt: 'Gateway (só leitura)' },
 };
 
 /**
@@ -29,6 +30,10 @@ const firstUserIsAdmin: CollectionBeforeChangeHook = async ({ data, operation, r
 
 export const users: CollectionConfig = {
   slug: 'users',
+  labels: {
+    singular: { en: 'User', pt: 'Usuário' },
+    plural: { en: 'Users', pt: 'Usuários' },
+  },
   admin: {
     useAsTitle: 'email',
     defaultColumns: ['email', 'role', 'updatedAt'],
@@ -56,10 +61,14 @@ export const users: CollectionConfig = {
       type: 'select',
       required: true,
       defaultValue: 'editor',
+      label: { en: 'Role', pt: 'Papel' },
       options: roles.map((role) => ({ label: roleLabels[role], value: role })),
       access: { create: administerField, update: administerField },
       admin: {
-        description: "Editors write content. The gateway role is the store's read-only API user.",
+        description: {
+          en: "Editors write content. The gateway role is the store's read-only API user.",
+          pt: 'Editores escrevem o conteúdo. O papel gateway é o usuário da API da loja, só de leitura.',
+        },
       },
     },
     {

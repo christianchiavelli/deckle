@@ -17,7 +17,10 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
 
   return {
     slug: 'stories',
-    labels: { singular: 'Story', plural: 'Stories' },
+    labels: {
+      singular: { en: 'Story', pt: 'História' },
+      plural: { en: 'Stories', pt: 'Histórias' },
+    },
     admin: {
       useAsTitle: 'artworkSlug',
       defaultColumns: ['artworkSlug', 'title', '_status', 'updatedAt'],
@@ -42,19 +45,32 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
         unique: true,
         index: true,
         validate: validateSlug,
-        admin: { description: `The artwork's slug in the catalogue: ${slugHint}.` },
+        label: { en: 'Artwork slug', pt: 'Slug da obra' },
+        admin: {
+          description: {
+            en: `The artwork's slug in the catalogue: ${slugHint.en}.`,
+            pt: `O slug da obra no catálogo: ${slugHint.pt}.`,
+          },
+        },
       },
-      { name: 'title', type: 'text', required: true },
+      { name: 'title', type: 'text', required: true, label: { en: 'Title', pt: 'Título' } },
       {
         name: 'lede',
         type: 'textarea',
         required: true,
-        admin: { description: 'One or two plain sentences that open the story.' },
+        label: { en: 'Lede', pt: 'Abertura' },
+        admin: {
+          description: {
+            en: 'One or two plain sentences that open the story.',
+            pt: 'Uma ou duas frases simples que abrem a história.',
+          },
+        },
       },
       {
         name: 'body',
         type: 'richText',
         required: true,
+        label: { en: 'Body', pt: 'Texto' },
         editor: proseEditor,
         validate: validateProse,
       },
@@ -63,10 +79,26 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
         type: 'array',
         required: true,
         minRows: 1,
-        admin: { description: 'Every story cites where its facts come from.' },
+        label: { en: 'Sources', pt: 'Fontes' },
+        labels: {
+          singular: { en: 'Source', pt: 'Fonte' },
+          plural: { en: 'Sources', pt: 'Fontes' },
+        },
+        admin: {
+          description: {
+            en: 'Every story cites where its facts come from.',
+            pt: 'Toda história cita de onde vêm os fatos.',
+          },
+        },
         fields: [
-          { name: 'label', type: 'text', required: true },
-          { name: 'url', type: 'text', required: true, validate: validateHttpUrl },
+          { name: 'label', type: 'text', required: true, label: { en: 'Label', pt: 'Nome' } },
+          {
+            name: 'url',
+            type: 'text',
+            required: true,
+            validate: validateHttpUrl,
+            label: { en: 'URL', pt: 'URL' },
+          },
         ],
       },
     ],

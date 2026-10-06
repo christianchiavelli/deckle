@@ -19,6 +19,10 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
 
   return {
     slug: 'curations',
+    labels: {
+      singular: { en: 'Curation', pt: 'Curadoria' },
+      plural: { en: 'Curations', pt: 'Curadorias' },
+    },
     admin: {
       useAsTitle: 'title',
       defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
@@ -32,7 +36,7 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
       afterDelete: [events.afterDelete],
     },
     fields: [
-      { name: 'title', type: 'text', required: true },
+      { name: 'title', type: 'text', required: true, label: { en: 'Title', pt: 'Título' } },
       {
         name: 'slug',
         type: 'text',
@@ -40,13 +44,24 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
         unique: true,
         index: true,
         validate: validateSlug,
-        admin: { description: `The curation's address in the store: ${slugHint}.` },
+        admin: {
+          description: {
+            en: `The curation's address in the store: ${slugHint.en}.`,
+            pt: `O endereço da curadoria na loja: ${slugHint.pt}.`,
+          },
+        },
       },
       {
         name: 'intro',
         type: 'textarea',
         hooks: { beforeChange: [blankToNull] },
-        admin: { description: 'Optional: a few plain sentences that open the curation.' },
+        label: { en: 'Introduction', pt: 'Introdução' },
+        admin: {
+          description: {
+            en: 'Optional: a few plain sentences that open the curation.',
+            pt: 'Opcional: algumas frases simples que abrem a curadoria.',
+          },
+        },
       },
       {
         name: 'artworks',
@@ -54,8 +69,12 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
         hasMany: true,
         required: true,
         validate: validateSlugList,
+        label: { en: 'Artworks', pt: 'Obras' },
         admin: {
-          description: 'Artwork slugs, in the order the store shows them. Drag to reorder.',
+          description: {
+            en: 'Artwork slugs, in the order the store shows them. Drag to reorder.',
+            pt: 'Slugs das obras, na ordem em que a loja as mostra. Arraste para reordenar.',
+          },
         },
       },
     ],

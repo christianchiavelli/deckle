@@ -1,6 +1,8 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { postgresAdapter } from '@payloadcms/db-postgres';
+import { en } from '@payloadcms/translations/languages/en';
+import { pt } from '@payloadcms/translations/languages/pt';
 import { buildConfig } from 'payload';
 import sharp from 'sharp';
 import { administer, administerJobs } from './access/rules';
@@ -32,6 +34,8 @@ export default buildConfig({
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' · Deckle CMS' },
   },
+  // The admin follows the browser's language, and each editor can change it in their account.
+  i18n: { supportedLanguages: { en, pt }, fallbackLanguage: 'en' },
   collections: [
     users,
     stories({ previewLink }),
@@ -59,7 +63,15 @@ export default buildConfig({
     jobsCollectionOverrides: ({ defaultJobsCollection }) => ({
       ...defaultJobsCollection,
       access: { ...defaultJobsCollection.access, read: administer },
-      admin: { ...defaultJobsCollection.admin, hidden: false, group: 'System' },
+      labels: {
+        singular: { en: 'Job', pt: 'Tarefa' },
+        plural: { en: 'Jobs', pt: 'Tarefas' },
+      },
+      admin: {
+        ...defaultJobsCollection.admin,
+        hidden: false,
+        group: { en: 'System', pt: 'Sistema' },
+      },
     }),
   },
   // The gateway reads the REST API; nothing uses GraphQL, so it is not served.

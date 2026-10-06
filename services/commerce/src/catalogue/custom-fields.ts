@@ -1,7 +1,11 @@
 import { PAPER_SIZE_ORDER, type PaperSize } from '@deckle/print-sizes';
 import { LanguageCode, type CustomFieldConfig } from '@vendure/core';
 
-const label = (value: string) => [{ languageCode: LanguageCode.en, value }];
+/** A label or description in the dashboard's two languages; a paper size reads the same in both. */
+const label = (en: string, ptBR = en) => [
+  { languageCode: LanguageCode.en, value: en },
+  { languageCode: LanguageCode.pt_BR, value: ptBR },
+];
 
 const museumRecord = { tab: 'Museum record' };
 
@@ -19,8 +23,11 @@ export const productCustomFields: CustomFieldConfig[] = [
     nullable: true,
     readonly: true,
     min: 1,
-    label: label('The Met object ID'),
-    description: label('The objectID in The Met collection API; how the seed recognises a work'),
+    label: label('The Met object ID', 'ID do objeto no Met'),
+    description: label(
+      'The objectID in The Met collection API; how the seed recognises a work',
+      'O objectID na API do acervo do Met; é por ele que o seed reconhece uma obra',
+    ),
     ui: museumRecord,
   },
   {
@@ -28,8 +35,11 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'text',
     nullable: true,
     readonly: true,
-    label: label('Full title'),
-    description: label("The Met's title, verbatim. The product name is the short title."),
+    label: label('Full title', 'Título completo'),
+    description: label(
+      "The Met's title, verbatim. The product name is the short title.",
+      'O título do Met, sem alterações. O nome do produto é o título curto.',
+    ),
     ui: museumRecord,
   },
   {
@@ -37,7 +47,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'text',
     nullable: true,
     readonly: true,
-    label: label('Artist'),
+    label: label('Artist', 'Artista'),
     ui: museumRecord,
   },
   {
@@ -45,8 +55,11 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'text',
     nullable: true,
     readonly: true,
-    label: label('Artist biography'),
-    description: label('As The Met words it, e.g. "German, Nuremberg 1471–1528 Nuremberg"'),
+    label: label('Artist biography', 'Biografia do artista'),
+    description: label(
+      'As The Met words it, e.g. "German, Nuremberg 1471–1528 Nuremberg"',
+      'Como o Met escreve, por exemplo "German, Nuremberg 1471–1528 Nuremberg"',
+    ),
     ui: museumRecord,
   },
   {
@@ -54,7 +67,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     readonly: true,
-    label: label('Artist nationality'),
+    label: label('Artist nationality', 'Nacionalidade do artista'),
     ui: museumRecord,
   },
   {
@@ -62,7 +75,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'int',
     nullable: true,
     readonly: true,
-    label: label('Artist born'),
+    label: label('Artist born', 'Nascimento do artista'),
     ui: museumRecord,
   },
   {
@@ -70,7 +83,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'int',
     nullable: true,
     readonly: true,
-    label: label('Artist died'),
+    label: label('Artist died', 'Morte do artista'),
     ui: museumRecord,
   },
   {
@@ -78,8 +91,11 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     readonly: true,
-    label: label('Date'),
-    description: label('As The Met displays it, e.g. "ca. 1830–32"'),
+    label: label('Date', 'Data'),
+    description: label(
+      'As The Met displays it, e.g. "ca. 1830–32"',
+      'Como o Met mostra, por exemplo "ca. 1830–32"',
+    ),
     ui: museumRecord,
   },
   {
@@ -87,7 +103,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'int',
     nullable: true,
     readonly: true,
-    label: label('Earliest year'),
+    label: label('Earliest year', 'Ano inicial'),
     ui: museumRecord,
   },
   {
@@ -95,7 +111,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'int',
     nullable: true,
     readonly: true,
-    label: label('Latest year'),
+    label: label('Latest year', 'Ano final'),
     ui: museumRecord,
   },
   {
@@ -103,7 +119,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'text',
     nullable: true,
     readonly: true,
-    label: label('Medium'),
+    label: label('Medium', 'Técnica'),
     ui: museumRecord,
   },
   {
@@ -112,8 +128,11 @@ export const productCustomFields: CustomFieldConfig[] = [
     list: true,
     nullable: true,
     readonly: true,
-    label: label('Dimensions'),
-    description: label('One line per measurement The Met records: plate, sheet, image'),
+    label: label('Dimensions', 'Dimensões'),
+    description: label(
+      'One line per measurement The Met records: plate, sheet, image',
+      'Uma linha por medida que o Met registra: chapa, folha, imagem',
+    ),
     ui: museumRecord,
   },
   {
@@ -121,7 +140,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     readonly: true,
-    label: label('Classification'),
+    label: label('Classification', 'Classificação'),
     ui: museumRecord,
   },
   {
@@ -129,7 +148,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     readonly: true,
-    label: label('Department'),
+    label: label('Department', 'Departamento'),
     ui: museumRecord,
   },
   {
@@ -137,7 +156,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     readonly: true,
-    label: label('Culture'),
+    label: label('Culture', 'Cultura'),
     ui: museumRecord,
   },
   {
@@ -145,7 +164,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     readonly: true,
-    label: label('Period'),
+    label: label('Period', 'Período'),
     ui: museumRecord,
   },
   {
@@ -153,7 +172,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'text',
     nullable: true,
     readonly: true,
-    label: label('Credit line'),
+    label: label('Credit line', 'Crédito'),
     ui: museumRecord,
   },
   {
@@ -161,7 +180,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     readonly: true,
-    label: label('Accession number'),
+    label: label('Accession number', 'Número de tombo'),
     ui: museumRecord,
   },
   {
@@ -169,7 +188,7 @@ export const productCustomFields: CustomFieldConfig[] = [
     type: 'text',
     nullable: true,
     readonly: true,
-    label: label('Page at The Met'),
+    label: label('Page at The Met', 'Página no Met'),
     ui: museumRecord,
   },
   {
@@ -178,8 +197,11 @@ export const productCustomFields: CustomFieldConfig[] = [
     nullable: true,
     readonly: true,
     min: 1,
-    label: label('Scan width (px)'),
-    description: label("The original scan's width, which the print sizes are worked out from"),
+    label: label('Scan width (px)', 'Largura do scan (px)'),
+    description: label(
+      "The original scan's width, which the print sizes are worked out from",
+      'A largura do scan original, de onde saem os tamanhos de impressão',
+    ),
     ui: museumRecord,
   },
   {
@@ -188,8 +210,11 @@ export const productCustomFields: CustomFieldConfig[] = [
     nullable: true,
     readonly: true,
     min: 1,
-    label: label('Scan height (px)'),
-    description: label("The original scan's height, which the print sizes are worked out from"),
+    label: label('Scan height (px)', 'Altura do scan (px)'),
+    description: label(
+      "The original scan's height, which the print sizes are worked out from",
+      'A altura do scan original, de onde saem os tamanhos de impressão',
+    ),
     ui: museumRecord,
   },
 ];
@@ -207,7 +232,7 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     type: 'string',
     nullable: true,
     options: PAPER_SIZE_ORDER.map((size) => ({ value: size, label: label(size) })),
-    label: label('Paper size'),
+    label: label('Paper size', 'Tamanho do papel'),
     ui: print,
   },
   {
@@ -215,7 +240,7 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     type: 'float',
     nullable: true,
     min: 0,
-    label: label('Paper width (cm)'),
+    label: label('Paper width (cm)', 'Largura do papel (cm)'),
     ui: print,
   },
   {
@@ -223,7 +248,7 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     type: 'float',
     nullable: true,
     min: 0,
-    label: label('Paper height (cm)'),
+    label: label('Paper height (cm)', 'Altura do papel (cm)'),
     ui: print,
   },
   {
@@ -231,7 +256,7 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     type: 'float',
     nullable: true,
     min: 0,
-    label: label('Image width (cm)'),
+    label: label('Image width (cm)', 'Largura da imagem (cm)'),
     ui: print,
   },
   {
@@ -239,7 +264,7 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     type: 'float',
     nullable: true,
     min: 0,
-    label: label('Image height (cm)'),
+    label: label('Image height (cm)', 'Altura da imagem (cm)'),
     ui: print,
   },
   {
@@ -247,8 +272,11 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     type: 'int',
     nullable: true,
     min: 1,
-    label: label('Pixels per inch'),
-    description: label('What the original scan gives at this size, rounded down'),
+    label: label('Pixels per inch', 'Pixels por polegada'),
+    description: label(
+      'What the original scan gives at this size, rounded down',
+      'O que o scan original rende neste tamanho, arredondado para baixo',
+    ),
     ui: print,
   },
 ];
