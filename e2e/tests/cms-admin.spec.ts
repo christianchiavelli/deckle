@@ -34,6 +34,8 @@ test.describe('Payload admin in Brazilian Portuguese', () => {
     ).toBeVisible();
 
     await page.goto(`${cms}/admin/collections/stories`);
+    // A search, as an editor would: the seeded stories run past the list's first page.
+    await page.getByRole('textbox', { name: 'Buscar por Slug da obra' }).fill('melencolia-i');
     await page.getByRole('link', { name: 'melencolia-i' }).click();
 
     await expect(page.getByRole('textbox', { name: /^Slug da obra/ })).toBeVisible();

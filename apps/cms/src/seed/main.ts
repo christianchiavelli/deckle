@@ -1,6 +1,6 @@
 import { parseEnv, seedEnvSchema } from '../env';
 import { createCmsClient } from './cms-client';
-import { firstImpressions, storySeeds } from './content';
+import { curationSeeds, dropPageSeeds, storySeeds } from './content';
 import { seed } from './seed';
 
 /**
@@ -14,8 +14,9 @@ async function main(): Promise<void> {
   const steps = await seed(createCmsClient(apiUrl), {
     admin: { email: env.ADMIN_EMAIL, password: env.ADMIN_PASSWORD },
     gatewayApiKey: env.GATEWAY_API_KEY,
-    curations: [firstImpressions],
+    curations: curationSeeds,
     stories: storySeeds,
+    dropPages: dropPageSeeds,
   });
   for (const { what, outcome } of steps) {
     process.stdout.write(`${outcome.padEnd(7)} ${what}\n`);

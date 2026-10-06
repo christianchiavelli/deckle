@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { proseFromParagraphs } from '../rich-text/prose';
 import type { CmsClient, Credentials, Session } from './cms-client';
-import type { CurationSeed, StorySeed } from './content';
+import type { CurationSeed, DropPageSeed, StorySeed } from './content';
 
 /** The user the gateway reads as. Its password is random and thrown away: it signs in by API key. */
 export const gatewayUserEmail = 'gateway@deckle.internal';
@@ -11,6 +11,7 @@ export interface SeedInput {
   readonly gatewayApiKey: string;
   readonly curations: readonly CurationSeed[];
   readonly stories: readonly StorySeed[];
+  readonly dropPages: readonly DropPageSeed[];
 }
 
 export type SeedOutcome = 'created' | 'updated' | 'kept';
@@ -27,9 +28,9 @@ export class SeedError extends Error {
 /**
  * Brings a CMS to the state a fresh stack needs, as many times as it is run:
  * the admin exists, the gateway's user reads with `gatewayApiKey`, and the
- * starter curation and stories exist. Content an editor has since changed is
- * kept as it is; only the API key is set every time, so the CMS always
- * matches the key the gateway was given.
+ * starter curations, stories and drop pages exist. Content an editor has
+ * since changed is kept as it is; only the API key is set every time, so the
+ * CMS always matches the key the gateway was given.
  */
 export async function seed(cms: CmsClient, input: SeedInput): Promise<SeedStep[]> {
   const steps: SeedStep[] = [];
@@ -43,6 +44,9 @@ export async function seed(cms: CmsClient, input: SeedInput): Promise<SeedStep[]
     }
     for (const story of input.stories) {
       steps.push(await ensureStory(cms, session, story));
+    }
+    for (const page of input.dropPages) {
+      steps.push(await ensureDropPage(cms, session, page));
     }
   } finally {
     await cms.logout(session);
@@ -97,7 +101,7 @@ async function ensureCuration(
   await cms.create(session, 'curations', {
     title: curation.title,
     slug: curation.slug,
-    intro: null,
+    intro: curation.intro,
     artworks: curation.artworks,
     _status: 'published',
   });
@@ -115,6 +119,25 @@ async function ensureStory(cms: CmsClient, session: Session, story: StorySeed): 
     lede: story.lede,
     body: proseFromParagraphs(story.paragraphs),
     sources: story.sources,
+    _status: 'published',
+  });
+  return { what, outcome: 'created' };
+}
+
+async function ensureDropPage(
+  cms: CmsClient,
+  session: Session,
+  page: DropPageSeed,
+): Promise<SeedStep> {
+  const what = `drop page ${page.slug}`;
+  if ((await cms.findIdBy(session, 'drop-pages', 'slug', page.slug)) !== null) {
+    return { what, outcome: 'kept' };
+  }
+  await cms.create(session, 'drop-pages', {
+    slug: page.slug,
+    artworkSlug: page.artworkSlug,
+    headline: page.headline,
+    body: proseFromParagraphs(page.paragraphs),
     _status: 'published',
   });
   return { what, outcome: 'created' };

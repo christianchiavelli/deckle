@@ -5,7 +5,7 @@ import { startPayload, testSecrets } from '../test/payload';
 import { startPostgres } from '../test/postgres';
 import { cmsEventSchema } from '../webhooks/event';
 import { createCmsClient } from './cms-client';
-import { firstImpressions, storySeeds } from './content';
+import { curationSeeds, dropPageSeeds, storySeeds } from './content';
 import { gatewayUserEmail, seed, type SeedInput } from './seed';
 
 let payload: Payload;
@@ -32,9 +32,13 @@ const base = 'http://cms.test/api';
 const input: SeedInput = {
   admin: { email: 'admin@deckle.local', password: 'integration-admin-password' },
   gatewayApiKey: 'integration-gateway-api-key-0000000000000',
-  curations: [firstImpressions],
+  curations: curationSeeds,
   stories: storySeeds,
+  dropPages: dropPageSeeds,
 };
+
+/** One document, and one event for the gateway, per curation, story and drop page. */
+const documents = curationSeeds.length + storySeeds.length + dropPageSeeds.length;
 
 const asGateway = { authorization: `users API-Key ${input.gatewayApiKey}` };
 
@@ -44,20 +48,27 @@ const get = async (path: string, headers: HeadersInit = {}) => {
 };
 
 describe('the seed', () => {
-  it('creates the admin, the gateway user, the curation and the stories', async () => {
+  it('creates the admin, the gateway user, the curations, the stories and the drop pages', async () => {
     const steps = await seed(createCmsClient(base, api), input);
     expect(steps).toEqual([
       { what: 'admin admin@deckle.local', outcome: 'created' },
       { what: `gateway user ${gatewayUserEmail}`, outcome: 'created' },
-      { what: 'curation first-impressions', outcome: 'created' },
-      { what: 'story melencolia-i', outcome: 'created' },
-      { what: 'story the-rhinoceros', outcome: 'created' },
-      { what: 'story under-the-wave-off-kanagawa', outcome: 'created' },
+      ...curationSeeds.map(({ slug }) => ({ what: `curation ${slug}`, outcome: 'created' })),
+      ...storySeeds.map(({ artworkSlug }) => ({
+        what: `story ${artworkSlug}`,
+        outcome: 'created',
+      })),
+      ...dropPageSeeds.map(({ slug }) => ({ what: `drop page ${slug}`, outcome: 'created' })),
     ]);
   });
 
   it('publishes the stories with their texts exactly as given', async () => {
-    const { docs } = await payload.find({ collection: 'stories', sort: 'id', depth: 0 });
+    const { docs } = await payload.find({
+      collection: 'stories',
+      sort: 'id',
+      depth: 0,
+      pagination: false,
+    });
     expect(
       docs.map((story) => ({
         artworkSlug: story.artworkSlug,
@@ -72,35 +83,70 @@ describe('the seed', () => {
     ).toEqual(storySeeds.map((story) => ({ ...story, status: 'published' })));
   });
 
-  it('publishes the curation with its artworks in order and no invented intro', async () => {
-    const { docs } = await payload.find({ collection: 'curations', depth: 0 });
-    expect(docs).toHaveLength(1);
-    expect(docs[0]).toMatchObject({
-      title: 'First impressions',
-      slug: 'first-impressions',
-      artworks: firstImpressions.artworks,
-      _status: 'published',
+  it('publishes the curations with their artworks in order, and an intro only where one was written', async () => {
+    const { docs } = await payload.find({
+      collection: 'curations',
+      sort: 'id',
+      depth: 0,
+      pagination: false,
     });
-    expect(docs[0]?.intro ?? null).toBeNull();
+    expect(
+      docs.map((curation) => ({
+        title: curation.title,
+        slug: curation.slug,
+        intro: curation.intro ?? null,
+        artworks: curation.artworks,
+        status: curation._status,
+      })),
+    ).toEqual(curationSeeds.map((curation) => ({ ...curation, status: 'published' })));
+  });
+
+  it('publishes the drop pages with their words exactly as given', async () => {
+    const { docs } = await payload.find({
+      collection: 'drop-pages',
+      sort: 'id',
+      depth: 0,
+      pagination: false,
+    });
+    expect(
+      docs.map((page) => ({
+        slug: page.slug,
+        artworkSlug: page.artworkSlug,
+        headline: page.headline,
+        paragraphs: page.body.root.children.map((paragraph) =>
+          (paragraph['children'] as { text: string }[]).map((text) => text.text).join(''),
+        ),
+        status: page._status,
+      })),
+    ).toEqual(dropPageSeeds.map((page) => ({ ...page, status: 'published' })));
   });
 
   it('reports each seeded document to the gateway once, through the running queue', async () => {
-    const received = await receiver.waitFor(4, 30_000);
+    const received = await receiver.waitFor(documents, 30_000);
     const events = received.map(({ body, signature }) => {
       expect(signatureIsValid(testSecrets.HOOK_SECRET, body, signature)).toBe(true);
       return cmsEventSchema.parse(JSON.parse(body));
     });
     expect(events.map(({ type, action, subject }) => ({ type, action, subject }))).toEqual(
       expect.arrayContaining([
-        { type: 'curation', action: 'created', subject: { slug: 'first-impressions' } },
+        ...curationSeeds.map(({ slug }) => ({
+          type: 'curation',
+          action: 'created',
+          subject: { slug },
+        })),
         ...storySeeds.map(({ artworkSlug }) => ({
           type: 'story',
           action: 'created',
           subject: { slug: artworkSlug, artworkSlug },
         })),
+        ...dropPageSeeds.map(({ slug }) => ({
+          type: 'drop-page',
+          action: 'created',
+          subject: { slug },
+        })),
       ]),
     );
-    expect(new Set(events.map((event) => event.id)).size).toBe(4);
+    expect(new Set(events.map((event) => event.id)).size).toBe(documents);
   });
 
   it('changes nothing on a second run but setting the API key again', async () => {
@@ -108,18 +154,18 @@ describe('the seed', () => {
     expect(steps.map(({ outcome }) => outcome)).toEqual([
       'kept',
       'updated',
-      'kept',
-      'kept',
-      'kept',
-      'kept',
+      ...Array<string>(documents).fill('kept'),
     ]);
     expect((await payload.count({ collection: 'users' })).totalDocs).toBe(2);
-    expect((await payload.count({ collection: 'stories' })).totalDocs).toBe(3);
-    expect((await payload.count({ collection: 'curations' })).totalDocs).toBe(1);
+    expect((await payload.count({ collection: 'stories' })).totalDocs).toBe(storySeeds.length);
+    expect((await payload.count({ collection: 'curations' })).totalDocs).toBe(curationSeeds.length);
+    expect((await payload.count({ collection: 'drop-pages' })).totalDocs).toBe(
+      dropPageSeeds.length,
+    );
 
     // Two runs of the five-second queue later, nothing new has been sent.
     await new Promise((resolve) => setTimeout(resolve, 11_000));
-    expect(receiver.received).toHaveLength(4);
+    expect(receiver.received).toHaveLength(documents);
   }, 30_000);
 
   it('lets the gateway read by API key, published or draft', async () => {
