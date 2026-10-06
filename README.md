@@ -6,7 +6,7 @@ Every work is offered only in the paper sizes its scan can hold at 240 ppi, so a
 
 Next.js 16 and React 19.3 in front, a NestJS 12 GraphQL gateway in the middle, Vendure 3.7 and Payload 3 behind it, all on Postgres 18.
 
-> The store's screens are being designed. What runs today is the platform under them: the catalogue, the editorial CMS and the GraphQL gateway that joins them, all from one `docker compose up`.
+> The store is being built page by page, each from a design approved first. Today it serves the front page and every work's page, with live prices, sizes and stories; the lists, the cart and the drops come next.
 
 ---
 
@@ -22,6 +22,7 @@ That pulls the images CI publishes; add `--build` to build them from the checkou
 
 | Where | What |
 | --- | --- |
+| `http://localhost:8080` | The store: the front page, and each work's page, such as `/prints/melencolia-i` |
 | `http://localhost:8080/graphql` | The gateway: the only API the browser will ever see |
 | `http://localhost:8081/admin` | Payload, for stories, curations and drop pages: `editor@deckle.localhost`, `deckle-editor` |
 | `http://localhost:8082/dashboard` | Vendure's dashboard: `superadmin`, `deckle-superadmin` |
@@ -53,6 +54,7 @@ That size decides what can be sold. Dürer's _Melencolia I_ is a 2,820 × 3,561 
 - **The gateway owns the contract.** Its code-first schema is committed, and CI fails on a stale file or a change that would break a client. Swapping Vendure for Shopify Plus would be an adapter in the gateway, not a rewrite.
 - **The gateway vouches for its users.** It signs short-lived EdDSA tokens and publishes its keys; Vendure verifies them in an `AuthenticationStrategy` and holds no secret that could mint a login.
 - **Changes arrive signed and once.** Vendure and Payload post HMAC-signed webhooks, deduplicated in the same transaction as their effect, and the gateway turns each one into cache tags and a live GraphQL event.
+- **Pages come from the cache until they would be wrong.** The store renders on the server from reads tagged with the same words the gateway drops, so a new price shows on the next request, with no timer to wait out. Nothing reads at build time, so the image builds without a stack.
 - **Postgres does what Redis would.** Vendure's job queue and the gateway's pub/sub both run on it; LISTEN/NOTIFY carries events between gateway replicas, tested with two of them.
 - **Missing data is `null`, never `""` or `0`**, and every reader shows it as a dash.
 
@@ -69,7 +71,7 @@ pnpm -r --if-present run schema:check        # each committed schema matches the
 pnpm --filter @deckle/e2e test:e2e           # in a browser, against the running stack
 ```
 
-Anything that touches the database runs against a real one, never a mock: migrations racing across replicas, a webhook delivered twice at once, an event that must not leave a rolled-back transaction. CI then builds the three images and runs the whole stack from them.
+Anything that touches the database runs against a real one, never a mock: migrations racing across replicas, a webhook delivered twice at once, an event that must not leave a rolled-back transaction. CI then builds the four images and runs the whole stack from them, with the store checked in a browser and by axe in both themes.
 
 ---
 
