@@ -46,6 +46,7 @@ catalog:
   '@testcontainers/postgresql': 12.2.0
   playwright: 1.63.0
   '@playwright/test': 1.63.0
+  '@axe-core/playwright': 4.13.0
 
   # Contracts and data
   zod: 4.6.5
@@ -110,9 +111,10 @@ catalog:
   '@types/supertest': 7.2.1
   '@graphql-inspector/cli': 7.0.0
   '@graphql-codegen/cli': 7.4.4
-  '@graphql-codegen/typescript': 6.1.1
   '@graphql-codegen/typescript-operations': 6.1.10
   '@graphql-codegen/typed-document-node': 7.1.1
+  # The type the generated documents implement; the store's operations import it.
+  '@graphql-typed-document-node/core': 3.2.0
   # Express ships no types, and the Nest Express adapter's own declarations import them.
   '@types/express': 5.0.6
 

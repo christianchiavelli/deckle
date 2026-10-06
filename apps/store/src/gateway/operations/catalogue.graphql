@@ -1,0 +1,11 @@
+# The whole catalogue as tiles, for the lists a page draws from it.
+query Catalogue {
+  artworks(first: 48) {
+    totalCount
+    edges {
+      node {
+        ...PrintTile
+      }
+    }
+  }
+}

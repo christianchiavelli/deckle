@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "es2025", "esnext.disposable"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "incremental": true,
+    "rootDir": ".",
+    "types": ["node", "react", "react-dom"],
+    // The design system's sources import each other with their extensions.
+    "allowImportingTsExtensions": true,
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["next-env.d.ts", "src", "*.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

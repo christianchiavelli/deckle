@@ -55,8 +55,14 @@
 		reverse_proxy commerce:3000
 	}
 
-	# The store is built once its design is approved.
+	# The gateway asks the store to drop cache tags on Docker's network; from
+	# outside, the route does not exist.
+	handle /api/revalidate {
+		respond 404
+	}
+
+	# Everything else is the store.
 	handle {
-		respond "The Deckle store is not built yet. The GraphQL API is at /graphql." 503
+		reverse_proxy store:3000
 	}
 }

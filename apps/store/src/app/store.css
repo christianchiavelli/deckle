@@ -1,0 +1,11 @@
+/*
+ * A visitor's choice of theme, set on the root before the first paint (see
+ * src/components/theme.ts). Without one, the tokens follow the system's.
+ */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}

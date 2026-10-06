@@ -1,0 +1,51 @@
+# syntax=docker/dockerfile:1
+# The store image: the Next.js standalone server.
+# Build from the repository root: docker build -f apps/store/Dockerfile .
+
+ARG NODE_IMAGE=node:24.21.0-alpine3.24@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
+
+FROM ${NODE_IMAGE} AS pnpm
+ENV PNPM_HOME=/pnpm \
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
+    NEXT_TELEMETRY_DISABLED=1
+WORKDIR /repo
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY patches/ patches/
+# pnpm at the exact version and checksum `packageManager` names.
+RUN corepack enable pnpm && corepack install
+
+FROM pnpm AS build
+# Downloads depend on the lockfile alone, so this layer outlives source edits.
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm fetch --store-dir /pnpm/store
+COPY tsconfig.base.json ./
+COPY packages/eslint-config packages/eslint-config
+# The design system, its tokens, the brand and the cache-tag vocabulary; the
+# sizing rule only for the store's own tests, which pnpm installs with it.
+COPY packages/tokens packages/tokens
+COPY packages/brand packages/brand
+COPY packages/ui packages/ui
+COPY packages/cache-tags packages/cache-tags
+COPY packages/print-sizes packages/print-sizes
+COPY apps/store apps/store
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --offline --frozen-lockfile --store-dir /pnpm/store --filter @deckle/store...
+# The build reads no gateway: every page waits for a request, or for its
+# params, before it asks for data. Next traces what the server needs into
+# .next/standalone, the image's whole production tree.
+RUN pnpm --filter @deckle/store build
+
+FROM ${NODE_IMAGE} AS runtime
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    HOSTNAME=0.0.0.0 \
+    PORT=3000
+WORKDIR /app
+COPY --from=build --chown=node:node /repo/apps/store/.next/standalone ./
+COPY --from=build --chown=node:node /repo/apps/store/.next/static ./apps/store/.next/static
+WORKDIR /app/apps/store
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --start-interval=2s --retries=3 \
+    CMD ["node", "-e", "fetch(`http://127.0.0.1:${process.env.PORT}/api/health`).then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+CMD ["node", "server.js"]

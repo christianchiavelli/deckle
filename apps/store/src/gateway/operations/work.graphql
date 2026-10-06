@@ -1,0 +1,62 @@
+# A work's own page: the print and its sizes, the museum's record and its story.
+query Work($slug: String!) {
+  artwork(slug: $slug) {
+    slug
+    title
+    fullTitle
+    date
+    medium
+    dimensions
+    classification
+    department
+    culture
+    period
+    creditLine
+    accessionNumber
+    museumUrl
+    artist {
+      name
+      bio
+      nationality
+      beginYear
+      endYear
+    }
+    image {
+      url
+      width
+      height
+      scanWidth
+      scanHeight
+    }
+    sizes {
+      ...PaperOption
+    }
+    story {
+      title
+      lede
+      blocks {
+        __typename
+        ... on ParagraphBlock {
+          text {
+            ...Run
+          }
+        }
+        ... on HeadingBlock {
+          level
+          text {
+            ...Run
+          }
+        }
+        ... on QuoteBlock {
+          text {
+            ...Run
+          }
+        }
+      }
+      sources {
+        label
+        url
+      }
+    }
+  }
+}

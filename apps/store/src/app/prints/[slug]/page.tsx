@@ -1,0 +1,179 @@
+import {
+  Band,
+  BuyBox,
+  PrintGrid,
+  Record,
+  SectionHead,
+  Stage,
+  Story,
+  TextLink,
+  WorkHeading,
+} from '@deckle/ui';
+import { media, tokens as t } from '@deckle/tokens';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import styled from 'styled-components';
+import { BuyOptions } from '../../../components/buy-options';
+import { PrintTiles } from '../../../components/print-tiles';
+import { StoryBody } from '../../../components/story-body';
+import { copy } from '../../../copy';
+import { readCatalogue, readWork } from '../../../gateway/reads';
+import { imageAt } from '../../../views/images';
+import { morePrints } from '../../../views/more';
+import { defaultSize, factsOf, lifeOf, recordOf, tooSmallNote } from '../../../views/work';
+
+const Product = styled(Band)`
+  padding-block-start: ${t.space.gapLg};
+`;
+
+const Grid = styled.div`
+  display: grid;
+  gap: ${t.space.gap2xl};
+  margin-block-start: ${t.space.gapLg};
+
+  @media ${media.md} {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: ${t.space.gap3xl};
+    align-items: start;
+  }
+`;
+
+const { work: text } = copy;
+
+export async function generateMetadata({ params }: PageProps<'/prints/[slug]'>): Promise<Metadata> {
+  const { slug } = await params;
+  const { artwork } = await readWork(slug);
+  return artwork
+    ? {
+        title: artwork.title,
+        description: [artwork.artist?.name, artwork.date, artwork.medium]
+          .filter(Boolean)
+          .join(', '),
+      }
+    : {};
+}
+
+/** A work's own page, as approved: the print and how to buy it, its story and its record. */
+export default function WorkPage({ params }: PageProps<'/prints/[slug]'>) {
+  return (
+    <Suspense fallback={<Product aria-busy="true" />}>
+      <Work params={params} />
+    </Suspense>
+  );
+}
+
+async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
+  const { slug } = await params;
+  const [{ artwork }, { artworks }] = await Promise.all([readWork(slug), readCatalogue()]);
+  if (!artwork) {
+    notFound();
+  }
+  const pixels = new Intl.NumberFormat(copy.locale);
+  const initial = defaultSize(artwork.sizes);
+  const more = morePrints(
+    artwork,
+    artworks.edges.map((edge) => edge.node),
+  );
+  const { story } = artwork;
+
+  return (
+    <>
+      <Product aria-labelledby="work-title">
+        <Grid>
+          {artwork.image && (
+            <Stage
+              image={{
+                src: imageAt(artwork.image.url, 'page'),
+                width: artwork.image.width,
+                height: artwork.image.height,
+                alt: [artwork.title, artwork.artist?.name].filter(Boolean).join(', '),
+              }}
+              caption={text.caption(
+                pixels.format(artwork.image.scanWidth),
+                pixels.format(artwork.image.scanHeight),
+              )}
+            />
+          )}
+          <BuyBox>
+            <WorkHeading
+              id="work-title"
+              artist={{
+                name: artwork.artist?.name ?? text.unknownArtist,
+                bio: lifeOf(artwork.artist),
+              }}
+              title={artwork.title}
+              facts={factsOf(artwork)}
+            />
+            {initial ? (
+              <BuyOptions
+                sizes={artwork.sizes}
+                initial={initial.size}
+                note={tooSmallNote(artwork, copy)}
+              />
+            ) : (
+              <p>{text.notForSale}</p>
+            )}
+          </BuyBox>
+        </Grid>
+      </Product>
+
+      {story && (
+        <Band aria-labelledby="story-title">
+          <Story
+            id="story-title"
+            title={story.title}
+            lede={story.lede}
+            source={
+              <>
+                {text.source}:{' '}
+                {story.sources.map((source, index) => (
+                  <span key={source.label}>
+                    {index > 0 && '; '}
+                    {source.url === null ? (
+                      source.label
+                    ) : (
+                      <TextLink href={source.url}>{source.label}</TextLink>
+                    )}
+                  </span>
+                ))}
+              </>
+            }
+          >
+            <StoryBody blocks={story.blocks} />
+          </Story>
+        </Band>
+      )}
+
+      <Band tone="band" aria-labelledby="record-title">
+        <SectionHead
+          id="record-title"
+          title={text.recordTitle}
+          action={
+            <TextLink href={artwork.museumUrl} icon="out">
+              {text.museum}
+            </TextLink>
+          }
+        />
+        <Record missing={text.missing} entries={recordOf(artwork, copy)} />
+      </Band>
+
+      {more.length > 0 && (
+        <Band aria-labelledby="more-title">
+          <SectionHead
+            id="more-title"
+            title={text.more}
+            action={
+              <TextLink href="/prints" icon="arrow">
+                {copy.home.seeAll(new Intl.NumberFormat(copy.locale).format(artworks.totalCount))}
+              </TextLink>
+            }
+          />
+          <PrintGrid>
+            <PrintTiles works={more} />
+          </PrintGrid>
+        </Band>
+      )}
+    </>
+  );
+}

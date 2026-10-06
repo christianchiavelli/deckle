@@ -10,6 +10,7 @@
     "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@axe-core/playwright": "catalog:",
     "@deckle/eslint-config": "workspace:*",
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",

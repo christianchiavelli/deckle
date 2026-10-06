@@ -1,0 +1,52 @@
+# A work as a tile in a list: enough for its picture, its maker and its price.
+fragment PrintTile on Artwork {
+  slug
+  title
+  date
+  department
+  artist {
+    name
+  }
+  image {
+    url
+    width
+    height
+  }
+  priceFrom {
+    amount
+    currencyCode
+  }
+  sizes {
+    size
+    available
+  }
+}
+
+# One paper size, sold or not, with the numbers that say why.
+fragment PaperOption on PrintSize {
+  size
+  available
+  ppi
+  requiredPixels
+  unavailableReason
+  variantId
+  paper {
+    width
+    height
+  }
+  image {
+    width
+    height
+  }
+  price {
+    amount
+    currencyCode
+  }
+}
+
+fragment Run on TextRun {
+  text
+  bold
+  italic
+  href
+}

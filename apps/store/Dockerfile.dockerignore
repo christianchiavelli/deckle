@@ -1,0 +1,22 @@
+# Read by BuildKit for apps/store/Dockerfile instead of a root .dockerignore.
+# The image needs the workspace manifests, the shared lint config, the design
+# system and the packages it builds on, and this app.
+**/node_modules
+**/.next
+**/dist
+**/coverage
+**/*.tsbuildinfo
+**/.env
+**/.env.*
+!**/.env.example
+.git
+data
+design
+services
+apps/cms
+packages/met
+packages/ui/storybook-static
+packages/ui/.storybook
+packages/ui/src/screens
+**/*.stories.tsx
+**/*.mdx

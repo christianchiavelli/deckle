@@ -1,0 +1,38 @@
+# The front page: the editor's selection, the work in the hero, and the work
+# whose scan explains how sizes are set.
+query Home($curation: String!, $hero: String!, $sizing: String!) {
+  curation(slug: $curation) {
+    slug
+    title
+    artworks {
+      ...PrintTile
+    }
+  }
+  hero: artwork(slug: $hero) {
+    slug
+    title
+    date
+    artist {
+      name
+    }
+    image {
+      url
+      width
+      height
+    }
+  }
+  sizing: artwork(slug: $sizing) {
+    slug
+    title
+    image {
+      url
+      width
+      height
+      scanWidth
+      scanHeight
+    }
+    sizes {
+      ...PaperOption
+    }
+  }
+}
