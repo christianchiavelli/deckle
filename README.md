@@ -64,6 +64,7 @@ AWS and Shopify Plus are left out on purpose: the stack runs on a laptop with no
 pnpm run ci                                  # format, lint, types, and unit tests with coverage
 pnpm -r --if-present run test:integration    # against a real Postgres 18, in Testcontainers
 pnpm -r --if-present run schema:check        # each committed schema matches the code
+pnpm --filter @deckle/e2e test:e2e           # in a browser, against the running stack
 ```
 
 Anything that touches the database runs against a real one, never a mock: migrations racing across replicas, a webhook delivered twice at once, an event that must not leave a rolled-back transaction. CI then builds the three images and runs the whole stack from them.

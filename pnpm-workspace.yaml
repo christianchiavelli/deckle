@@ -3,6 +3,7 @@ packages:
   - services/*
   - packages/*
   - design/*
+  - e2e
 
 # One version of each dependency for the whole repository, checked at the
 # source on 5 October 2026. A package names `catalog:` instead of a range, so

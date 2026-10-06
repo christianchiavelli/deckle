@@ -13,6 +13,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/print-sizes` | Which paper sizes a scan can print, and at what ppi. Plain TypeScript, no I/O |
 | `packages/eslint-config` | The lint rules every package shares |
 | `data/met` | The imported data set: `catalog.json` and the reduced images, baked into the published images |
+| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the admin panels in Portuguese |
 | `design/art-direction` | The three art directions for the artwork page, each a DTCG token set, in static HTML |
 | `infra` | Caddy and Postgres configuration for `compose.yaml` |
 | `docs` | `upstream-api.md` (The Met, probed live) and the decision records in `adr/` |
@@ -29,6 +30,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm --filter @deckle/cms dev` pushes the schema straight into its database. Point it at a throwaway one, never the stack's `cms` database, or the next migration stops to ask questions.
 - `pnpm --filter @deckle/cms seed`: creates the editor, the gateway's read-only user and the starter stories, through the API of a CMS that is already running.
 - `pnpm -r --if-present run test:integration`: the specs that need a real Postgres, in Testcontainers. Needs Docker running.
+- `pnpm --filter @deckle/e2e test:e2e`: the browser checks, against the stack `docker compose up --wait` started. The first time, `pnpm --filter @deckle/e2e exec playwright install chromium` fetches the browser.
 - `pnpm --filter @deckle/gateway schema:generate`: after any change to a resolver or GraphQL type. `schema.gql` is the committed contract, and CI fails when it is stale or when a change breaks a client.
 - `pnpm --filter @deckle/gateway db:generate --name <change>`: after editing a `*.table.ts`. Commit the new files under `drizzle/`; the gateway migrates itself as it starts.
 - `pnpm --filter @deckle/commerce schema`: prints the Shop API schema the gateway reads into `services/commerce/schema/`. CI fails when the committed file is stale (`schema:check`).
