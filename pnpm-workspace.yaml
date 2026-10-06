@@ -138,6 +138,15 @@ packageExtensions:
       '@nestjs/core': 11.2.7
       '@vendure/core': 3.7.4
 
+# @nestjs/terminus offers health checks for many backends through optional
+# peers, and pnpm links each one it finds anywhere in the workspace, so
+# commerce's TypeORM and Testcontainers' gRPC would ship in the gateway's image
+# unused. Its health checks need none of them.
+overrides:
+  '@nestjs/terminus>typeorm': '-'
+  '@nestjs/terminus>@grpc/grpc-js': '-'
+  '@nestjs/terminus>@grpc/proto-loader': '-'
+
 # A version reaches this repository a day after it is published (pnpm's
 # default since 11), which keeps out the releases that get pulled within hours.
 # These were a day old or less when the repository started, and are pinned
