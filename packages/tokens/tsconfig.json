@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "rootDir": ".",
+    "noEmit": true,
+    "types": ["node"],
+    // Node runs the build straight from source, so only erasable syntax and .ts imports.
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["src", "*.config.ts"]
+}

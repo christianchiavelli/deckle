@@ -1,0 +1,36 @@
+{
+  "name": "@deckle/tokens",
+  "version": "0.0.0",
+  "description": "Deckle's design tokens: DTCG at the source; CSS, TypeScript and Storybook data out",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./foundations.json": "./dist/foundations.json"
+  },
+  "files": [
+    "dist",
+    "tokens"
+  ],
+  "scripts": {
+    "prepare": "node src/build.ts",
+    "build": "node src/build.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@deckle/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "style-dictionary": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -24,6 +24,8 @@ A plain accent connects nobody to the shop, so C2 was then coloured three ways f
 
 ![The three palettes from the trade, light and dark](shots/compare-trade-first-screen.png)
 
+On 6 October 2026 the owner chose **Copper plate**. Its token set is now `packages/tokens`, and this folder stays as the record of the choice.
+
 ## Looking at them
 
 Open `index.html` in a browser for all three side by side, or `artwork.html?d=kento&theme=dark` for one. The comparison sheets in `shots/` come from `pnpm --filter @deckle/art-direction capture`.
