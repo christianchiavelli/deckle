@@ -16,6 +16,7 @@ export default defineConfig({
         'src/fields/**/*.ts',
         'src/preview/**/*.ts',
         'src/rich-text/prose.ts',
+        'src/seed/cms-client.ts',
         'src/webhooks/event.ts',
         'src/webhooks/publication.ts',
         'src/webhooks/signature.ts',

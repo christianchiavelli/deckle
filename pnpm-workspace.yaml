@@ -59,6 +59,10 @@ catalog:
   react-dom: 19.3.0
   '@types/react': 19.3.0
   '@types/react-dom': 19.3.0
+  # Bundles the CMS seed into one file the standalone image can run; it also
+  # satisfies Vite 8's optional esbuild peer, which would otherwise resolve to
+  # drizzle-kit's 0.25.
+  esbuild: 0.28.2
 
   # Gateway
   '@nestjs/common': 12.1.2

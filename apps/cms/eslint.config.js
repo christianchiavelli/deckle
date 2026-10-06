@@ -48,8 +48,19 @@ export default [
     },
   },
   {
+    files: ['src/seed/**/*.ts'],
+    ignores: ['**/*.spec.ts'],
+    rules: {
+      'no-restricted-imports': restrictImports({
+        group: [...framework, '**/payload.config', '**/collections/**', '**/webhooks/**'],
+        message:
+          'The seed is a REST client bundled into one file for the image: it cannot load Payload.',
+      }),
+    },
+  },
+  {
     files: ['src/**/*.ts'],
-    ignores: [...contracts, 'src/app/**', 'src/proxy.ts', '**/*.spec.ts'],
+    ignores: [...contracts, 'src/seed/**', 'src/app/**', 'src/proxy.ts', '**/*.spec.ts'],
     rules: {
       'no-restricted-imports': restrictImports({
         group: ['next', 'next/**'],
