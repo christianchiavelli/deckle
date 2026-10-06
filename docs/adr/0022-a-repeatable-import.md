@@ -1,4 +1,4 @@
-# XXXX. An import that changes nothing when nothing changed
+# 22. An import that changes nothing when nothing changed
 
 - Status: accepted
 - Date: 2026-10-05

@@ -12,7 +12,7 @@ import { readCatalog } from './read-catalog.js';
 
 /** The committed data set, as every service will read it. */
 const dataDir = fileURLToPath(new URL('../../../data/met/', import.meta.url));
-/** The size the data set was planned to (docs/adr/XXXX-reduced-masters.md). */
+/** The size the data set was planned to (docs/adr/0021-reduced-masters.md). */
 const BUDGET_BYTES = 25_000_000;
 
 describe('data/met', () => {

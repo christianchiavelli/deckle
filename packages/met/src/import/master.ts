@@ -10,7 +10,7 @@ export interface MasterSettings {
 /**
  * The reduced master every service reads. More pixels at a lower quality kept
  * more of the engraved line under zoom than fewer pixels at a higher one, for
- * the same bytes: measured in docs/adr/XXXX-reduced-masters.md.
+ * the same bytes: measured in docs/adr/0021-reduced-masters.md.
  */
 export const MASTER: MasterSettings = { format: 'webp', longEdge: 2400, quality: 60 };
 

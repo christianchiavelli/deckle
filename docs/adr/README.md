@@ -23,3 +23,6 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0017](0017-design-system-starts-in-code.md) | The design system starts in code |
 | [0018](0018-the-stack-from-published-images.md) | The stack runs from published images |
 | [0019](0019-ci-least-privilege-pinned-actions.md) | CI with least privilege and pinned actions |
+| [0020](0020-pace-requests-to-the-met.md) | One request a second to The Met, retried with jitter |
+| [0021](0021-reduced-masters.md) | Reduced masters: WebP, 2,400 px, quality 60 |
+| [0022](0022-a-repeatable-import.md) | An import that changes nothing when nothing changed |

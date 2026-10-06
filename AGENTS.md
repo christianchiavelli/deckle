@@ -23,6 +23,8 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm run ci`: format check, lint, types and unit tests in every package. Must pass before any change is done.
 - `pnpm --filter <package> <script>`: one package's script, e.g. `pnpm --filter @deckle/gateway test`.
 - `docker compose up --wait`: the whole stack, production builds, healthchecked.
+- `pnpm --filter @deckle/met run import`: fetches the curated works from The Met again and rewrites `data/met`, only where bytes changed. `run` is needed because `import` is also a pnpm command. It calls the museum, so it never runs in CI.
+- `pnpm --filter @deckle/met run candidates`: searches The Met and sizes the works that could join the curated list. Also never in CI.
 
 ## Contracts between services
 

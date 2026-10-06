@@ -1,4 +1,4 @@
-# XXXX. Reduced masters: WebP, 2,400 px, quality 60
+# 21. Reduced masters: WebP, 2,400 px, quality 60
 
 - Status: accepted
 - Date: 2026-10-05

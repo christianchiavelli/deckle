@@ -1,4 +1,4 @@
-# XXXX. One request a second to The Met, retried with jitter
+# 20. One request a second to The Met, retried with jitter
 
 - Status: accepted
 - Date: 2026-10-05
