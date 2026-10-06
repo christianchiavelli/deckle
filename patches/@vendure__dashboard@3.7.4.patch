@@ -1,0 +1,29 @@
+diff --git a/src/lib/hooks/use-ui-language-loader.ts b/src/lib/hooks/use-ui-language-loader.ts
+index c7822bd5f1fa92369f292e9abe883679945af4b5..74e305c0ac9abfeddcc9728c6bf8fcb8e040d4ff 100644
+--- a/src/lib/hooks/use-ui-language-loader.ts
++++ b/src/lib/hooks/use-ui-language-loader.ts
+@@ -25,7 +25,9 @@ export function useUiLanguageLoader() {
+             try {
+                 const messages = await loadI18nMessages(locale);
+                 i18n.load(locale, messages);
+-                i18n.activate(locale);
++                // Vendure names languages with an underscore (pt_BR), which Intl rejects as a
++                // locale, so plurals, dates and numbers are formatted with the BCP 47 tag (pt-BR).
++                i18n.activate(locale, [locale.replace('_', '-')]);
+             } finally {
+                 currentlyLoading = null;
+             }
+diff --git a/src/lib/providers/i18n-provider.tsx b/src/lib/providers/i18n-provider.tsx
+index 2f0f8d1dc31daf55518c9d6a507b4895b825a056..2af74c949ad822b6e792bdb5993e5dadcd0efaef 100644
+--- a/src/lib/providers/i18n-provider.tsx
++++ b/src/lib/providers/i18n-provider.tsx
+@@ -19,7 +19,8 @@ i18n.activate(defaultLocale);
+ export async function dynamicActivate(locale: string, onActivate?: () => void) {
+     const messages = await loadI18nMessages(locale);
+     i18n.load(locale, messages);
+-    i18n.activate(locale);
++    // Intl rejects Vendure's underscored codes (pt_BR): format with the BCP 47 tag.
++    i18n.activate(locale, [locale.replace('_', '-')]);
+     onActivate?.();
+ }
+ 

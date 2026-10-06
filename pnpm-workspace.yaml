@@ -184,3 +184,10 @@ allowBuilds:
   cpu-features: false
   # Vitest's mocker: the postinstall copies a browser service worker we never use.
   msw: false
+
+# Fixes in dependencies, each with its reason. Drop a patch once its version is upgraded.
+patchedDependencies:
+  # The dashboard activates Lingui with Vendure's language code (pt_BR), which Intl
+  # rejects as a locale, so any page with a plural, a date or a price fails in
+  # Brazilian Portuguese. The patch formats with the BCP 47 tag (pt-BR) instead.
+  '@vendure/dashboard@3.7.4': patches/@vendure__dashboard@3.7.4.patch

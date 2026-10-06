@@ -10,6 +10,7 @@ ENV PNPM_HOME=/pnpm \
     NEXT_TELEMETRY_DISABLED=1
 WORKDIR /repo
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY patches/ patches/
 # pnpm at the exact version and checksum `packageManager` names.
 RUN corepack enable pnpm && corepack install
 

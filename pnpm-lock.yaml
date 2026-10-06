@@ -390,6 +390,9 @@ overrides:
 
 packageExtensionsChecksum: sha256-a2wYRXjvPUW41R/Hrux5jpHKSx/sz7W06vmnskYFW3E=
 
+patchedDependencies:
+  '@vendure/dashboard@3.7.4': 018c6e4ead5fbce07bc355fce4e68e62d359f2878c65d9b7734366d0cf5d4263
+
 importers:
 
   .:
@@ -591,7 +594,7 @@ importers:
         version: 3.7.4(babel-plugin-macros@3.1.0)(pg@8.23.1)(sql.js@1.14.2)(supports-color@7.2.0)(typescript@6.0.3)
       '@vendure/dashboard':
         specifier: 'catalog:'
-        version: 3.7.4(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@nestjs/core@11.2.7)(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(@tanstack/router-core@1.171.34)(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/extensions@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))(@types/node@24.19.1)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(babel-plugin-macros@3.1.0)(csstype@3.2.3)(esbuild@0.28.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(jiti@2.7.0)(lightningcss@1.33.0)(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@24.19.1)(babel-plugin-macros@3.1.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sass@1.77.4))(pg@8.23.1)(reflect-metadata@0.2.2)(rolldown@1.2.12)(rollup@4.64.0)(rxjs@7.8.2)(sass@1.77.4)(sql.js@1.14.2)(supports-color@7.2.0)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1)
+        version: 3.7.4(patch_hash=018c6e4ead5fbce07bc355fce4e68e62d359f2878c65d9b7734366d0cf5d4263)(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@nestjs/core@11.2.7)(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(@tanstack/router-core@1.171.34)(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/extensions@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))(@types/node@24.19.1)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(babel-plugin-macros@3.1.0)(csstype@3.2.3)(esbuild@0.28.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(jiti@2.7.0)(lightningcss@1.33.0)(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@24.19.1)(babel-plugin-macros@3.1.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sass@1.77.4))(pg@8.23.1)(reflect-metadata@0.2.2)(rolldown@1.2.12)(rollup@4.64.0)(rxjs@7.8.2)(sass@1.77.4)(sql.js@1.14.2)(supports-color@7.2.0)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1)
       '@vendure/email-plugin':
         specifier: 'catalog:'
         version: 3.7.4(@nestjs/platform-express@11.2.7)(babel-plugin-macros@3.1.0)(pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)(sql.js@1.14.2)(supports-color@7.2.0)(svgo@4.1.0)(typescript@6.0.3)
@@ -14618,7 +14621,7 @@ snapshots:
       - uWebSockets.js
       - utf-8-validate
 
-  '@vendure/dashboard@3.7.4(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@nestjs/core@11.2.7)(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(@tanstack/router-core@1.171.34)(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/extensions@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))(@types/node@24.19.1)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(babel-plugin-macros@3.1.0)(csstype@3.2.3)(esbuild@0.28.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(jiti@2.7.0)(lightningcss@1.33.0)(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@24.19.1)(babel-plugin-macros@3.1.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sass@1.77.4))(pg@8.23.1)(reflect-metadata@0.2.2)(rolldown@1.2.12)(rollup@4.64.0)(rxjs@7.8.2)(sass@1.77.4)(sql.js@1.14.2)(supports-color@7.2.0)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1)':
+  '@vendure/dashboard@3.7.4(patch_hash=018c6e4ead5fbce07bc355fce4e68e62d359f2878c65d9b7734366d0cf5d4263)(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@nestjs/core@11.2.7)(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(@tanstack/router-core@1.171.34)(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/extensions@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))(@types/node@24.19.1)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(babel-plugin-macros@3.1.0)(csstype@3.2.3)(esbuild@0.28.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(jiti@2.7.0)(lightningcss@1.33.0)(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@24.19.1)(babel-plugin-macros@3.1.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sass@1.77.4))(pg@8.23.1)(reflect-metadata@0.2.2)(rolldown@1.2.12)(rollup@4.64.0)(rxjs@7.8.2)(sass@1.77.4)(sql.js@1.14.2)(supports-color@7.2.0)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1)':
     dependencies:
       '@babel/core': 7.29.7(supports-color@7.2.0)
       '@babel/preset-react': 7.29.7(@babel/core@7.29.7(supports-color@7.2.0))(supports-color@7.2.0)

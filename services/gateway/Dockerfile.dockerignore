@@ -4,6 +4,7 @@
 !package.json
 !pnpm-lock.yaml
 !pnpm-workspace.yaml
+!patches/
 !tsconfig.base.json
 !packages/eslint-config
 !packages/print-sizes

@@ -19,6 +19,7 @@ WORKDIR /repo
 
 # The lockfile alone decides what is downloaded, so this layer outlives source edits.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches/ patches/
 RUN --mount=type=cache,id=deckle-pnpm-store,target=/pnpm/store \
     --mount=type=cache,id=deckle-pnpm-cache,target=/root/.cache/pnpm \
     pnpm fetch --store-dir /pnpm/store

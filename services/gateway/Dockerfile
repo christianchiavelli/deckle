@@ -18,6 +18,7 @@ RUN corepack enable pnpm && corepack install
 # Dependencies first, from the manifests alone, so a source change reuses this layer.
 # Scripts wait for the sources: print-sizes compiles itself in `prepare`.
 COPY pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
+COPY patches/ patches/
 COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/print-sizes/package.json packages/print-sizes/
 COPY services/gateway/package.json services/gateway/
