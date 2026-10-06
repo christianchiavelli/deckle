@@ -46,9 +46,11 @@ const Label = styled.p<{ $available: boolean }>`
   font-size: 0.75rem;
   line-height: 1.35;
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 
+  /* The size never breaks; its ppi wraps under itself where a small sheet is
+     narrower than "248 ppi", as A4 is beside A1 on a phone. */
   strong {
+    white-space: nowrap;
     color: ${({ $available }) => ($available ? t.text.accent : 'inherit')};
     font-size: 0.875rem;
     font-weight: ${t.type.label.weight};
