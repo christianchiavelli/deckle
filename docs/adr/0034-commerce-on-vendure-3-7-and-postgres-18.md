@@ -1,4 +1,4 @@
-# Commerce runs Vendure 3.7.4 on Postgres 18, with committed migrations
+# 34. Commerce runs Vendure 3.7.4 on Postgres 18, with committed migrations
 
 - Status: accepted
 - Date: 2026-10-05

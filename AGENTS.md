@@ -31,6 +31,9 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm -r --if-present run test:integration`: the specs that need a real Postgres, in Testcontainers. Needs Docker running.
 - `pnpm --filter @deckle/gateway schema:generate`: after any change to a resolver or GraphQL type. `schema.gql` is the committed contract, and CI fails when it is stale or when a change breaks a client.
 - `pnpm --filter @deckle/gateway db:generate --name <change>`: after editing a `*.table.ts`. Commit the new files under `drizzle/`; the gateway migrates itself as it starts.
+- `pnpm --filter @deckle/commerce schema`: prints the Shop API schema the gateway reads into `services/commerce/schema/`. CI fails when the committed file is stale (`schema:check`).
+- `pnpm --filter @deckle/commerce migration:generate <name>`: after a change to Vendure's config or a custom field, run against a database that has every migration applied. Commerce migrates itself as it starts, and refuses to start when the database and the config differ.
+- `pnpm --filter @deckle/commerce seed`: loads `data/met` into Vendure. It is idempotent by Met object id.
 
 ## Contracts between services
 
@@ -49,6 +52,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 - **The gateway vouches for its users to commerce.** It signs a short-lived EdDSA JWT (`iss` `deckle-gateway`, `aud` `deckle-commerce`, `sub` the Deckle user id) and publishes its keys at `GET /internal/jwks.json`. Commerce verifies it in a Vendure `AuthenticationStrategy` named `deckle`, so it holds no secret that could mint a login.
 - **The gateway calls the Admin API with an API key, never a session.**
 - **Missing data is `null`, never `""` or `0`.** Every reader renders it as a dash.
+- **Commerce's API key is `<lookup id>:<secret>`**, 8 to 64 then 32 to 256 characters of `[A-Za-z0-9_-]`, and the gateway's `COMMERCE_API_KEY` is the same string. Commerce refuses to start with any other shape.
 
 ## Conventions
 

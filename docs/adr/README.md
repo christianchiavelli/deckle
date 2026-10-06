@@ -37,3 +37,7 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0031](0031-gateway-migrations-at-start-under-an-advisory-lock.md) | Gateway migrations at start-up, under an advisory lock |
 | [0032](0032-gateway-health-is-readiness.md) | Gateway health is readiness |
 | [0033](0033-gateway-offset-cursors.md) | Offset cursors over commerce's skip and take |
+| [0034](0034-commerce-on-vendure-3-7-and-postgres-18.md) | Commerce runs Vendure 3.7.4 on Postgres 18, with committed migrations |
+| [0035](0035-commerce-seed-through-vendure-services.md) | The commerce seed goes through Vendure's services, not populate() and a CSV |
+| [0036](0036-commerce-sessions-api-keys-and-gateway-sign-in.md) | Commerce sessions: cookies for the dashboard, bearer for the gateway, API keys for the Admin API |
+| [0037](0037-commerce-catalogue-hooks.md) | Catalogue hooks: coalesced in memory, delivered through Vendure's job queue |

@@ -1,4 +1,4 @@
-# The commerce seed goes through Vendure's services, not populate() and a CSV
+# 35. The commerce seed goes through Vendure's services, not populate() and a CSV
 
 - Status: accepted
 - Date: 2026-10-05

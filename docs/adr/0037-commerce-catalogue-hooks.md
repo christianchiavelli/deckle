@@ -1,4 +1,4 @@
-# Catalogue hooks: coalesced in memory, delivered through Vendure's job queue
+# 37. Catalogue hooks: coalesced in memory, delivered through Vendure's job queue
 
 - Status: accepted
 - Date: 2026-10-05

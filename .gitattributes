@@ -20,3 +20,5 @@ apps/cms/src/payload-types.ts linguist-generated=true
 apps/cms/src/migrations/** linguist-generated=true
 apps/cms/src/app/(payload)/admin/importMap.js linguist-generated=true
 services/gateway/drizzle/meta/** linguist-generated=true
+services/commerce/schema/shop-api.graphql linguist-generated=true
+services/commerce/src/migrations/*-initial-schema.ts linguist-generated=true

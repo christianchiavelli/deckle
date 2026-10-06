@@ -1,4 +1,4 @@
-# Commerce sessions: cookies for the dashboard, bearer for the gateway, API keys for the Admin API
+# 36. Commerce sessions: cookies for the dashboard, bearer for the gateway, API keys for the Admin API
 
 - Status: accepted
 - Date: 2026-10-05
