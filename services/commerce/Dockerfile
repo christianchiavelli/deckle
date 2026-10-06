@@ -26,10 +26,14 @@ RUN --mount=type=cache,id=deckle-pnpm-store,target=/pnpm/store \
 
 # What reaches this COPY is whitelisted by Dockerfile.dockerignore: the commerce
 # package, the workspace packages it builds on, and every workspace manifest.
+# Before installing, pnpm checks every lockfile entry against the supply-chain
+# policies, which reads each package's registry metadata. That metadata lives in
+# the cache mount, which is empty whenever the fetch layer comes from CI's build
+# cache instead of running, so the install fetches whatever it lacks.
 COPY . .
 RUN --mount=type=cache,id=deckle-pnpm-store,target=/pnpm/store \
     --mount=type=cache,id=deckle-pnpm-cache,target=/root/.cache/pnpm \
-    pnpm install --offline --frozen-lockfile --store-dir /pnpm/store --filter '@deckle/commerce...'
+    pnpm install --prefer-offline --frozen-lockfile --store-dir /pnpm/store --filter '@deckle/commerce...'
 RUN pnpm --filter @deckle/commerce build
 
 # A self-contained copy of the package: `dist` (package.json `files`) and a
