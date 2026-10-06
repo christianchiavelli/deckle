@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-05T17:40:34.325Z",
+  "source": "https://collectionapi.metmuseum.org/public/collection/v1",
+  "works": [
+    {
+      "objectId": 336228,
+      "slug": "melencolia-i",
+      "title": "Melencolia I",
+      "shortTitle": "Melencolia I",
+      "artist": {
+        "name": "Albrecht Dürer",
+        "bio": "German, Nuremberg 1471–1528 Nuremberg",
+        "nationality": "German",
+        "beginYear": 1471,
+        "endYear": 1528
+      },
+      "date": {
+        "display": "1514",
+        "beginYear": 1514,
+        "endYear": 1514
+      },
+      "medium": "Engraving",
+      "dimensions": ["Plate: 9 7/16 × 7 5/16 in. (24 × 18.5 cm)"],
+      "classification": "Prints",
+      "department": "Drawings and Prints",
+      "culture": null,
+      "period": null,
+      "creditLine": "Harris Brisbane Dick Fund, 1943",
+      "accessionNumber": "43.106.1",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/336228",
+      "tags": ["Contemplation", "Putti", "Dogs", "Geometry"],
+      "image": {
+        "file": "336228.jpg",
+        "width": 253,
+        "height": 320,
+        "originalWidth": 2820,
+        "originalHeight": 3561,
+        "sha256": "e34c2e5f0f1299347a5cee0e5e7261142763a3ab7f0d16bf8e13181cf9a23442",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820348.jpg"
+      }
+    },
+    {
+      "objectId": 45434,
+      "slug": "under-the-wave-off-kanagawa",
+      "title": "Under the Wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave, from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+      "shortTitle": "Under the Wave off Kanagawa",
+      "artist": {
+        "name": "Katsushika Hokusai",
+        "bio": "Japanese, Tokyo (Edo) 1760–1849 Tokyo (Edo)",
+        "nationality": "Japanese",
+        "beginYear": 1760,
+        "endYear": 1849
+      },
+      "date": {
+        "display": "ca. 1830–32",
+        "beginYear": 1820,
+        "endYear": 1842
+      },
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": ["10 1/8 x 14 15/16 in. (25.7 x 37.9 cm)"],
+      "classification": "Prints",
+      "department": "Asian Art",
+      "culture": "Japan",
+      "period": "Edo period (1615–1868)",
+      "creditLine": "H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "accessionNumber": "JP1847",
+      "objectUrl": "https://www.metmuseum.org/art/collection/search/45434",
+      "tags": ["Waves", "Boats"],
+      "image": {
+        "file": "45434.webp",
+        "width": 320,
+        "height": 215,
+        "originalWidth": 3859,
+        "originalHeight": 2594,
+        "sha256": "81cefd9cfe448852b40fd5a332a3f78f78760dbe132102fb433da4252f0fa0bb",
+        "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg"
+      }
+    }
+  ]
+}
