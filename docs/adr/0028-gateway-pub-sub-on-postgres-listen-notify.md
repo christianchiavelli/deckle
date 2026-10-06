@@ -1,4 +1,4 @@
-# Gateway pub/sub on Postgres LISTEN/NOTIFY
+# 28. Gateway pub/sub on Postgres LISTEN/NOTIFY
 
 - Status: accepted
 - Date: 2026-10-05

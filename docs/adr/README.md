@@ -29,3 +29,11 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0023](0023-cms-migrations-at-start-up-and-a-rest-seed.md) | CMS: migrations at start-up, and a seed that talks REST |
 | [0024](0024-cms-webhooks-through-the-jobs-queue.md) | CMS: webhooks to the gateway through Payload's jobs queue |
 | [0025](0025-cms-content-model-and-gateway-access.md) | CMS: a small rich-text contract, and a read-only gateway |
+| [0026](0026-gateway-schema-contract.md) | The gateway's schema is a committed contract |
+| [0027](0027-gateway-graphql-request-limits.md) | Gateway GraphQL request limits |
+| [0028](0028-gateway-pub-sub-on-postgres-listen-notify.md) | Gateway pub/sub on Postgres LISTEN/NOTIFY |
+| [0029](0029-gateway-idempotent-webhooks.md) | Idempotent webhooks in one transaction |
+| [0030](0030-gateway-signing-keys-in-postgres.md) | Gateway signing keys in Postgres |
+| [0031](0031-gateway-migrations-at-start-under-an-advisory-lock.md) | Gateway migrations at start-up, under an advisory lock |
+| [0032](0032-gateway-health-is-readiness.md) | Gateway health is readiness |
+| [0033](0033-gateway-offset-cursors.md) | Offset cursors over commerce's skip and take |

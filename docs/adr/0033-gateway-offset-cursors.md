@@ -1,4 +1,4 @@
-# Offset cursors over commerce's skip and take
+# 33. Offset cursors over commerce's skip and take
 
 - Status: accepted
 - Date: 2026-10-05

@@ -1,4 +1,4 @@
-# The gateway's schema is a committed contract
+# 26. The gateway's schema is a committed contract
 
 - Status: accepted
 - Date: 2026-10-05

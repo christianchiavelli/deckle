@@ -1,4 +1,4 @@
-# Gateway signing keys in Postgres
+# 30. Gateway signing keys in Postgres
 
 - Status: accepted
 - Date: 2026-10-05

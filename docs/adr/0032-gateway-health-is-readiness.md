@@ -1,4 +1,4 @@
-# Gateway health is readiness
+# 32. Gateway health is readiness
 
 - Status: accepted
 - Date: 2026-10-05

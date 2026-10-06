@@ -1,4 +1,4 @@
-# Gateway migrations at start-up, under an advisory lock
+# 31. Gateway migrations at start-up, under an advisory lock
 
 - Status: accepted
 - Date: 2026-10-05

@@ -1,4 +1,4 @@
-# Gateway GraphQL request limits
+# 27. Gateway GraphQL request limits
 
 - Status: accepted
 - Date: 2026-10-05
