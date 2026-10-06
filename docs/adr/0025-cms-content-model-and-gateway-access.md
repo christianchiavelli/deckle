@@ -1,4 +1,4 @@
-# CMS: a small rich-text contract, and a read-only gateway
+# 25. CMS: a small rich-text contract, and a read-only gateway
 
 - Status: accepted
 - Date: 2026-10-05

@@ -25,6 +25,9 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `docker compose up --wait`: the whole stack, production builds, healthchecked.
 - `pnpm --filter @deckle/met run import`: fetches the curated works from The Met again and rewrites `data/met`, only where bytes changed. `run` is needed because `import` is also a pnpm command. It calls the museum, so it never runs in CI.
 - `pnpm --filter @deckle/met run candidates`: searches The Met and sizes the works that could join the curated list. Also never in CI.
+- `pnpm --filter @deckle/cms migrate:create <name>`, then `generate:types`: after any change to a CMS collection. Commit the migration and the types together; the CMS applies migrations itself as it starts.
+- `pnpm --filter @deckle/cms dev` pushes the schema straight into its database. Point it at a throwaway one, never the stack's `cms` database, or the next migration stops to ask questions.
+- `pnpm --filter @deckle/cms seed`: creates the editor, the gateway's read-only user and the starter stories, through the API of a CMS that is already running.
 
 ## Contracts between services
 

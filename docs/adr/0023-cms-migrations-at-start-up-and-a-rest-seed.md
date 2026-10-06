@@ -1,4 +1,4 @@
-# CMS: migrations at start-up, and a seed that talks REST
+# 23. CMS: migrations at start-up, and a seed that talks REST
 
 - Status: accepted
 - Date: 2026-10-05

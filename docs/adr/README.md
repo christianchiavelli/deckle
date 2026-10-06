@@ -26,3 +26,6 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0020](0020-pace-requests-to-the-met.md) | One request a second to The Met, retried with jitter |
 | [0021](0021-reduced-masters.md) | Reduced masters: WebP, 2,400 px, quality 60 |
 | [0022](0022-a-repeatable-import.md) | An import that changes nothing when nothing changed |
+| [0023](0023-cms-migrations-at-start-up-and-a-rest-seed.md) | CMS: migrations at start-up, and a seed that talks REST |
+| [0024](0024-cms-webhooks-through-the-jobs-queue.md) | CMS: webhooks to the gateway through Payload's jobs queue |
+| [0025](0025-cms-content-model-and-gateway-access.md) | CMS: a small rich-text contract, and a read-only gateway |

@@ -16,3 +16,6 @@ pnpm-lock.yaml linguist-generated=true -diff
 services/gateway/schema.gql linguist-generated=true
 design/art-direction/build/tokens.css linguist-generated=true
 data/met/catalog.json linguist-generated=true
+apps/cms/src/payload-types.ts linguist-generated=true
+apps/cms/src/migrations/** linguist-generated=true
+apps/cms/src/app/(payload)/admin/importMap.js linguist-generated=true
