@@ -68,8 +68,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # Testcontainers starts a real Postgres 18 on the runner's Docker for each suite.
+      # Every package runs to the end, so one failure does not stop the others mid-test.
       - name: Integration tests
-        run: pnpm -r --if-present run test:integration
+        run: pnpm -r --if-present --no-bail run test:integration
 
   contract:
     name: GraphQL contract
