@@ -1,0 +1,17 @@
+# The gateway image builds from the workspace manifests, the shared TypeScript
+# settings and the packages it compiles against; nothing else reaches the builder.
+*
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.base.json
+!packages/eslint-config
+!packages/print-sizes
+!services/gateway
+
+**/node_modules
+**/dist
+**/coverage
+**/.env
+**/.env.*
+services/gateway/Dockerfile*
