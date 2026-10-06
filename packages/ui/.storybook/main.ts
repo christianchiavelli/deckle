@@ -5,9 +5,10 @@ export default defineMain({
   framework: { name: '@storybook/nextjs-vite', options: {} },
   stories: ['../src/**/*.mdx', '../src/**/*.stories.tsx'],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
-  // The typeface for Storybook's own chrome, which loads none of the store's CSS,
-  // and the Met's images for the screens, as the importer wrote them.
+  // The favicon, the typeface for Storybook's own chrome, which loads none of
+  // the store's CSS, and the Met's images for the screens.
   staticDirs: [
+    { from: '../brand', to: '/' },
     { from: '../src/fonts', to: '/fonts' },
     { from: '../../../data/met/images', to: '/met' },
   ],

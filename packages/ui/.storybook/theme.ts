@@ -1,5 +1,6 @@
 import foundations from '@deckle/tokens/foundations.json';
 import { create } from 'storybook/theming';
+import { seal } from '../src/brand/seal.ts';
 
 /**
  * Storybook's own chrome cannot read CSS variables, so it takes the light
@@ -15,10 +16,22 @@ function light(token: string): string {
 
 const body = foundations.type.find((role) => role.role === 'body');
 
+/*
+ * The sidebar's title is the store's own lockup, the seal and the name set as
+ * an imprint. Storybook renders a title without an image as HTML.
+ */
+const lockup = [
+  '<span style="display: inline-flex; align-items: center; gap: 10px">',
+  `<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="${light('icon.accent')}" fill-rule="evenodd" d="${seal}"/></svg>`,
+  '<span style="font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase">Deckle</span>',
+  `<span style="color: ${light('text.secondary')}; font-size: 12px; font-weight: 500; white-space: nowrap">design system</span>`,
+  '</span>',
+].join('');
+
 /** Storybook in Deckle's light theme: its sidebar and toolbar, and the docs pages. */
 export const theme = create({
   base: 'light',
-  brandTitle: 'Deckle · design system',
+  brandTitle: lockup,
   brandUrl: 'https://github.com/christianchiavelli/deckle',
   brandTarget: '_blank',
   colorPrimary: light('accent.default'),

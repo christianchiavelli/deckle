@@ -3,15 +3,11 @@
  * round ends, so they sit with Host Grotesk at text sizes. No icon library: a
  * handful of shapes is cheaper than a dependency, and these are the shop's own.
  */
+import { seal } from '../../brand/seal.ts';
+
 export const icons = {
-  /** The mark: a sheet with a torn, deckled edge. Filled, the one icon that is. */
-  deckle: (
-    <path
-      d="M3 3.2h11.8l2.1.9-1 1.5 1.7 1.3-1.4 1.8 1.7 1.4-1.3 1.3 1.5 1.8-1.8 1.4 1.1 1.7-1.6 1.1 1.4 1.8-1.6 1.6H3Z"
-      fill="currentColor"
-      stroke="none"
-    />
-  ),
+  /** The mark, the studio's seal. Filled, the one icon that is. */
+  deckle: <path d={seal} fill="currentColor" fillRule="evenodd" stroke="none" />,
   search: (
     <>
       <circle cx="10.5" cy="10.5" r="6.5" />

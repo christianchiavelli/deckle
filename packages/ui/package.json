@@ -15,6 +15,7 @@
     "storybook": "storybook dev --port 6006",
     "build": "storybook build --output-dir storybook-static --quiet",
     "fonts": "node scripts/fonts.ts",
+    "favicon": "node scripts/favicon.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run --project unit --coverage",
