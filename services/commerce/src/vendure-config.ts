@@ -17,6 +17,7 @@ import {
   orderConfirmationHandler,
 } from '@vendure/email-plugin';
 import { withholdSessionTokenHeader } from './auth/admin-session.js';
+import { redirectRootTo } from './dashboard-root.js';
 import { adminApiKeyStrategy, ProvisionedApiKeyStrategy, splitApiKey } from './auth/api-keys.js';
 import { productCustomFields, productVariantCustomFields } from './catalogue/custom-fields.js';
 import type { CommerceEnv } from './env.js';
@@ -101,6 +102,7 @@ export function createVendureConfig(env: CommerceEnv, options: ConfigOptions): V
       introspection: true,
       middleware: [
         { route: 'admin-api', handler: withholdSessionTokenHeader(SESSION_TOKEN_HEADER) },
+        { route: '/', handler: redirectRootTo('/dashboard/') },
       ],
     },
     authOptions: {

@@ -6,7 +6,9 @@ const password = process.env['COMMERCE_SUPERADMIN_PASSWORD'] ?? 'deckle-superadm
 
 test.describe("Vendure dashboard in Deckle's brand", () => {
   test("signs in under Deckle's mark, in the store's typeface", async ({ page }) => {
-    await page.goto(`${dashboard}/login`);
+    // The port's root leads to the dashboard, as the CMS's leads to its admin.
+    await page.goto(new URL('/', dashboard).href);
+    await expect(page).toHaveURL(/\/dashboard\/login/);
     // DashboardBrandPlugin's lockup, where Vendure's logo would be.
     await expect(page.getByText('Deckle', { exact: true })).toBeVisible();
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute('type', 'image/svg+xml');
