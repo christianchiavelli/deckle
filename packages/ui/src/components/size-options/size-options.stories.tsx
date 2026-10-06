@@ -15,6 +15,8 @@ const sizesFor = (scan: { width: number; height: number }): SizeOption[] =>
 const meta = preview.meta({
   title: 'Components/Size options',
   component: SizeOptions,
+  // Side by side, both panes render a radio group named "size": a form each keeps them apart.
+  parameters: { separateForms: true },
   args: {
     name: 'size',
     legend: 'Size',

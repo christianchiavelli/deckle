@@ -13,8 +13,9 @@ type Theme = 'light' | 'dark' | 'both';
  * store does, or both side by side. Side by side is the default: a component
  * is reviewed, and audited by axe, in both themes at once.
  *
- * Each pane is its own form, so a radio group in one never reaches into the
- * other. Screens, which bring their own forms, show one theme at a time.
+ * A story whose radios share a name across the panes asks for
+ * `separateForms`: each pane becomes its own form, so a radio group in one
+ * never reaches into the other.
  */
 interface PanesProps {
   theme: Theme;
@@ -22,10 +23,11 @@ interface PanesProps {
   bleed: boolean;
   /** A story alone fills the window; on a docs page it takes only the room it needs. */
   fill: boolean;
+  separateForms: boolean;
   children: ReactNode;
 }
 
-function Panes({ theme, bleed, fill, children }: PanesProps) {
+function Panes({ theme, bleed, fill, separateForms, children }: PanesProps) {
   useEffect(() => {
     document.documentElement.dataset['theme'] = theme === 'both' ? 'light' : theme;
   }, [theme]);
@@ -47,7 +49,7 @@ function Panes({ theme, bleed, fill, children }: PanesProps) {
           padding: bleed ? 0 : t.space.gapXl,
           minInlineSize: 0,
         };
-        return theme === 'both' ? (
+        return theme === 'both' && separateForms ? (
           <form key={scheme} data-theme-pane={scheme} style={style}>
             {children}
           </form>
@@ -66,6 +68,7 @@ const withTheme: Decorator = (Story, context) => (
     theme={(context.globals['theme'] ?? 'both') as Theme}
     bleed={context.parameters['bleed'] === true}
     fill={context.viewMode === 'story'}
+    separateForms={context.parameters['separateForms'] === true}
   >
     <Story />
   </Panes>
@@ -96,6 +99,17 @@ export default definePreview({
     // An accessibility violation fails the story's test, not just a panel warning.
     a11y: { test: 'error' },
     backgrounds: { disable: true },
+    // The widths the screens are approved at: an iPhone, and a 14-inch laptop.
+    viewport: {
+      options: {
+        phone: { name: 'Phone, 390', styles: { width: '390px', height: '844px' }, type: 'mobile' },
+        desktop: {
+          name: 'Laptop, 1440',
+          styles: { width: '1440px', height: '900px' },
+          type: 'desktop',
+        },
+      },
+    },
     docs: { theme: docsTheme },
     options: {
       storySort: {

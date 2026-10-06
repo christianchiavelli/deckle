@@ -82,6 +82,9 @@ export const icons = {
     </>
   ),
   check: <path d="m6 12.5 4 4 8-8.5" />,
+  /** Two rules, not three: the menu on a phone. */
+  menu: <path d="M4 9h16M4 15h16" />,
+  close: <path d="m6.5 6.5 11 11M17.5 6.5l-11 11" />,
 };
 
 export type IconName = keyof typeof icons;

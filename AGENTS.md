@@ -78,3 +78,5 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 ## Design changes
 
 A new screen, or a visible change to one, starts as a static mock or screenshots the owner approves, in both themes and at phone width. Only then is it built, and the build is checked against the approved version.
+
+The mocks live in Storybook under Screens (`packages/ui/src/screens`): the real sections with the real data set, at a laptop's and a phone's width, light and dark, each audited by axe. The store builds its pages from the same sections.

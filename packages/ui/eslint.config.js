@@ -33,8 +33,10 @@ const rawColours = [
   ),
 ];
 
-const handWrittenVariables = banInStrings(
-  '/var\\(--/',
+// A token's variable written by hand. A component's own custom properties, such
+// as a print's --ratio, are not tokens and stay allowed.
+const handWrittenTokens = banInStrings(
+  '/var\\(--(surface|text|icon|stroke|action|accent|focus|feedback|component|type|space|radius|layout|motion)-/',
   'Read the token from @deckle/tokens: a typo in tokens.x fails the build, a typo in var() fails silently.',
 );
 
@@ -53,10 +55,10 @@ export default [
     },
   },
   {
-    // Components go further: every value comes through the typed token module.
-    files: ['src/components/**/*.tsx'],
+    // Components, sections and screens go further: every token comes through the typed module.
+    files: ['src/components/**/*.tsx', 'src/sections/**/*.tsx', 'src/screens/**/*.tsx'],
     rules: {
-      'no-restricted-syntax': ['error', ...primitives, ...rawColours, ...handWrittenVariables],
+      'no-restricted-syntax': ['error', ...primitives, ...rawColours, ...handWrittenTokens],
     },
   },
 ];

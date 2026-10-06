@@ -5,8 +5,12 @@ export default defineMain({
   framework: { name: '@storybook/nextjs-vite', options: {} },
   stories: ['../src/**/*.mdx', '../src/**/*.stories.tsx'],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
-  // The typeface for Storybook's own chrome, which loads none of the store's CSS.
-  staticDirs: [{ from: '../src/fonts', to: '/fonts' }],
+  // The typeface for Storybook's own chrome, which loads none of the store's CSS,
+  // and the Met's images for the screens, as the importer wrote them.
+  staticDirs: [
+    { from: '../src/fonts', to: '/fonts' },
+    { from: '../../../data/met/images', to: '/met' },
+  ],
   core: { disableTelemetry: true, disableWhatsNewNotifications: true },
   // Storybook's own getting-started checklist: this Storybook is for reviewing Deckle, not learning Storybook.
   features: { sidebarOnboardingChecklist: false },
