@@ -34,15 +34,20 @@ const met = (label: string, objectId: number) => ({
 
 export const curationSeeds: readonly CurationSeed[] = [
   {
+    // The store's front page lists these under "The prints": eight makers, two
+    // full rows, none of them the works the page already shows elsewhere.
     title: 'First impressions',
     slug: 'first-impressions',
     intro: null,
     artworks: [
-      'melencolia-i',
       'the-rhinoceros',
-      'knight-death-and-the-devil',
+      'the-three-trees',
+      'south-wind-clear-sky',
+      'the-drawbridge',
+      'evening-snow-at-kanbara',
       'the-sleep-of-reason-produces-monsters',
-      'under-the-wave-off-kanagawa',
+      'black-lion-wharf',
+      'two-young-women-on-a-verandah',
     ],
   },
   {
