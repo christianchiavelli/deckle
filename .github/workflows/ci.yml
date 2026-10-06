@@ -91,9 +91,10 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      # The committed schema is what the resolvers generate, not a hand-edited copy.
+      # Each committed schema, the gateway's and the Shop API it reads, is what the
+      # code generates, not a hand-edited copy.
       - name: Schema matches the code
-        run: pnpm --filter @deckle/gateway schema:check
+        run: pnpm -r --if-present run schema:check
 
       # Changes go straight to main, so a push is compared with the commit before
       # it, and a pull request with its base. A first push has nothing to compare.
