@@ -19,7 +19,8 @@ x-app: &app
 x-secrets:
   commerce-hook: &commerce-hook-secret ${COMMERCE_HOOK_SECRET:-local-only-commerce-hook-secret-not-for-production}
   cms-hook: &cms-hook-secret ${CMS_HOOK_SECRET:-local-only-cms-hook-secret-not-for-production}
-  commerce-api-key: &commerce-api-key ${COMMERCE_API_KEY:-local-only-commerce-api-key-not-for-production}
+  # Vendure's API key format: a lookup id, a colon, then the secret.
+  commerce-api-key: &commerce-api-key ${COMMERCE_API_KEY:-deckle-gateway:local-only-commerce-api-key-not-for-production}
   cms-api-key: &cms-api-key ${CMS_API_KEY:-local-only-cms-api-key-not-for-production}
 
 x-commerce: &commerce
@@ -32,7 +33,7 @@ x-commerce: &commerce
     DATABASE_URL: postgres://commerce:commerce@postgres:5432/commerce
     PORT: '3000'
     SUPERADMIN_USERNAME: ${COMMERCE_SUPERADMIN_USERNAME:-superadmin}
-    SUPERADMIN_PASSWORD: ${COMMERCE_SUPERADMIN_PASSWORD:-superadmin}
+    SUPERADMIN_PASSWORD: ${COMMERCE_SUPERADMIN_PASSWORD:-deckle-superadmin}
     ASSET_URL_PREFIX: http://localhost:8080/assets/
     GATEWAY_JWKS_URL: http://gateway:4000/internal/jwks.json
     GATEWAY_HOOK_URL: http://gateway:4000/hooks/commerce
@@ -96,14 +97,17 @@ services:
   commerce-seed:
     <<: *commerce
     restart: 'no'
-    command: ['node', 'dist/seed.js']
+    command: ['node', '--enable-source-maps', 'dist/seed.js']
+    # The image's check asks for a server the seed never starts.
+    healthcheck:
+      disable: true
     depends_on:
       postgres:
         condition: service_healthy
 
+  # The image's own command: migrate, then serve.
   commerce:
     <<: *commerce
-    command: ['node', 'dist/index.js']
     ports:
       # Vendure's dashboard, at http://localhost:8082/dashboard
       - 127.0.0.1:8082:3000
@@ -114,15 +118,19 @@ services:
         - node
         - -e
         - "fetch('http://127.0.0.1:3000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+    # Vendure finishes its requests and jobs within 18 s of SIGTERM.
+    stop_grace_period: 20s
     depends_on:
       commerce-seed:
         condition: service_completed_successfully
       mailpit:
         condition: service_healthy
 
+  # Serves its own /health on the same port, which the image's check asks.
   commerce-worker:
     <<: *commerce
-    command: ['node', 'dist/index-worker.js']
+    command: ['node', '--enable-source-maps', 'dist/index-worker.js']
+    stop_grace_period: 20s
     depends_on:
       commerce-seed:
         condition: service_completed_successfully
