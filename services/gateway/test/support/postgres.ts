@@ -25,6 +25,10 @@ export interface Connection extends AsyncDisposable {
 /** A pool on `url` and its Drizzle instance, closed by `await using`. */
 export function connect(url: string): Connection {
   const pool = new pg.Pool({ connectionString: url, max: 5 });
+  // `end()` resolves before its clients' sockets close, so a container stopped
+  // right after can still reach one, which reports here. Unheard, it fails the
+  // run; the gateway's own pool logs it (database.module.ts).
+  pool.on('error', () => undefined);
   return { pool, db: drizzle({ client: pool }), [Symbol.asyncDispose]: () => pool.end() };
 }
 
