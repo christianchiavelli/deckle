@@ -3,7 +3,7 @@
  * fonts, a reset and the base elements. Components bring their own styles.
  */
 @import '@deckle/tokens/tokens.css';
-@import './fonts.css';
+@import '@deckle/brand/fonts.css';
 
 @layer reset, base;
 

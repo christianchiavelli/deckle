@@ -14,14 +14,13 @@
   "scripts": {
     "storybook": "storybook dev --port 6006",
     "build": "storybook build --output-dir storybook-static --quiet",
-    "fonts": "node scripts/fonts.ts",
-    "favicon": "node scripts/favicon.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run --project unit --coverage",
     "test:stories": "vitest run --project storybook"
   },
   "dependencies": {
+    "@deckle/brand": "workspace:*",
     "@deckle/tokens": "workspace:*",
     "styled-components": "catalog:"
   },
@@ -30,9 +29,6 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@capsizecss/core": "catalog:",
-    "@capsizecss/metrics": "catalog:",
-    "@capsizecss/unpack": "catalog:",
     "@deckle/eslint-config": "workspace:*",
     "@deckle/print-sizes": "workspace:*",
     "@storybook/addon-a11y": "catalog:",
@@ -49,7 +45,6 @@
     "eslint-plugin-storybook": "catalog:",
     "next": "catalog:",
     "playwright": "catalog:",
-    "prettier": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "storybook": "catalog:",

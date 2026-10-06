@@ -1,6 +1,6 @@
 import foundations from '@deckle/tokens/foundations.json';
 import { create } from 'storybook/theming';
-import { seal } from '../src/brand/seal.ts';
+import { seal } from '@deckle/brand';
 
 /**
  * Storybook's own chrome cannot read CSS variables, so it takes the light

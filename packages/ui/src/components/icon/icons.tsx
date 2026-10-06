@@ -3,7 +3,7 @@
  * round ends, so they sit with Host Grotesk at text sizes. No icon library: a
  * handful of shapes is cheaper than a dependency, and these are the shop's own.
  */
-import { seal } from '../../brand/seal.ts';
+import { seal } from '@deckle/brand';
 
 export const icons = {
   /** The mark, the studio's seal. Filled, the one icon that is. */

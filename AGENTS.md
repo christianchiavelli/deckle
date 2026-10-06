@@ -12,6 +12,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/met` | The Met's API client, the curated list of works, and the importer that writes `data/met` |
 | `packages/print-sizes` | Which paper sizes a scan can print, and at what ppi. Plain TypeScript, no I/O |
 | `packages/tokens` | The design tokens: DTCG files from the chosen art direction, built by Style Dictionary into CSS, a typed module and the Storybook data |
+| `packages/brand` | The mark, the favicon and the typeface: what the store, Storybook and both admin panels share, with no framework |
 | `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them |
 | `packages/eslint-config` | The lint rules every package shares |
 | `data/met` | The imported data set: `catalog.json` and the reduced images, baked into the published images |
@@ -36,8 +37,8 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm --filter @deckle/tokens build`: rebuilds `dist/` after a change under `packages/tokens/tokens`, and `test -u` once the new output in the snapshot has been reviewed.
 - `pnpm --filter @deckle/ui storybook`: the components and the Foundations pages on port 6006, both themes side by side.
 - `pnpm --filter @deckle/ui test:stories`: every story in Chromium, with its interactions and an axe audit in both themes. The first time, `pnpm --filter @deckle/ui exec playwright install chromium` fetches the browser.
-- `pnpm --filter @deckle/ui fonts`: rewrites `src/styles/fonts.css` and its metric-matched fallback after a font file changes.
-- `pnpm --filter @deckle/ui favicon`: rewrites `brand/favicon.svg` from the seal and the accent copper, after either changes. A unit test fails while it is stale.
+- `pnpm --filter @deckle/brand fonts`: rewrites `assets/fonts/fonts.css` and its metric-matched fallback after a font file changes.
+- `pnpm --filter @deckle/brand favicon`: rewrites `assets/favicon.svg` from the seal and the accent copper, after either changes. A unit test fails while it is stale.
 - `pnpm --filter @deckle/e2e test:e2e`: the browser checks, against the stack `docker compose up --wait` started. The first time, `pnpm --filter @deckle/e2e exec playwright install chromium` fetches the browser.
 - `pnpm --filter @deckle/gateway schema:generate`: after any change to a resolver or GraphQL type. `schema.gql` is the committed contract, and CI fails when it is stale or when a change breaks a client.
 - `pnpm --filter @deckle/gateway db:generate --name <change>`: after editing a `*.table.ts`. Commit the new files under `drizzle/`; the gateway migrates itself as it starts.

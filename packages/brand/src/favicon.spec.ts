@@ -1,8 +1,9 @@
 import { readFile } from 'node:fs/promises';
+import foundations from '@deckle/tokens/foundations.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { copper, copperFrom } from './copper.ts';
-import { favicon } from './favicon.ts';
-import { seal } from './seal.ts';
+import { copperFrom } from './copper.js';
+import { favicon } from './favicon.js';
+import { seal } from './seal.js';
 
 describe('favicon', () => {
   it('draws the seal in the light copper, and in the dark copper for a dark tab strip', () => {
@@ -13,7 +14,7 @@ describe('favicon', () => {
   });
 
   it('takes both coppers from the token build', () => {
-    const { light, dark } = copper();
+    const { light, dark } = copperFrom(foundations.colours);
     expect(light).toMatch(/^#[0-9a-f]{6}$/);
     expect(dark).toMatch(/^#[0-9a-f]{6}$/);
     expect(light).not.toBe(dark);
@@ -24,7 +25,7 @@ describe('favicon', () => {
   });
 
   it('is committed as the generator writes it', async () => {
-    const committed = await readFile(new URL('../../brand/favicon.svg', import.meta.url), 'utf8');
-    expect(committed).toBe(favicon(copper()));
+    const committed = await readFile(new URL('../assets/favicon.svg', import.meta.url), 'utf8');
+    expect(committed).toBe(favicon(copperFrom(foundations.colours)));
   });
 });

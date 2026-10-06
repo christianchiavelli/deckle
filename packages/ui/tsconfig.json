@@ -13,5 +13,5 @@
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["src", "scripts", ".storybook/**/*", "*.config.ts"]
+  "include": ["src", ".storybook/**/*", "*.config.ts"]
 }

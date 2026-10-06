@@ -1,0 +1,46 @@
+{
+  "name": "@deckle/brand",
+  "version": "0.0.0",
+  "description": "Deckle's mark, favicon and typeface, for the store, Storybook and both admin panels",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./fonts.css": "./assets/fonts/fonts.css",
+    "./favicon.svg": "./assets/favicon.svg"
+  },
+  "files": [
+    "dist",
+    "assets"
+  ],
+  "scripts": {
+    "prepare": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
+    "fonts": "tsx scripts/fonts.ts",
+    "favicon": "tsx scripts/favicon.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@capsizecss/core": "catalog:",
+    "@capsizecss/metrics": "catalog:",
+    "@capsizecss/unpack": "catalog:",
+    "@deckle/eslint-config": "workspace:*",
+    "@deckle/tokens": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,4 +1,4 @@
-import { seal } from './seal.ts';
+import { seal } from './seal.js';
 
 export interface Copper {
   /** The accent on paper, for a light tab strip. */

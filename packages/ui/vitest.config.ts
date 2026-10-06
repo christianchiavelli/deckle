@@ -38,7 +38,7 @@ export default defineConfig({
     ],
     coverage: {
       provider: 'v8',
-      include: ['src/format.ts', 'src/sections/detail.ts', 'src/brand/*.ts'],
+      include: ['src/format.ts', 'src/sections/detail.ts'],
       thresholds: { lines: 100, branches: 100, functions: 100, statements: 100 },
     },
   },

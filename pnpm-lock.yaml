@@ -561,6 +561,48 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
+  packages/brand:
+    devDependencies:
+      '@capsizecss/core':
+        specifier: 'catalog:'
+        version: 4.1.3
+      '@capsizecss/metrics':
+        specifier: 'catalog:'
+        version: 4.3.0
+      '@capsizecss/unpack':
+        specifier: 'catalog:'
+        version: 4.0.1
+      '@deckle/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@deckle/tokens':
+        specifier: workspace:*
+        version: link:../tokens
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(@vitest/browser@5.0.3)(vitest@5.0.3)
+      eslint:
+        specifier: 'catalog:'
+        version: 10.12.0(jiti@2.7.0)(supports-color@7.2.0)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.9
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.77.4)(tsx@4.23.15)(yaml@2.9.1)
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/browser-playwright@5.0.3)(@vitest/coverage-v8@5.0.3)(@vitest/ui@5.0.3)(happy-dom@20.14.5)(msw@2.15.0(@types/node@24.19.1)(typescript@6.0.3))(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.77.4)(tsx@4.23.15)(yaml@2.9.1))
+
   packages/eslint-config:
     dependencies:
       '@eslint/js':
@@ -667,6 +709,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@deckle/brand':
+        specifier: workspace:*
+        version: link:../brand
       '@deckle/tokens':
         specifier: workspace:*
         version: link:../tokens
@@ -674,15 +719,6 @@ importers:
         specifier: 'catalog:'
         version: 6.6.0-prerelease-20260925231434(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
     devDependencies:
-      '@capsizecss/core':
-        specifier: 'catalog:'
-        version: 4.1.3
-      '@capsizecss/metrics':
-        specifier: 'catalog:'
-        version: 4.3.0
-      '@capsizecss/unpack':
-        specifier: 'catalog:'
-        version: 4.0.1
       '@deckle/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -731,9 +767,6 @@ importers:
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
-      prettier:
-        specifier: 'catalog:'
-        version: 3.9.9
       react:
         specifier: 'catalog:'
         version: 19.3.0

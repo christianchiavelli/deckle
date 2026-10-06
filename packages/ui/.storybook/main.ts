@@ -8,8 +8,7 @@ export default defineMain({
   // The favicon, the typeface for Storybook's own chrome, which loads none of
   // the store's CSS, and the Met's images for the screens.
   staticDirs: [
-    { from: '../brand', to: '/' },
-    { from: '../src/fonts', to: '/fonts' },
+    { from: '../../brand/assets', to: '/' },
     { from: '../../../data/met/images', to: '/met' },
   ],
   core: { disableTelemetry: true, disableWhatsNewNotifications: true },
