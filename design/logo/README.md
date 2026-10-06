@@ -11,6 +11,6 @@ How Deckle's mark was chosen, drawn from how prints are made, like the art direc
 
 ![The options side by side](compare.png)
 
-On 6 October 2026 the owner chose **C's seal with B's name**: the seal as the mark, and the name in Host Grotesk capitals, spaced wide. The seal lives in `packages/ui/src/brand/seal.ts`, shared by the icon set and the favicon, which `pnpm --filter @deckle/ui favicon` writes in the accent copper of both themes.
+On 6 October 2026 the owner chose **C's seal with B's name**: the seal as the mark, and the name in Host Grotesk capitals, spaced wide. The seal lives in `packages/brand/src/seal.ts`, shared by the icon set, the favicon and both admin panels; `pnpm --filter @deckle/brand favicon` writes the favicon in the accent copper of both themes.
 
 Open `index.html` in a browser after `pnpm install`: it reads the built tokens from `packages/tokens/dist` and the fonts from the art direction's assets.

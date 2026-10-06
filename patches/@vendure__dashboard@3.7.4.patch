@@ -1,3 +1,18 @@
+diff --git a/src/lib/components/date-range-picker.tsx b/src/lib/components/date-range-picker.tsx
+index be9c6fbfbdfae467bdb604b77189de26b724f39d..645a1a45451b2fb8875d76ba1353efa30fe350c1 100644
+--- a/src/lib/components/date-range-picker.tsx
++++ b/src/lib/components/date-range-picker.tsx
+@@ -144,7 +144,9 @@ export function DateRangePicker({ className, dateRange, onDateRangeChange }: Dat
+         <Popover open={open} onOpenChange={setOpen}>
+             <PopoverTrigger render={<Button
+                     variant="outline"
+-                    className={cn('w-[280px] justify-start text-left font-normal', className)}
++                    // A floor, not a fixed width: a range in a longer language or a wider
++                    // typeface ("1 de out. de 2026 - 6 de out. de 2026") ran out of the button.
++                    className={cn('min-w-[280px] justify-start text-left font-normal', className)}
+                 />}>
+                     <CalendarIcon className="mr-2 h-4 w-4" />
+                     {formatDateRange()}
 diff --git a/src/lib/hooks/use-ui-language-loader.ts b/src/lib/hooks/use-ui-language-loader.ts
 index c7822bd5f1fa92369f292e9abe883679945af4b5..74e305c0ac9abfeddcc9728c6bf8fcb8e040d4ff 100644
 --- a/src/lib/hooks/use-ui-language-loader.ts

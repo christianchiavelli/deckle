@@ -17,7 +17,7 @@
     "schema": "pnpm run build:server && node --enable-source-maps dist/tools/shop-schema.js write",
     "schema:check": "pnpm run build:server && node --enable-source-maps dist/tools/shop-schema.js check",
     "migration:generate": "pnpm run build:server && node --enable-source-maps dist/tools/migration.js",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p src/plugins/dashboard-brand/dashboard",
     "lint": "eslint .",
     "test": "vitest run --coverage",
     "test:integration": "vitest run --config vitest.integration.config.ts"
@@ -38,13 +38,17 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@deckle/brand": "workspace:*",
     "@deckle/eslint-config": "workspace:*",
+    "@deckle/tokens": "workspace:*",
     "@testcontainers/postgresql": "catalog:",
     "@types/node": "catalog:",
     "@types/pg": "catalog:",
+    "@types/react": "catalog:",
     "@vendure/testing": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
+    "react": "catalog:",
     "testcontainers": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

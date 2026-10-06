@@ -1,5 +1,6 @@
 # Read by BuildKit for apps/cms/Dockerfile instead of a root .dockerignore.
-# The image needs the workspace manifests, the shared lint config and this app.
+# The image needs the workspace manifests, the shared lint config, the tokens
+# and the brand, and this app.
 **/node_modules
 **/.next
 **/dist
@@ -14,6 +15,7 @@ design
 services
 packages/met
 packages/print-sizes
+packages/ui
 apps/cms/media
 apps/cms/src/**/*.spec.ts
 apps/cms/src/test

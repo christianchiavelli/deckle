@@ -9,5 +9,6 @@
     "emitDecoratorMetadata": true
   },
   "include": ["src"],
-  "exclude": ["src/**/*.spec.ts"]
+  // The dashboard build compiles the extensions into the panel; the server never loads them.
+  "exclude": ["src/**/*.spec.ts", "src/plugins/*/dashboard"]
 }

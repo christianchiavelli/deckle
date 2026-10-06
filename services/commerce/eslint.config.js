@@ -48,6 +48,18 @@ export default [
         message:
           'A plugin imports only from its own folder and packages; pass settings through init().',
       }),
+      // A plugin is a decorated class, and empty when the decorator says it all.
+      '@typescript-eslint/no-extraneous-class': ['error', { allowWithDecorator: true }],
+    },
+  },
+  {
+    files: ['src/plugins/*/dashboard/**/*.tsx'],
+    rules: {
+      'no-restricted-imports': restrictImports({
+        group: ['node:*', '@vendure/core', '@vendure/core/*', '../*'],
+        message:
+          'A dashboard extension runs in the browser, inside the panel: nothing from the server.',
+      }),
     },
   },
 ];

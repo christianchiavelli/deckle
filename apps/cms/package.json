@@ -18,6 +18,8 @@
     "migrate:create": "payload migrate:create"
   },
   "dependencies": {
+    "@deckle/brand": "workspace:*",
+    "@deckle/tokens": "workspace:*",
     "@payloadcms/db-postgres": "catalog:",
     "@payloadcms/next": "catalog:",
     "@payloadcms/richtext-lexical": "catalog:",

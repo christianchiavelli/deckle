@@ -68,7 +68,7 @@ describe('createVendureConfig', () => {
     expect(config.logger).not.toBeInstanceOf(JsonLogger);
   });
 
-  it('runs the React dashboard, never the Angular admin', () => {
+  it("runs the React dashboard in Deckle's brand, never the Angular admin", () => {
     const names = pluginNames(config);
     expect(names).toEqual(
       expect.arrayContaining([
@@ -78,6 +78,7 @@ describe('createVendureConfig', () => {
         'AssetServerPlugin',
         'EmailPlugin',
         'DashboardPlugin',
+        'DashboardBrandPlugin',
         'CatalogueHooksPlugin',
         'StockShortfallAlarmPlugin',
       ]),

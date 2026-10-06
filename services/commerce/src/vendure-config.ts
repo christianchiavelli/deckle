@@ -25,6 +25,7 @@ import { migrations } from './migrations/index.js';
 import { CatalogueHooksPlugin } from './plugins/catalogue-hooks/catalogue-hooks.plugin.js';
 import { hookBackoffMs } from './plugins/catalogue-hooks/hook-delivery.js';
 import { CATALOGUE_HOOKS_QUEUE } from './plugins/catalogue-hooks/options.js';
+import { DashboardBrandPlugin } from './plugins/dashboard-brand/dashboard-brand.plugin.js';
 import { DatabaseHealthPlugin } from './plugins/database-health/database-health.plugin.js';
 import { DeckleAuthenticationStrategy } from './plugins/gateway-identity/deckle-authentication-strategy.js';
 import { GatewayTokenVerifier } from './plugins/gateway-identity/gateway-token.js';
@@ -191,6 +192,7 @@ export function createVendureConfig(env: CommerceEnv, options: ConfigOptions): V
         globalTemplateVars: { fromAddress: '"Deckle" <orders@deckle.invalid>' },
       }),
       DashboardPlugin.init({ route: 'dashboard', appDir: paths.dashboard }),
+      DashboardBrandPlugin,
       CatalogueHooksPlugin.init({
         hookUrl: new URL(env.GATEWAY_HOOK_URL),
         secret: env.HOOK_SECRET,

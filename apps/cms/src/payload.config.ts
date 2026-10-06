@@ -32,7 +32,17 @@ export default buildConfig({
   admin: {
     user: users.slug,
     importMap: { baseDir: dirname },
-    meta: { titleSuffix: ' · Deckle CMS' },
+    // Deckle's mark where Payload draws its own; custom.scss has the colours and type.
+    components: {
+      graphics: { Logo: '/admin/brand#Logo', Icon: '/admin/brand#Icon' },
+    },
+    meta: {
+      titleSuffix: ' · Deckle CMS',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' }],
+      // Nobody shares a link to the admin, so it needs no preview card: Payload's
+      // would carry Payload's mark.
+      defaultOGImageType: 'off',
+    },
     // date-fns' localised pattern, where Payload's default fixes English word order:
     // "Oct 5, 2026, 11:46 PM" in English and "5 de out de 2026, 23:46" in Portuguese.
     dateFormat: 'PPp',

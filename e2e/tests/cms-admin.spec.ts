@@ -4,6 +4,19 @@ const cms = process.env['CMS_URL'] ?? 'http://localhost:8081';
 const email = process.env['CMS_ADMIN_EMAIL'] ?? 'editor@deckle.localhost';
 const password = process.env['CMS_ADMIN_PASSWORD'] ?? 'deckle-editor';
 
+test.describe("Payload admin in Deckle's brand", () => {
+  test("signs in under Deckle's mark, in the store's typeface", async ({ page, request }) => {
+    await page.goto(`${cms}/admin/login`);
+    // The Logo in admin.components.graphics, where Payload's would be.
+    await expect(page.getByText('Deckle', { exact: true })).toBeVisible();
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '/favicon.svg');
+    await expect(page.locator('body')).toHaveCSS('font-family', /^"?Host Grotesk/);
+
+    const favicon = await request.get(`${cms}/favicon.svg`);
+    expect(favicon.headers()['content-type']).toBe('image/svg+xml');
+  });
+});
+
 test.describe('Payload admin in Brazilian Portuguese', () => {
   // Payload picks the admin's language from the browser's, as it does for an editor.
   test.use({ locale: 'pt-BR' });

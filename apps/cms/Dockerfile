@@ -20,6 +20,9 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm fetch --store-dir /pnpm/store
 COPY tsconfig.base.json ./
 COPY packages/eslint-config packages/eslint-config
+# The admin wears Deckle's tokens, typeface and mark.
+COPY packages/tokens packages/tokens
+COPY packages/brand packages/brand
 COPY apps/cms apps/cms
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm install --offline --frozen-lockfile --store-dir /pnpm/store --filter @deckle/cms...

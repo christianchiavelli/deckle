@@ -1,0 +1,17 @@
+{
+  // Browser code that the dashboard's own Vite build compiles into the panel, so it
+  // is checked apart from the server: React and the DOM, no Node.
+  "extends": "../../../../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "lib": ["es2025", "dom", "dom.iterable"],
+    "types": [],
+    "noEmit": true,
+    "paths": {
+      "@vendure/dashboard": ["./vendure-dashboard.d.ts"]
+    }
+  },
+  "include": ["."]
+}

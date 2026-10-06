@@ -8,5 +8,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["src", "test", "*.config.ts", "*.config.mts"]
+  "include": ["src", "test", "*.config.ts", "*.config.mts"],
+  // Dashboard extensions are browser code, checked by the tsconfig.json in their folder.
+  "exclude": ["src/plugins/*/dashboard"]
 }

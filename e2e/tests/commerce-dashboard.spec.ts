@@ -4,6 +4,16 @@ const dashboard = process.env['DASHBOARD_URL'] ?? 'http://localhost:8082/dashboa
 const username = process.env['COMMERCE_SUPERADMIN_USERNAME'] ?? 'superadmin';
 const password = process.env['COMMERCE_SUPERADMIN_PASSWORD'] ?? 'deckle-superadmin';
 
+test.describe("Vendure dashboard in Deckle's brand", () => {
+  test("signs in under Deckle's mark, in the store's typeface", async ({ page }) => {
+    await page.goto(`${dashboard}/login`);
+    // DashboardBrandPlugin's lockup, where Vendure's logo would be.
+    await expect(page.getByText('Deckle', { exact: true })).toBeVisible();
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute('type', 'image/svg+xml');
+    await expect(page.locator('body')).toHaveCSS('font-family', /^"?Host Grotesk/);
+  });
+});
+
 test.describe('Vendure dashboard in Brazilian Portuguese', () => {
   test.beforeEach(async ({ page }) => {
     // The display language is a setting the dashboard keeps in local storage.
