@@ -6,7 +6,8 @@
 #
 # Every secret below has a default that is fine on a laptop and nowhere else.
 # They are defaults, not code: the services refuse to start without a value,
-# and a `.env` file next to this one overrides any of them (see .env.example).
+# or with one shorter than 32 characters, and a `.env` file next to this one
+# overrides any of them (see .env.example).
 name: deckle
 
 x-app: &app
@@ -16,10 +17,10 @@ x-app: &app
 
 # What the services must agree on, written once.
 x-secrets:
-  commerce-hook: &commerce-hook-secret ${COMMERCE_HOOK_SECRET:-local-only-commerce-hook-secret}
-  cms-hook: &cms-hook-secret ${CMS_HOOK_SECRET:-local-only-cms-hook-secret}
-  commerce-api-key: &commerce-api-key ${COMMERCE_API_KEY:-local-only-commerce-api-key}
-  cms-api-key: &cms-api-key ${CMS_API_KEY:-local-only-cms-api-key}
+  commerce-hook: &commerce-hook-secret ${COMMERCE_HOOK_SECRET:-local-only-commerce-hook-secret-not-for-production}
+  cms-hook: &cms-hook-secret ${CMS_HOOK_SECRET:-local-only-cms-hook-secret-not-for-production}
+  commerce-api-key: &commerce-api-key ${COMMERCE_API_KEY:-local-only-commerce-api-key-not-for-production}
+  cms-api-key: &cms-api-key ${CMS_API_KEY:-local-only-cms-api-key-not-for-production}
 
 x-commerce: &commerce
   <<: *app
@@ -50,19 +51,6 @@ x-cms: &cms
   build:
     context: .
     dockerfile: apps/cms/Dockerfile
-  environment:
-    DATABASE_URL: postgres://cms:cms@postgres:5432/cms
-    PORT: '3000'
-    PAYLOAD_SECRET: ${PAYLOAD_SECRET:-local-only-payload-secret}
-    GATEWAY_HOOK_URL: http://gateway:4000/hooks/cms
-    HOOK_SECRET: *cms-hook-secret
-    STORE_PREVIEW_URL: http://localhost:8080/api/preview
-    PREVIEW_SECRET: ${PREVIEW_SECRET:-local-only-preview-secret}
-    GATEWAY_API_KEY: *cms-api-key
-    ADMIN_EMAIL: ${CMS_ADMIN_EMAIL:-editor@deckle.localhost}
-    ADMIN_PASSWORD: ${CMS_ADMIN_PASSWORD:-deckle-editor}
-  volumes:
-    - cms-media:/app/media
 
 # A healthcheck without curl: the Node images have Node, so Node asks.
 x-node-health: &node-health
@@ -70,6 +58,8 @@ x-node-health: &node-health
   timeout: 5s
   retries: 12
   start_period: 30s
+  # Checked every 2 s while starting, so `up --wait` returns as soon as it can.
+  start_interval: 2s
 
 services:
   postgres:
@@ -82,9 +72,8 @@ services:
       # major version, inside this volume, so a later pg_upgrade can --link.
       - postgres:/var/lib/postgresql
       - ./infra/postgres/initdb:/docker-entrypoint-initdb.d:ro
-    ports:
-      # For running a service from the checkout against the stack's database.
-      - 127.0.0.1:5432:5432
+    # No host port, so a Postgres already on 5432 is no obstacle. Reach it with
+    # `docker compose exec postgres psql --username postgres`.
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready --username postgres --dbname postgres']
       interval: 5s
@@ -140,8 +129,19 @@ services:
       mailpit:
         condition: service_healthy
 
+  # Runs its own migrations as it starts.
   cms:
     <<: *cms
+    environment:
+      DATABASE_URL: postgres://cms:cms@postgres:5432/cms
+      PORT: '3000'
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-local-only-payload-secret-not-for-production}
+      GATEWAY_HOOK_URL: http://gateway:4000/hooks/cms
+      HOOK_SECRET: *cms-hook-secret
+      STORE_PREVIEW_URL: http://localhost:8080/api/preview
+      PREVIEW_SECRET: ${PREVIEW_SECRET:-local-only-preview-secret-not-for-production}
+    volumes:
+      - cms-media:/app/apps/cms/media
     ports:
       # Payload's admin, at http://localhost:8081/admin
       - 127.0.0.1:8081:3000
@@ -152,8 +152,30 @@ services:
         - node
         - -e
         - "fetch('http://127.0.0.1:3000/api/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+    # Lets a webhook delivery in flight finish before the container stops.
+    stop_grace_period: 20s
     depends_on:
       postgres:
+        condition: service_healthy
+
+  # Creates the editor, the gateway's read-only user and the starter stories
+  # through the CMS's own API, then exits; a no-op when they are there.
+  cms-seed:
+    <<: *cms
+    restart: 'no'
+    command: ['node', 'seed.mjs']
+    # The seed calls the CMS on 127.0.0.1, so it joins the CMS's network.
+    network_mode: service:cms
+    environment:
+      PORT: '3000'
+      ADMIN_EMAIL: ${CMS_ADMIN_EMAIL:-editor@deckle.localhost}
+      ADMIN_PASSWORD: ${CMS_ADMIN_PASSWORD:-deckle-editor}
+      GATEWAY_API_KEY: *cms-api-key
+    # The image's check would reach the CMS through the shared network and pass.
+    healthcheck:
+      disable: true
+    depends_on:
+      cms:
         condition: service_healthy
 
   gateway:
@@ -177,7 +199,7 @@ services:
       CMS_API_KEY: *cms-api-key
       COMMERCE_HOOK_SECRET: *commerce-hook-secret
       CMS_HOOK_SECRET: *cms-hook-secret
-      STORE_REVALIDATE_SECRET: ${STORE_REVALIDATE_SECRET:-local-only-revalidate-secret}
+      STORE_REVALIDATE_SECRET: ${STORE_REVALIDATE_SECRET:-local-only-revalidate-secret-not-for-production}
     healthcheck:
       <<: *node-health
       test:
@@ -185,11 +207,15 @@ services:
         - node
         - -e
         - "fetch('http://127.0.0.1:4000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
-    # The gateway calls commerce and the CMS on demand, so it only needs its
-    # database to start; they in turn reach it with webhooks that retry.
+    # The gateway calls commerce and the CMS on demand, so it needs only its
+    # database and the CMS user the seed makes for it; commerce and the CMS
+    # reach it with webhooks that retry. Waiting on the seed is also what lets
+    # `up --wait` accept the seed's exit, which it would otherwise call a failure.
     depends_on:
       postgres:
         condition: service_healthy
+      cms-seed:
+        condition: service_completed_successfully
 
   caddy:
     image: caddy:2.11.6-alpine@sha256:d44355d3c2149dc580ce2cac735955d1c08d3d00882c30489c241aa51a5c10d9
