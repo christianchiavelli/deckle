@@ -25,11 +25,15 @@ export abstract class SigningKeyStore {
 
 /** A retired key stays published this long: well past any token it signed (60 s at most) and any JWKS cache. */
 const RETIRED_KEY_GRACE = sql`interval '1 hour'`;
-const KEY_CREATION_LOCK = 'deckle-gateway:signing-keys';
+/** Held while a replica looks for the active key and creates one if there is none. */
+export const KEY_CREATION_LOCK = 'deckle-gateway:signing-keys';
 
+// The statement's time, not the transaction's: `now()` is when the transaction
+// began, and a replica that began before another but waited for its lock would
+// find that one's new key not yet valid, and create a second.
 const isActive = and(
-  lte(signingKeys.notBefore, sql`now()`),
-  or(isNull(signingKeys.notAfter), gt(signingKeys.notAfter, sql`now()`)),
+  lte(signingKeys.notBefore, sql`statement_timestamp()`),
+  or(isNull(signingKeys.notAfter), gt(signingKeys.notAfter, sql`statement_timestamp()`)),
 );
 
 @Injectable()
