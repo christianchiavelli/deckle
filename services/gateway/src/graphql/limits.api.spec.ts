@@ -43,6 +43,35 @@ describe('operation limits', () => {
     expect(response.errors?.[0]?.message).toMatch(/depth/i);
   });
 
+  it('counts fields, not the fragments a client groups them in', async () => {
+    const response = await graphql(
+      gateway,
+      `
+        query Work {
+          artwork(slug: "melencolia-i") {
+            story {
+              blocks {
+                ... on ParagraphBlock {
+                  text {
+                    ...Run
+                  }
+                }
+              }
+            }
+          }
+        }
+        fragment Run on TextRun {
+          text
+          bold
+          italic
+          href
+        }
+      `,
+    );
+
+    expect(response.errors?.map((error) => error.message).join(' ') ?? '').not.toMatch(/depth/i);
+  });
+
   it('refuses too many aliases, a cheap way to multiply work', async () => {
     const aliases = Array.from(
       { length: 16 },

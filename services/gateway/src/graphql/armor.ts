@@ -4,6 +4,8 @@ import type { ApolloDriverConfig } from '@nestjs/apollo';
 /**
  * The deepest page the store builds is six fields down (a collection's works:
  * collection → artworks → edges → node → image → url); one more level of room.
+ * Fields are counted, not the fragments a client groups them in: a fragment
+ * adds no data to resolve, and GraphQL's own validation refuses one that cycles.
  */
 export const MAX_DEPTH = 7;
 /**
@@ -24,7 +26,7 @@ type ApolloPlugin = NonNullable<ApolloDriverConfig['plugins']>[number];
 export function armorProtection(production: boolean) {
   const protection = new ApolloArmor({
     costLimit: { enabled: false },
-    maxDepth: { n: MAX_DEPTH },
+    maxDepth: { n: MAX_DEPTH, flattenFragments: true },
     maxAliases: { n: 15 },
     maxDirectives: { n: 10 },
     maxTokens: { enabled: false },
