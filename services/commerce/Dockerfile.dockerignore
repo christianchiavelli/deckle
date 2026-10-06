@@ -1,0 +1,23 @@
+# The build context is the repository root. Send only what the commerce image needs:
+# the workspace files, every workspace manifest (so pnpm sees the same projects as
+# the lockfile), the packages commerce builds on, and the data set it seeds from.
+*
+
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.base.json
+!apps/*/package.json
+!design/*/package.json
+!services/*/package.json
+!packages/
+!services/commerce/
+!data/met/catalog.json
+!data/met/images/
+
+**/node_modules
+**/dist
+**/coverage
+**/*.tsbuildinfo
+services/commerce/assets
+services/commerce/test
