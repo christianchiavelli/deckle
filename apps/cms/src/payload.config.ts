@@ -33,6 +33,9 @@ export default buildConfig({
     user: users.slug,
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' · Deckle CMS' },
+    // date-fns' localised pattern, where Payload's default fixes English word order:
+    // "Oct 5, 2026, 11:46 PM" in English and "5 de out de 2026, 23:46" in Portuguese.
+    dateFormat: 'PPp',
   },
   // The admin follows the browser's language, and each editor can change it in their account.
   i18n: { supportedLanguages: { en, pt }, fallbackLanguage: 'en' },
