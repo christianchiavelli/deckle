@@ -64,19 +64,38 @@ export interface SearchFieldProps {
   placeholder: string;
   /** The key that focuses the field from anywhere on the page, shown as a hint. */
   shortcut?: string;
+  /** What was searched for, on the page that shows its results. */
+  defaultValue?: string;
+  /** Names the landmark, where the page has a second search beside the header's. */
+  landmark?: string;
   className?: string;
 }
 
 /** Search across prints, artists and techniques: a plain GET form, so it works before scripts load. */
-export function SearchField({ action, label, placeholder, shortcut, className }: SearchFieldProps) {
+export function SearchField({
+  action,
+  label,
+  placeholder,
+  shortcut,
+  defaultValue,
+  landmark,
+  className,
+}: SearchFieldProps) {
   const id = useId();
   return (
-    <Form role="search" action={action} className={className}>
+    <Form role="search" action={action} aria-label={landmark} className={className}>
       <VisuallyHidden as="label" htmlFor={id}>
         {label}
       </VisuallyHidden>
       <Icon name="search" size="small" />
-      <Input id={id} type="search" name="q" placeholder={placeholder} autoComplete="off" />
+      <Input
+        id={id}
+        type="search"
+        name="q"
+        placeholder={placeholder}
+        defaultValue={defaultValue}
+        autoComplete="off"
+      />
       {shortcut && <Key aria-hidden="true">{shortcut}</Key>}
     </Form>
   );

@@ -47,6 +47,7 @@ export {
   SectionHead,
   type SectionHeadProps,
 } from './sections/band.tsx';
+export { BlankProof, type BlankProofProps } from './sections/blank-proof.tsx';
 export {
   type Assurance,
   Assurances,
@@ -57,6 +58,7 @@ export {
   WorkHeading,
   type WorkHeadingProps,
 } from './sections/buy-box.tsx';
+export { CollectionRow, type CollectionRowProps } from './sections/collection-row.tsx';
 export { type Detail, placement } from './sections/detail.ts';
 export { DetailImage, type DetailImageProps } from './sections/detail-image.tsx';
 export {
@@ -72,15 +74,29 @@ export {
   Tally,
   type TallyProps,
 } from './sections/edition.tsx';
+export {
+  type FilterGroup,
+  type FilterOption,
+  Filters,
+  type FiltersProps,
+} from './sections/filters.tsx';
+export { PageHead, type PageHeadProps } from './sections/page-head.tsx';
 export { PrintGrid, PrintTile, type PrintTileProps } from './sections/print-tile.tsx';
 export { Record, type RecordEntry, type RecordProps } from './sections/record.tsx';
 export { type FooterColumn, SiteFooter, type SiteFooterProps } from './sections/site-footer.tsx';
 export { type NavItem, SiteHeader, type SiteHeaderProps } from './sections/site-header.tsx';
 export { type DiagramSize, SizeDiagram, type SizeDiagramProps } from './sections/size-diagram.tsx';
-export { Stage, type StageImage, type StageProps } from './sections/stage.tsx';
+export { type SizeRow, SizeTable, type SizeTableProps } from './sections/size-table.tsx';
+export { Stage, type StageImage, type StageProps, TrimMarks } from './sections/stage.tsx';
 export { Steps, type StepsProps } from './sections/steps.tsx';
 export { Story, type StoryFigure, type StoryProps } from './sections/story.tsx';
-export { StoryCard, type StoryCardProps, StoryGrid } from './sections/story-card.tsx';
+export {
+  StoryCard,
+  type StoryCardProps,
+  StoryGrid,
+  StoryLead,
+  type StoryLeadProps,
+} from './sections/story-card.tsx';
 export { type Thumbnail, Thumbnails, type ThumbnailsProps } from './sections/thumbnails.tsx';
 
 export { formatCentimetres, formatMoney, formatPpi, MISSING, type Centimetres } from './format.ts';

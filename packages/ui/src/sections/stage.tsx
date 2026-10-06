@@ -137,6 +137,18 @@ const Caption = styled.figcaption`
   }
 `;
 
+/** The four trim marks, outside the corners of the positioned box they are put in. */
+export function TrimMarks() {
+  return (
+    <>
+      <Crop $corner="tl" aria-hidden="true" />
+      <Crop $corner="tr" aria-hidden="true" />
+      <Crop $corner="bl" aria-hidden="true" />
+      <Crop $corner="br" aria-hidden="true" />
+    </>
+  );
+}
+
 export interface StageImage {
   readonly src: string;
   readonly width: number;
@@ -162,10 +174,7 @@ export function Stage({ image, caption, zoom, children, className }: StageProps)
       <Area>
         <Print style={{ '--ratio': image.width / image.height }}>
           <img src={image.src} width={image.width} height={image.height} alt={image.alt} />
-          <Crop $corner="tl" aria-hidden="true" />
-          <Crop $corner="tr" aria-hidden="true" />
-          <Crop $corner="bl" aria-hidden="true" />
-          <Crop $corner="br" aria-hidden="true" />
+          <TrimMarks />
           {children}
         </Print>
       </Area>

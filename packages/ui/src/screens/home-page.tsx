@@ -14,7 +14,7 @@ import { typeRole } from '../theme/type.ts';
 import { Chrome } from './chrome.tsx';
 import { EditionBand } from './edition-band.tsx';
 import {
-  collections,
+  curations,
   imageOf,
   LOCALE,
   metaOf,
@@ -252,15 +252,15 @@ export function HomePage() {
           }
         />
         <Three>
-          {collections.map((collection) => {
-            const cover = collection.works[0];
+          {curations.slice(0, 3).map((curation) => {
+            const cover = curation.works[0];
             return cover ? (
-              <li key={collection.slug}>
+              <li key={curation.slug}>
                 <PrintTile
-                  href={`/collections/${collection.slug}`}
+                  href={`/collections/${curation.slug}`}
                   image={imageOf(cover)}
-                  title={collection.title}
-                  meta={`${collection.works.length} prints`}
+                  title={curation.title}
+                  meta={`${String(curation.works.length)} prints`}
                 />
               </li>
             ) : null;
@@ -281,27 +281,27 @@ export function HomePage() {
         <StoryGrid>
           <li>
             <StoryCard
-              href="/journal/about-the-engraving"
-              work={melencolia.shortTitle}
-              title="About the engraving"
+              href="/prints/melencolia-i#story"
+              kicker="About the engraving"
+              title={melencolia.shortTitle}
               lede="Dürer cut Melencolia I into copper in 1514, a year after Knight, Death, and the Devil. With Saint Jerome in His Study, the three are known as his master engravings."
               image={{ ...imageOf(melencolia), detail: { x: 80, y: 18, zoom: 3 } }}
             />
           </li>
           <li>
             <StoryCard
-              href="/journal/about-the-woodcut"
-              work={rhinoceros.shortTitle}
-              title="About the woodcut"
+              href="/prints/the-rhinoceros#story"
+              kicker="About the woodcut"
+              title={rhinoceros.shortTitle}
               lede="Dürer never saw the animal he drew. An Indian rhinoceros reached Lisbon in 1515, the first living one seen in Europe since Roman times, and he worked from a written description and a sketch sent on to Nuremberg."
               image={{ ...imageOf(rhinoceros), detail: { x: 84, y: 52, zoom: 2.2 } }}
             />
           </li>
           <li>
             <StoryCard
-              href="/journal/about-the-print"
-              work={wave.shortTitle}
-              title="About the print"
+              href="/prints/under-the-wave-off-kanagawa#story"
+              kicker="About the print"
+              title={wave.shortTitle}
               lede="Hokusai made the Great Wave around 1830–32 for his series Thirty-six Views of Mount Fuji. The mountain sits small in the distance, framed by the trough of the wave."
               image={{ ...imageOf(wave), detail: { x: 30, y: 30, zoom: 1.6 } }}
             />
