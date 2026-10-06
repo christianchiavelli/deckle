@@ -23,9 +23,11 @@ That pulls the images CI publishes; add `--build` to build them from the checkou
 | Where | What |
 | --- | --- |
 | `http://localhost:8080/graphql` | The gateway: the only API the browser will ever see |
-| `http://localhost:8081/admin` | Payload, for stories and curations: `editor@deckle.localhost`, `deckle-editor` |
+| `http://localhost:8081/admin` | Payload, for stories, curations and drop pages: `editor@deckle.localhost`, `deckle-editor` |
 | `http://localhost:8082/dashboard` | Vendure's dashboard: `superadmin`, `deckle-superadmin` |
 | `http://localhost:8025` | Mailpit, where order and drop emails land |
+
+The shop starts with two months of trade, so the dashboard has something to show: about 150 orders from 40 invented customers at `example.com`, placed through Vendure's own checkout and dated back, some still to ship, most delivered, a few cancelled and refunded. `DECKLE_DEMO_DATA=false docker compose up --wait` leaves them out. Payload starts with five curations, twelve short stories and two drop pages, every fact in them from The Met's record of the work.
 
 ```bash
 curl -s http://localhost:8080/graphql -H 'content-type: application/json' \

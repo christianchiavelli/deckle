@@ -32,7 +32,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm --filter @deckle/met run candidates`: searches The Met and sizes the works that could join the curated list. Also never in CI.
 - `pnpm --filter @deckle/cms migrate:create <name>`, then `generate:types`: after any change to a CMS collection. Commit the migration and the types together; the CMS applies migrations itself as it starts.
 - `pnpm --filter @deckle/cms dev` pushes the schema straight into its database. Point it at a throwaway one, never the stack's `cms` database, or the next migration stops to ask questions.
-- `pnpm --filter @deckle/cms seed`: creates the editor, the gateway's read-only user and the starter stories, through the API of a CMS that is already running.
+- `pnpm --filter @deckle/cms seed`: creates the editor, the gateway's read-only user and the starter curations, stories and drop pages, through the API of a CMS that is already running.
 - `pnpm -r --if-present run test:integration`: the specs that need a real Postgres, in Testcontainers. Needs Docker running.
 - `pnpm --filter @deckle/tokens build`: rebuilds `dist/` after a change under `packages/tokens/tokens`, and `test -u` once the new output in the snapshot has been reviewed.
 - `pnpm --filter @deckle/ui storybook`: the components and the Foundations pages on port 6006, both themes side by side.
@@ -44,7 +44,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm --filter @deckle/gateway db:generate --name <change>`: after editing a `*.table.ts`. Commit the new files under `drizzle/`; the gateway migrates itself as it starts.
 - `pnpm --filter @deckle/commerce schema`: prints the Shop API schema the gateway reads into `services/commerce/schema/`. CI fails when the committed file is stale (`schema:check`).
 - `pnpm --filter @deckle/commerce migration:generate <name>`: after a change to Vendure's config or a custom field, run against a database that has every migration applied. Commerce migrates itself as it starts, and refuses to start when the database and the config differ.
-- `pnpm --filter @deckle/commerce seed`: loads `data/met` into Vendure. It is idempotent by Met object id.
+- `pnpm --filter @deckle/commerce seed`: loads `data/met` into Vendure. It is idempotent by Met object id. With `DEMO_DATA=true` it then places the demo trade, invented customers and their orders (ADR 0041); compose turns that on unless `DECKLE_DEMO_DATA=false`.
 
 ## Contracts between services
 

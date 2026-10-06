@@ -26,7 +26,7 @@ x-secrets:
 x-commerce: &commerce
   <<: *app
   image: ghcr.io/christianchiavelli/deckle-commerce:${DECKLE_TAG:-latest}
-  environment:
+  environment: &commerce-env
     DATABASE_URL: postgres://commerce:commerce@postgres:5432/commerce
     PORT: '3000'
     SUPERADMIN_USERNAME: ${COMMERCE_SUPERADMIN_USERNAME:-superadmin}
@@ -87,11 +87,17 @@ services:
       timeout: 5s
       retries: 6
 
-  # Loads The Met's works into Vendure once, then exits; a no-op when they are there.
+  # Loads The Met's works into Vendure, then the demo trade, and exits; a no-op when
+  # both are there.
   commerce-seed:
     <<: *commerce
     restart: 'no'
     command: ['node', '--enable-source-maps', 'dist/seed.js']
+    environment:
+      <<: *commerce-env
+      # Invented customers and two months of their orders, so the dashboard has a
+      # shop to show. DECKLE_DEMO_DATA=false starts with the catalogue alone.
+      DEMO_DATA: ${DECKLE_DEMO_DATA:-true}
     # The image's check asks for a server the seed never starts.
     healthcheck:
       disable: true

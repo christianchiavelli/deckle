@@ -44,3 +44,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0038](0038-tokens-collections-as-namespaces.md) | Tokens: Figma's collections as namespaces, checked as they build |
 | [0039](0039-ui-components-and-stories-in-both-themes.md) | UI components: typed stories, both themes in every test |
 | [0040](0040-admin-panels-in-deckles-brand.md) | The admin panels wear Deckle's brand, from the same tokens |
+| [0041](0041-a-demo-trade-through-the-real-checkout.md) | A demo trade, placed through the real checkout |

@@ -6,6 +6,7 @@ import { parseCommerceEnv } from './env.js';
 import { CatalogueHooksService } from './plugins/catalogue-hooks/catalogue-hooks.service.js';
 import { logFormat, runProcess } from './process.js';
 import { isNoOp, seedCommerce } from './seed/seed-commerce.js';
+import { seedDemo } from './seed/seed-demo.js';
 import { createVendureConfig } from './vendure-config.js';
 
 /**
@@ -48,6 +49,9 @@ runProcess('seed', async () => {
         : `Seeded: ${JSON.stringify(report)}`,
       'Seed',
     );
+    if (env.DEMO_DATA === 'true') {
+      Logger.info(`Demo trade: ${JSON.stringify(await seedDemo(app))}`, 'Seed');
+    }
     // The hooks for what the seed wrote are still in memory; they go to the queue now.
     await app.get(CatalogueHooksService).drain();
   } finally {

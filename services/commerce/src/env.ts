@@ -46,6 +46,9 @@ export const commerceEnvSchema = z.object({
   VENDURE_DISABLE_TELEMETRY: z.literal('true', {
     error: 'must be "true": Deckle never sends telemetry',
   }),
+  // Read by the seed alone: "true" adds the demo trade, invented customers and their
+  // orders, after the catalogue. Compose turns it on; DECKLE_DEMO_DATA=false turns it off.
+  DEMO_DATA: z.enum(['true', 'false']).default('false'),
 });
 
 export type CommerceEnv = z.infer<typeof commerceEnvSchema>;

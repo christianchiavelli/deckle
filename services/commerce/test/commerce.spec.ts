@@ -21,7 +21,9 @@ import { aroundAll, describe, expect, it } from 'vitest';
 import { migrateDatabase } from '../src/database/migrate.js';
 import { parseCommerceEnv, type CommerceEnv } from '../src/env.js';
 import { CatalogueHooksService } from '../src/plugins/catalogue-hooks/catalogue-hooks.service.js';
+import { demoPlan, type DemoFate, type SellableVariant } from '../src/seed/demo-plan.js';
 import { isNoOp, seedCommerce, type SeedReport } from '../src/seed/seed-commerce.js';
+import { seedDemo, type DemoSeedReport } from '../src/seed/seed-demo.js';
 import { createVendureConfig } from '../src/vendure-config.js';
 import { freePort, startGatewayStub, type GatewayStub } from './support/gateway-stub.js';
 
@@ -30,6 +32,20 @@ const FIXTURE = fileURLToPath(new URL('./fixtures/met', import.meta.url));
 const HOOK_SECRET = 'integration-hook-secret';
 const GATEWAY_API_KEY = 'deckle-gateway:integration-gateway-api-key-0123456789';
 const UNSELLABLE_ID = 999_001;
+
+/**
+ * A small demo trade, run three times: in the morning, late the same evening and a day
+ * later. Its seed gives every fate an order, and the evening run a new customer and a
+ * returning one.
+ */
+const DEMO_TRADE = { customers: 4, orders: 12, days: 20, seed: 299 };
+const DEMO_RUNS = [
+  new Date('2026-10-01T06:00:00Z'),
+  new Date('2026-10-01T23:00:00Z'),
+  new Date('2026-10-02T23:00:00Z'),
+] as const;
+/** Where the orders stand: the evening run placed the last of them. */
+const DEMO_NOW = DEMO_RUNS[1];
 
 /** A directory that removes itself when the scope that made it ends. */
 async function temporaryDirectory(prefix: string): Promise<AsyncDisposable & { path: string }> {
@@ -82,11 +98,22 @@ async function runSeed(config: VendureConfig, catalogDir: string): Promise<SeedR
   }
 }
 
+/** What `src/seed.ts` adds when DEMO_DATA is on, in a worker context of its own. */
+async function runDemo(config: VendureConfig, now: Date): Promise<DemoSeedReport> {
+  const { app } = await bootstrapWorker(config);
+  try {
+    return await seedDemo(app, now, DEMO_TRADE);
+  } finally {
+    await app.close();
+  }
+}
+
 interface Commerce {
   env: CommerceEnv;
   gateway: GatewayStub;
   shop: SimpleGraphQLClient;
   seeds: [SeedReport, SeedReport];
+  demos: DemoSeedReport[];
   shopApi: string;
   adminApi: string;
 }
@@ -131,6 +158,10 @@ aroundAll(async (runSuite) => {
     await runSeed(seedConfig, dataSet.path),
     await runSeed(seedConfig, dataSet.path),
   ];
+  const demos: DemoSeedReport[] = [];
+  for (const now of DEMO_RUNS) {
+    demos.push(await runDemo(seedConfig, now));
+  }
 
   // Vendure's own bootstrap rather than TestServer's: the seed above ran as a worker in
   // this process, and only bootstrap() puts the process back in the server's context
@@ -148,6 +179,7 @@ aroundAll(async (runSuite) => {
       gateway,
       shop: new SimpleGraphQLClient(mergeConfig(defaultConfig, serverConfig), shopApi),
       seeds,
+      demos,
       shopApi,
       adminApi: `http://127.0.0.1:${port}/admin-api`,
     };
@@ -479,5 +511,126 @@ describe('catalogue hooks', () => {
       slug: product?.slug,
       variantIds: [variantId],
     });
+  });
+});
+
+const STATE_OF: Readonly<Record<DemoFate, string>> = {
+  'awaiting-shipment': 'PaymentSettled',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+};
+
+interface DemoOrderRow {
+  state: string;
+  orderPlacedAt: string;
+  createdAt: string;
+  customer: { emailAddress: string };
+  payments: { state: string; refunds: { state: string }[] }[];
+  fulfillments: { state: string }[];
+}
+
+/** A query to the Admin API in the superadmin's session, as the dashboard sends it. */
+async function asSuperadmin(query: string): Promise<Record<string, unknown> | null | undefined> {
+  const login = await graphql(
+    commerce.adminApi,
+    'mutation { login(username: "superadmin", password: "integration-superadmin-password") { __typename } }',
+  );
+  const cookie = login.response.headers
+    .getSetCookie()
+    .map((header) => header.split(';')[0])
+    .join('; ');
+  const { data, errors } = await graphql(commerce.adminApi, query, { cookie });
+  expect(errors).toBeUndefined();
+  return data;
+}
+
+/** Every order, oldest first, as the superadmin sees them in the dashboard. */
+async function demoOrders(): Promise<DemoOrderRow[]> {
+  const listed = await asSuperadmin(
+    `
+      {
+        orders(options: { sort: { orderPlacedAt: ASC }, take: 100 }) {
+          items {
+            state
+            orderPlacedAt
+            createdAt
+            customer {
+              emailAddress
+            }
+            payments {
+              state
+              refunds {
+                state
+              }
+            }
+            fulfillments {
+              state
+            }
+          }
+        }
+      }
+    `,
+  );
+  return (listed?.['orders'] as { items: DemoOrderRow[] }).items;
+}
+
+describe('the demo trade', () => {
+  it('places each order once, catching up later that day and adding nothing the next', () => {
+    expect(commerce.demos).toEqual([
+      { customersCreated: 3, ordersPlaced: 10, ordersKept: 0 },
+      { customersCreated: 1, ordersPlaced: 2, ordersKept: 10 },
+      { customersCreated: 0, ordersPlaced: 0, ordersKept: 12 },
+    ]);
+  });
+
+  it('holds each planned order, in the state and on the date the plan gives it', async () => {
+    const catalogue = await graphql(
+      commerce.adminApi,
+      '{ products { items { customFields { metObjectId } variants { sku customFields { paperSize } } } } }',
+      { 'vendure-api-key': GATEWAY_API_KEY },
+    );
+    const products = (
+      catalogue.data?.['products'] as {
+        items: {
+          customFields: { metObjectId: number };
+          variants: { sku: string; customFields: { paperSize: SellableVariant['size'] } }[];
+        }[];
+      }
+    ).items;
+    const plan = demoPlan(
+      products.flatMap((product) =>
+        product.variants.map((variant) => ({
+          sku: variant.sku,
+          work: String(product.customFields.metObjectId),
+          size: variant.customFields.paperSize,
+        })),
+      ),
+      { ...DEMO_TRADE, now: DEMO_NOW },
+    );
+    expect(new Set(plan.orders.map((order) => order.fate)).size).toBe(4);
+
+    const orders = await demoOrders();
+    expect(orders.map((order) => ({ state: order.state, placedAt: order.orderPlacedAt }))).toEqual(
+      plan.orders.map((order) => ({
+        state: STATE_OF[order.fate],
+        placedAt: order.placedAt.toISOString(),
+      })),
+    );
+  });
+
+  it('refunds what it cancels and ships what it sends, to example addresses only', async () => {
+    for (const order of await demoOrders()) {
+      expect(order.customer.emailAddress).toMatch(/@example\.com$/);
+      expect(Date.parse(order.createdAt)).toBeLessThan(Date.parse(order.orderPlacedAt));
+      if (order.state === 'Cancelled') {
+        expect(order.payments.flatMap((payment) => payment.refunds)).toEqual([
+          { state: 'Settled' },
+        ]);
+      }
+      if (order.state === 'Shipped' || order.state === 'Delivered') {
+        expect(order.fulfillments).toEqual([{ state: order.state }]);
+      }
+    }
   });
 });
