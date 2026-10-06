@@ -106,6 +106,38 @@ catalogs:
   vendure:
     '@nestjs/common': 11.2.7
 
+# Vendure's plugins and test kit import NestJS and Vendure itself without
+# declaring them. Left alone, pnpm hands them whatever is hoisted, which here
+# mixes in the gateway's NestJS 12 and @nestjs/graphql 14: the asset server then
+# fails to inject ModuleRef, because Vendure 3.7 runs on NestJS 11. Declaring
+# them ties each import to the copy Vendure loads. Images are not affected, as
+# they install commerce alone; every version below is the one Vendure resolves.
+packageExtensions:
+  '@vendure/asset-server-plugin@3.7.4':
+    dependencies:
+      '@nestjs/common': 11.2.7
+      '@nestjs/core': 11.2.7
+      '@vendure/common': 3.7.4
+      '@vendure/core': 3.7.4
+  '@vendure/email-plugin@3.7.4':
+    dependencies:
+      '@nestjs/common': 11.2.7
+      '@nestjs/core': 11.2.7
+      '@vendure/common': 3.7.4
+      '@vendure/core': 3.7.4
+  '@vendure/dashboard@3.7.4':
+    dependencies:
+      '@nestjs/common': 11.2.7
+      '@nestjs/graphql': 13.1.0
+      '@vendure/common': 3.7.4
+      '@vendure/core': 3.7.4
+      express: 5.2.1
+      graphql-tag: 2.12.7
+  '@vendure/testing@3.7.4':
+    dependencies:
+      '@nestjs/core': 11.2.7
+      '@vendure/core': 3.7.4
+
 # A version reaches this repository a day after it is published (pnpm's
 # default since 11), which keeps out the releases that get pulled within hours.
 # These were a day old or less when the repository started, and are pinned
