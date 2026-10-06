@@ -19,6 +19,9 @@ blob-report/
 # The importer's download cache: originals are hundreds of MB and never committed
 data/met/.cache/
 
+# The CMS's local uploads; in the image they live on a volume
+apps/cms/media/
+
 # Art direction: the comparison sheets are kept, the single captures are rebuilt on demand
 design/art-direction/shots/*.png
 !design/art-direction/shots/compare-*.png

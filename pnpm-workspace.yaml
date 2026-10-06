@@ -112,3 +112,9 @@ allowBuilds:
   sharp: true
   # esbuild ships its native binary through an install script.
   esbuild: true
+  # Testcontainers reaches Docker through dockerode, which pulls these in. Their
+  # scripts only build optional native speed-ups (ssh2's crypto, cpu-features)
+  # or check protobufjs's CLI versions; the pure JavaScript paths work without them.
+  ssh2: false
+  cpu-features: false
+  protobufjs: false
