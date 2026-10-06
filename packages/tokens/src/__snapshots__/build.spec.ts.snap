@@ -579,7 +579,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
   "type": [
     {
       "role": "display",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "2.875rem",
       "weight": "700",
       "leading": "1",
@@ -587,7 +587,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "heading-1",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "2.5rem",
       "weight": "600",
       "leading": "1.08",
@@ -595,7 +595,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "heading-2",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "2rem",
       "weight": "600",
       "leading": "1.2",
@@ -603,7 +603,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "heading-3",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "1.25rem",
       "weight": "600",
       "leading": "1.2",
@@ -611,7 +611,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "body",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "1rem",
       "weight": "400",
       "leading": "1.62",
@@ -619,7 +619,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "body-small",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "0.875rem",
       "weight": "400",
       "leading": "1.5",
@@ -627,7 +627,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "caption",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "0.8125rem",
       "weight": "400",
       "leading": "1.5",
@@ -635,7 +635,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "label",
-      "family": "'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
       "size": "0.875rem",
       "weight": "600",
       "leading": "1.2",
@@ -643,7 +643,7 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
     },
     {
       "role": "numeral",
-      "family": "'Host Grotesk', 'Segoe UI', Arial, sans-serif",
+      "family": "'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', Arial, sans-serif",
       "size": "3.5rem",
       "weight": "600",
       "leading": "1",
@@ -1301,9 +1301,9 @@ exports[`the tokens as built > match the reviewed output, so no token changes un
   --p-color-amber-600: #8f6400;
   --p-color-red-300: #f59a8b;
   --p-color-red-600: #b3261e;
-  --p-font-family-display: 'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --p-font-family-text: 'Host Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --p-font-family-numeral: 'Host Grotesk', 'Segoe UI', Arial, sans-serif;
+  --p-font-family-display: 'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --p-font-family-text: 'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --p-font-family-numeral: 'Host Grotesk', 'Host Grotesk Fallback', 'Segoe UI', Arial, sans-serif;
   --p-font-weight-300: 300;
   --p-font-weight-400: 400;
   --p-font-weight-500: 500;

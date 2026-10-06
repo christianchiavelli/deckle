@@ -315,15 +315,29 @@
     "family": {
       "display": {
         "$type": "fontFamily",
-        "$value": ["Host Grotesk", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"]
+        "$value": [
+          "Host Grotesk",
+          "Host Grotesk Fallback",
+          "Segoe UI",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif"
+        ]
       },
       "text": {
         "$type": "fontFamily",
-        "$value": ["Host Grotesk", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"]
+        "$value": [
+          "Host Grotesk",
+          "Host Grotesk Fallback",
+          "Segoe UI",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif"
+        ]
       },
       "numeral": {
         "$type": "fontFamily",
-        "$value": ["Host Grotesk", "Segoe UI", "Arial", "sans-serif"]
+        "$value": ["Host Grotesk", "Host Grotesk Fallback", "Segoe UI", "Arial", "sans-serif"]
       }
     },
     "weight": {
