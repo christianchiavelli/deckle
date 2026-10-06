@@ -1,12 +1,19 @@
+import {
+  artworkTag,
+  CATALOG,
+  collectionTag,
+  curationTag,
+  dropPageTag,
+  priceTag,
+  type RevalidationProfile,
+  stockTag,
+  storyTag,
+} from '@deckle/cache-tags';
 import type { ArtworkChangeKind } from '../live/artwork-change.model.js';
 import type { ArtworkChangeMessage } from '../live/artwork-events.js';
 import type { HookEvent } from './hook-events.js';
 
-/**
- * `expire` drops a tag's cached pages at once; `max` serves them stale while the
- * store rebuilds them in the background.
- */
-export type RevalidationProfile = 'expire' | 'max';
+export type { RevalidationProfile };
 
 export interface Revalidation {
   readonly tags: readonly string[];
@@ -22,28 +29,28 @@ export interface Revalidation {
 export function revalidationFor(event: HookEvent): Revalidation {
   switch (event.type) {
     case 'product':
-      return expire(`artwork:${event.subject.slug}`, 'catalog');
+      return expire(artworkTag(event.subject.slug), CATALOG);
     case 'variant':
       return expire(
-        `artwork:${event.subject.slug}`,
-        `price:${event.subject.slug}`,
-        `stock:${event.subject.slug}`,
-        'catalog',
+        artworkTag(event.subject.slug),
+        priceTag(event.subject.slug),
+        stockTag(event.subject.slug),
+        CATALOG,
       );
     case 'price':
-      return expire(`price:${event.subject.slug}`, 'catalog');
+      return expire(priceTag(event.subject.slug), CATALOG);
     case 'stock':
-      return expire(`stock:${event.subject.slug}`);
+      return expire(stockTag(event.subject.slug));
     case 'collection':
-      return expire(`collection:${event.subject.slug}`, 'catalog');
+      return expire(collectionTag(event.subject.slug), CATALOG);
     case 'asset':
-      return expire('catalog');
+      return expire(CATALOG);
     case 'story':
-      return { tags: [`story:${event.subject.artworkSlug}`], profile: 'max' };
+      return { tags: [storyTag(event.subject.artworkSlug)], profile: 'max' };
     case 'curation':
-      return { tags: [`curation:${event.subject.slug}`], profile: 'max' };
+      return { tags: [curationTag(event.subject.slug)], profile: 'max' };
     case 'drop-page':
-      return { tags: [`drop-page:${event.subject.slug}`], profile: 'max' };
+      return { tags: [dropPageTag(event.subject.slug)], profile: 'max' };
   }
 }
 

@@ -16,24 +16,28 @@ COPY package.json ./
 RUN corepack enable pnpm && corepack install
 
 # Dependencies first, from the manifests alone, so a source change reuses this layer.
-# Scripts wait for the sources: print-sizes compiles itself in `prepare`.
+# Scripts wait for the sources: print-sizes and cache-tags compile in `prepare`.
 COPY pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY patches/ patches/
 COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/print-sizes/package.json packages/print-sizes/
+COPY packages/cache-tags/package.json packages/cache-tags/
 COPY services/gateway/package.json services/gateway/
 RUN --mount=type=cache,id=deckle-pnpm-store,target=/pnpm/store \
     pnpm install --frozen-lockfile --ignore-scripts --store-dir /pnpm/store --filter "@deckle/gateway..."
 
 COPY packages/eslint-config/ packages/eslint-config/
 COPY packages/print-sizes/ packages/print-sizes/
+COPY packages/cache-tags/ packages/cache-tags/
 COPY services/gateway/ services/gateway/
 RUN pnpm --filter "@deckle/gateway..." run build
 
-# A self-contained tree: production dependencies, print-sizes' dist, and the
-# gateway's `files` (dist and the migrations).
+# A self-contained tree: production dependencies, the shared packages' dist, and the
+# gateway's `files` (dist and the migrations). Not offline: deploy checks its own
+# lockfile against the supply-chain policies in pnpm-workspace.yaml, which reads
+# registry metadata this stage may not have cached.
 RUN --mount=type=cache,id=deckle-pnpm-store,target=/pnpm/store \
-    pnpm --filter @deckle/gateway deploy --prod --offline --store-dir /pnpm/store /prod/gateway
+    pnpm --filter @deckle/gateway deploy --prod --store-dir /pnpm/store /prod/gateway
 
 FROM ${NODE_IMAGE}
 ENV NODE_ENV=production PORT=4000

@@ -8,6 +8,7 @@
 !tsconfig.base.json
 !packages/eslint-config
 !packages/print-sizes
+!packages/cache-tags
 !services/gateway
 
 **/node_modules

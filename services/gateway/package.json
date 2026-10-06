@@ -23,6 +23,7 @@
   "dependencies": {
     "@apollo/server": "catalog:",
     "@as-integrations/express5": "catalog:",
+    "@deckle/cache-tags": "workspace:*",
     "@deckle/print-sizes": "workspace:*",
     "@escape.tech/graphql-armor": "catalog:",
     "@nestjs/apollo": "catalog:",
