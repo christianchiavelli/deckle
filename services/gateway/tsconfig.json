@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "rootDir": ".",
+    "noEmit": true,
+    "types": ["node"],
+    // Nest still runs on TypeScript's legacy decorators: its dependency injection
+    // reads the constructor types that `emitDecoratorMetadata` records.
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src", "test", "*.config.ts"]
+}

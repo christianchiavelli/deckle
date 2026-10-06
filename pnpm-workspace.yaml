@@ -92,6 +92,8 @@ catalog:
   '@graphql-codegen/typescript': 6.1.1
   '@graphql-codegen/typescript-operations': 6.1.10
   '@graphql-codegen/typed-document-node': 7.1.1
+  # Express ships no types, and the Nest Express adapter's own declarations import them.
+  '@types/express': 5.0.6
 
 # A version reaches this repository a day after it is published (pnpm's
 # default since 11), which keeps out the releases that get pulled within hours.
@@ -116,9 +118,11 @@ allowBuilds:
   sharp: true
   # esbuild ships its native binary through an install script.
   esbuild: true
-  # Testcontainers reaches Docker through dockerode, which pulls these in. Their
-  # scripts only build optional native speed-ups (ssh2's crypto, cpu-features)
-  # or check protobufjs's CLI versions; the pure JavaScript paths work without them.
+  # Denied: their postinstall only warns about the version scheme of dependents
+  # (Apollo Server's usage reporting, and gRPC under Testcontainers and Terminus).
+  '@apollo/protobufjs': false
+  protobufjs: false
+  # Denied: optional native speedups for Testcontainers' SSH transport, which the
+  # local Docker socket never uses; ssh2 falls back to plain JavaScript.
   ssh2: false
   cpu-features: false
-  protobufjs: false

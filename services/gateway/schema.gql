@@ -1,0 +1,308 @@
+# The gateway's GraphQL contract, generated from the code-first resolvers.
+# Do not edit: run `pnpm --filter @deckle/gateway schema:generate`.
+# CI fails when this file differs from the code (schema:check) and on breaking changes (schema:diff).
+
+"""Who made the work, as The Met records it."""
+type Artist {
+  beginYear: Int
+
+  """As The Met words it, e.g. "German, Nuremberg 1471–1528 Nuremberg"."""
+  bio: String
+  endYear: Int
+  name: String!
+  nationality: String
+}
+
+"""A work from The Met, sold as open-edition prints."""
+type Artwork {
+  accessionNumber: String
+
+  """Null when the maker is unknown."""
+  artist: Artist
+  classification: String
+  creditLine: String
+  culture: String
+
+  """As The Met dates it, e.g. "ca. 1830–32"."""
+  date: String
+  department: String
+
+  """One line per measurement: plate, sheet and so on."""
+  dimensions: [String!]!
+
+  """The Met's title, verbatim."""
+  fullTitle: String!
+  id: ID!
+  image: ArtworkImage
+  medium: String
+
+  """The work's page on metmuseum.org."""
+  museumUrl: String!
+  period: String
+
+  """The cheapest size for sale; null when none is."""
+  priceFrom: Money
+  sizes: [PrintSize!]!
+  slug: String!
+
+  """Null when the CMS has no story for this work."""
+  story: Story
+
+  """The title as the shop shows it."""
+  title: String!
+}
+
+"""
+Commerce changed something about an artwork; read it again to see what.
+"""
+type ArtworkChange {
+  action: ChangeAction!
+
+  """The artwork as it is now; null once it is deleted."""
+  artwork: Artwork
+  kind: ArtworkChangeKind!
+
+  """When commerce made the change."""
+  occurredAt: DateTime!
+  slug: String!
+}
+
+"""
+What changed in commerce: the work, one of its sizes, a price, or stock.
+"""
+enum ArtworkChangeKind {
+  PRICE
+  PRODUCT
+  STOCK
+  VARIANT
+}
+
+"""A page of artworks."""
+type ArtworkConnection {
+  edges: [ArtworkEdge!]!
+  pageInfo: PageInfo!
+
+  """Artworks in the whole list, not just this page."""
+  totalCount: Int!
+}
+
+type ArtworkEdge {
+  """Opaque; pass it as `after` to read on from here."""
+  cursor: String!
+  node: Artwork!
+}
+
+"""Narrows the artworks listed."""
+input ArtworkFilter {
+  """A collection slug."""
+  collection: String
+}
+
+"""The picture the shop shows, and the size of the scan it prints from."""
+type ArtworkImage {
+  height: Int!
+
+  """The original scan's height in pixels."""
+  scanHeight: Int!
+
+  """The original scan's width in pixels."""
+  scanWidth: Int!
+
+  """The full-size master, served through /assets."""
+  url: String!
+  width: Int!
+}
+
+"""A width and a height, in centimetres."""
+type Centimetres {
+  height: Float!
+  width: Float!
+}
+
+enum ChangeAction {
+  CREATED
+  DELETED
+  UPDATED
+}
+
+"""
+A group of works in the commerce catalogue, such as a department or a theme.
+"""
+type Collection {
+  """The works in this collection, ordered by title."""
+  artworks(
+    """Read on after this cursor."""
+    after: String
+
+    """How many to return, from 1 to 48."""
+    first: Int = 24
+  ): ArtworkConnection!
+  id: ID!
+  name: String!
+  slug: String!
+}
+
+"""Works an editor grouped in the CMS, in the order they chose."""
+type Curation {
+  """
+  The works in the order the editor set. A work commerce no longer sells is left out.
+  """
+  artworks: [Artwork!]!
+
+  """A few plain sentences that open the curation."""
+  intro: String
+  slug: String!
+  title: String!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type HeadingBlock {
+  """2 or 3: the levels under the story title."""
+  level: Int!
+  text: [TextRun!]!
+}
+
+"""An amount in the currency's minor unit: 5500 USD is $55.00."""
+type Money {
+  """Minor units, e.g. cents."""
+  amount: Int!
+
+  """ISO 4217 code, e.g. USD."""
+  currencyCode: String!
+}
+
+"""Where a page sits in the whole list (Relay cursor connections)."""
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+"""ISO A paper sizes the shop prints on."""
+enum PaperSize {
+  A1
+  A2
+  A3
+  A4
+}
+
+type ParagraphBlock {
+  text: [TextRun!]!
+}
+
+"""
+One paper size for an artwork. Every size is listed, sold or not, so the store can say why one is missing.
+"""
+type PrintSize {
+  """Whether this size can be bought."""
+  available: Boolean!
+
+  """The printed image inside its white border."""
+  image: Centimetres!
+
+  """The sheet, turned to the image's orientation."""
+  paper: Centimetres!
+
+  """Pixels per inch the scan gives at this size, rounded down."""
+  ppi: Int!
+
+  """Taxes included."""
+  price: Money
+
+  """
+  Pixels the scan would need along its limiting side to reach the minimum resolution; null when it has them.
+  """
+  requiredPixels: Int
+  size: PaperSize!
+  sku: String
+
+  """Null when available."""
+  unavailableReason: PrintSizeUnavailableReason
+
+  """The commerce variant to add to a cart."""
+  variantId: ID
+}
+
+"""Why a size is not for sale."""
+enum PrintSizeUnavailableReason {
+  """The scan could print it, but commerce does not sell it."""
+  NOT_OFFERED
+
+  """
+  The scan has too few pixels to print this sheet at the minimum resolution.
+  """
+  RESOLUTION_TOO_LOW
+}
+
+type Query {
+  """Null when no artwork has this slug."""
+  artwork(slug: String!): Artwork
+
+  """The catalogue, a page at a time, ordered by title."""
+  artworks(
+    """Read on after this cursor."""
+    after: String
+    filter: ArtworkFilter
+
+    """How many to return, from 1 to 48."""
+    first: Int = 24
+  ): ArtworkConnection!
+
+  """Null when no collection has this slug."""
+  collection(slug: String!): Collection
+
+  """The commerce taxonomy, in the order commerce keeps it."""
+  collections: [Collection!]!
+
+  """Null when no curation has this slug."""
+  curation(slug: String!): Curation
+
+  """Every published curation, by title."""
+  curations: [Curation!]!
+}
+
+type QuoteBlock {
+  text: [TextRun!]!
+}
+
+"""Where the story got a fact."""
+type Source {
+  """How the story names the source, such as a book or a page."""
+  label: String!
+  url: String
+}
+
+"""What the CMS tells about a work."""
+type Story {
+  blocks: [StoryBlock!]!
+  lede: String
+  sources: [Source!]!
+  title: String!
+  updatedAt: DateTime!
+}
+
+"""One block of a story, in reading order."""
+union StoryBlock = HeadingBlock | ParagraphBlock | QuoteBlock
+
+type Subscription {
+  """
+  Changes commerce makes to one artwork, from whichever replica hears of them.
+  """
+  artworkChanged(slug: String!): ArtworkChange!
+}
+
+"""A stretch of text with one formatting."""
+type TextRun {
+  bold: Boolean!
+
+  """Where the run links to; null when it is not a link."""
+  href: String
+  italic: Boolean!
+  text: String!
+}

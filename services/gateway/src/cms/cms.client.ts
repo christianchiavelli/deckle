@@ -1,0 +1,115 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { z } from 'zod';
+import type { Env } from '../config/env.js';
+import { sendUpstream } from '../upstream/http.js';
+import {
+  UpstreamContractError,
+  UpstreamHttpError,
+  UpstreamUnavailableError,
+} from '../upstream/upstream-errors.js';
+import {
+  type CmsCuration,
+  type CmsStory,
+  cmsCurationSchema,
+  cmsStorySchema,
+  payloadList,
+} from './cms.responses.js';
+
+/**
+ * The Payload collection that holds the gateway's read-only user. Payload's API-key
+ * header names it: `Authorization: <collection slug> API-Key <key>`.
+ */
+export const CMS_API_KEY_COLLECTION = 'users';
+
+const CMS_TIMEOUT_MS = 5000;
+const MAX_CURATIONS = 100;
+
+/**
+ * The gateway's CMS user can read drafts, because preview goes through it. Every
+ * query here asks for published documents only, and `find` drops a draft that
+ * comes back anyway.
+ */
+const PUBLISHED_ONLY = { 'where[_status][equals]': 'published' } as const;
+
+type Publishable = z.ZodType<{ readonly _status: 'draft' | 'published' | null }>;
+
+/** The CMS's REST API, read-only: published stories and curations, without relations. */
+@Injectable()
+export class CmsClient {
+  private readonly logger = new Logger(CmsClient.name);
+  private readonly baseUrl: string;
+  private readonly authorization: string;
+
+  constructor(config: ConfigService<Env, true>) {
+    this.baseUrl = config.get('CMS_API_URL', { infer: true }).replace(/\/+$/, '');
+    this.authorization = `${CMS_API_KEY_COLLECTION} API-Key ${config.get('CMS_API_KEY', { infer: true })}`;
+  }
+
+  /** The published story of each of these works that has one: one request for a whole page. */
+  async storiesForArtworks(artworkSlugs: readonly string[]): Promise<readonly CmsStory[]> {
+    if (artworkSlugs.length === 0) return [];
+    return this.find('stories', cmsStorySchema, {
+      // Slugs are lowercase words joined by hyphens, so the comma list Payload expects is safe.
+      'where[artworkSlug][in]': artworkSlugs.join(','),
+      ...PUBLISHED_ONLY,
+      // `artworkSlug` is unique in the CMS: at most one story per work.
+      limit: String(artworkSlugs.length),
+    });
+  }
+
+  async curations(): Promise<readonly CmsCuration[]> {
+    return this.find('curations', cmsCurationSchema, {
+      ...PUBLISHED_ONLY,
+      sort: 'title',
+      limit: String(MAX_CURATIONS),
+    });
+  }
+
+  async curationBySlug(slug: string): Promise<CmsCuration | null> {
+    const [curation] = await this.find('curations', cmsCurationSchema, {
+      'where[slug][equals]': slug,
+      ...PUBLISHED_ONLY,
+      limit: '1',
+    });
+    return curation ?? null;
+  }
+
+  private async find<T extends Publishable>(
+    collection: string,
+    document: T,
+    query: Record<string, string>,
+  ): Promise<z.output<T>[]> {
+    const url = new URL(`${this.baseUrl}/${collection}`);
+    for (const [key, value] of Object.entries({ ...query, depth: '0' })) {
+      url.searchParams.set(key, value);
+    }
+
+    const response = await sendUpstream({
+      service: 'cms',
+      url,
+      method: 'GET',
+      headers: { authorization: this.authorization },
+      timeoutMs: CMS_TIMEOUT_MS,
+      retryOnNetworkError: true,
+    });
+    if (response.status >= 500) {
+      throw new UpstreamUnavailableError('cms', `answered ${response.status}`);
+    }
+    if (response.status !== 200) {
+      throw new UpstreamHttpError('cms', response.status, `GET /${collection}`);
+    }
+
+    const parsed = payloadList(document).safeParse(response.json);
+    if (!parsed.success) {
+      throw new UpstreamContractError('cms', `GET /${collection}`, parsed.error);
+    }
+    const published = parsed.data.docs.filter((doc) => doc._status !== 'draft');
+    if (published.length < parsed.data.docs.length) {
+      this.logger.warn(
+        `The CMS answered a published-only query on ${collection} with drafts; dropped them`,
+      );
+    }
+    return published;
+  }
+}

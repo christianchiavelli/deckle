@@ -6,6 +6,8 @@ coverage
 node_modules
 # Generated from the code-first resolvers, and diffed as a contract in CI
 services/gateway/schema.gql
+# Written by drizzle-kit, which reads its own snapshots back on the next generate
+services/gateway/drizzle
 # The Met data set as the importer wrote it
 data/met
 design/art-direction/assets
