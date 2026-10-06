@@ -31,3 +31,8 @@
   line-gap-override: 0%;
   size-adjust: 104.9796%;
 }
+
+/* Host Grotesk's one contextual alternate draws an x between figures as ×, which garbles codes such as order numbers. A × that is meant is typed as one. */
+:root {
+  font-variant-ligatures: no-contextual;
+}

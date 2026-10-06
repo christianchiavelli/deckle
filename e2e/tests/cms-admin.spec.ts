@@ -11,6 +11,8 @@ test.describe("Payload admin in Deckle's brand", () => {
     await expect(page.getByText('Deckle', { exact: true })).toBeVisible();
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '/favicon.svg');
     await expect(page.locator('body')).toHaveCSS('font-family', /^"?Host Grotesk/);
+    // Without its contextual alternate, which would draw the X of an order code as ×.
+    await expect(page.locator('body')).toHaveCSS('font-variant-ligatures', 'no-contextual');
 
     const favicon = await request.get(`${cms}/favicon.svg`);
     expect(favicon.headers()['content-type']).toBe('image/svg+xml');

@@ -37,6 +37,11 @@ ${face('italic')}
 
 /* Arial resized to Host Grotesk's metrics: the fallback takes the same space, so nothing shifts on swap. */
 ${fontFaces}
+
+/* Host Grotesk's one contextual alternate draws an x between figures as ×, which garbles codes such as order numbers. A × that is meant is typed as one. */
+:root {
+  font-variant-ligatures: no-contextual;
+}
 `;
 
 // Written as the formatter would write it, so a regenerated file is the committed one.

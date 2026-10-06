@@ -13,6 +13,8 @@ test.describe("Vendure dashboard in Deckle's brand", () => {
     await expect(page.getByText('Deckle', { exact: true })).toBeVisible();
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute('type', 'image/svg+xml');
     await expect(page.locator('body')).toHaveCSS('font-family', /^"?Host Grotesk/);
+    // Without its contextual alternate, which would draw the X of an order code as ×.
+    await expect(page.locator('body')).toHaveCSS('font-variant-ligatures', 'no-contextual');
   });
 });
 

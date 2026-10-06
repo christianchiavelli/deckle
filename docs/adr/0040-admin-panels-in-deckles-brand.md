@@ -23,6 +23,7 @@ The editors work in two panels the store does not draw: Payload's admin on 8081 
 - The declaration of the dashboard's extension API has to follow Vendure's upgrades; a change it misses shows as a missing mark, which the e2e check catches.
 - Inside Vendure's app the brand is colour and type only: the dashboard has no slot for a mark beside its menu, and a patch for looks would not be a fix.
 - Host Grotesk sets wider than the dashboard's own face. The one fixed-width control that overflowed with it, the insights page's date range in Portuguese, is patched to grow with its text (`pnpm-workspace.yaml`).
+- Host Grotesk's one contextual alternate draws an x between figures as ×, so an order code such as `…1X67` read as `…1×67` in the dashboard. `fonts.css` turns contextual alternates off on every surface that loads the face; a × that is meant is typed as one.
 - Copper shows in the panels where it shows in the store: the mark, focus, and the open section of Vendure's menu.
 
 ## Alternatives considered
