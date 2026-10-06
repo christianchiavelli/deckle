@@ -634,3 +634,49 @@ describe('the demo trade', () => {
     }
   });
 });
+
+describe("the dashboard's order chart", () => {
+  // Patched: Vendure counted the server's days in UTC and added one; see pnpm-workspace.yaml.
+  it("counts the browser's own days, as many as it asked for", async () => {
+    const DAY = 86_400_000;
+    // A week as a browser in São Paulo, three hours behind UTC, sends it: from its first
+    // midnight to the last moment of its seventh day.
+    const from = Date.parse('2026-09-25T03:00:00.000Z');
+    const data = await asSuperadmin(`
+      {
+        dashboardMetricSummary(
+          input: {
+            types: [OrderCount]
+            refresh: true
+            startDate: "${new Date(from).toISOString()}"
+            endDate: "${new Date(from + 7 * DAY - 1).toISOString()}"
+          }
+        ) {
+          entries {
+            label
+            value
+          }
+        }
+      }
+    `);
+    const [summary] = data?.['dashboardMetricSummary'] as {
+      entries: { label: string; value: number }[];
+    }[];
+
+    const orders = await demoOrders();
+    const days = [0, 1, 2, 3, 4, 5, 6].map((day) => from + day * DAY);
+    const placedOn = (start: number) =>
+      orders.filter((order) => {
+        const placed = Date.parse(order.orderPlacedAt);
+        return placed >= start && placed < start + DAY;
+      }).length;
+    // Dated at the middle of each day, which the browser prints as that day.
+    expect(summary?.entries).toEqual(
+      days.map((start) => ({
+        label: new Date(start + DAY / 2).toISOString(),
+        value: placedOn(start),
+      })),
+    );
+    expect(summary?.entries.some((entry) => entry.value > 0)).toBe(true);
+  });
+});

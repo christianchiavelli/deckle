@@ -205,9 +205,14 @@ allowBuilds:
 
 # Fixes in dependencies, each with its reason. Drop a patch once its version is upgraded.
 patchedDependencies:
-  # Two fixes to the dashboard. It activates Lingui with Vendure's language code
+  # Four fixes to the dashboard. It activates Lingui with Vendure's language code
   # (pt_BR), which Intl rejects as a locale, so any page with a plural, a date or a
   # price fails in Brazilian Portuguese: the patch formats with the BCP 47 tag
-  # (pt-BR) instead. And the insights page's date range button had a fixed width
-  # that a Portuguese range in Host Grotesk overflows: the width is now a floor.
+  # (pt-BR) instead. The insights page's date range button had a fixed width that a
+  # Portuguese range in Host Grotesk overflows: the width is now a floor. Its order
+  # chart counted the server's days in UTC, plus one: west of UTC every bar sat a
+  # day early, and the chart always ended on a day still to come. It now counts the
+  # browser's days, from the first and last moments the browser sends. And the
+  # chart sized its value axis to the largest value rather than to the top tick,
+  # which cut the first letter off "US$ 1.000".
   '@vendure/dashboard@3.7.4': patches/@vendure__dashboard@3.7.4.patch

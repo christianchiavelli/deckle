@@ -1,3 +1,60 @@
+diff --git a/dist/plugin/service/metrics.service.js b/dist/plugin/service/metrics.service.js
+index 98129a6111c233f6d238fb5f0ee49f32071693b2..7465503a42a98a93895466d785e45fae0f05690d 100644
+--- a/dist/plugin/service/metrics.service.js
++++ b/dist/plugin/service/metrics.service.js
+@@ -27,8 +27,11 @@ let MetricsService = class MetricsService {
+         ];
+     }
+     async getMetrics(ctx, { types, refresh, startDate, endDate }) {
+-        const calculatedStartDate = (0, date_fns_1.startOfDay)(new Date(startDate));
+-        const calculatedEndDate = (0, date_fns_1.endOfDay)(new Date(endDate));
++        // Deckle patch: the dashboard sends the first and the last moment of its own days.
++        // Snapped to the server's days instead, every bar moved by the browser's offset from
++        // UTC, and the range grew a day that had not happened yet.
++        const calculatedStartDate = new Date(startDate);
++        const calculatedEndDate = new Date(endDate);
+         // Check if we have cached result
+         const hash = (0, node_crypto_1.createHash)('sha1')
+             .update(JSON.stringify({
+@@ -70,9 +73,10 @@ let MetricsService = class MetricsService {
+     }
+     async loadData(ctx, startDate, endDate) {
+         const orderRepo = this.connection.getRepository(ctx, core_1.Order);
+-        // Calculate number of days between start and end
+-        const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+-        const nrOfDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
++        // Deckle patch: one bucket per day of the client's, 24 hours each from its first
++        // midnight. Rounded, so a change of clocks inside the range adds or drops no day.
++        const dayMs = 1000 * 60 * 60 * 24;
++        const nrOfDays = Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / dayMs));
+         // Get orders in a loop until we have all
+         let skip = 0;
+         const take = 1000;
+@@ -103,15 +107,18 @@ let MetricsService = class MetricsService {
+         const dataPerDay = new Map();
+         // Create a map entry for each day in the range
+         for (let i = 0; i < nrOfDays; i++) {
+-            const currentDate = new Date(startDate);
+-            currentDate.setDate(startDate.getDate() + i);
+-            const dateKey = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+-            // Filter orders for this specific day
++            const dayStart = startDate.getTime() + i * dayMs;
++            // Dated at midday: the dashboard prints the date in its own time zone, and a change
++            // of clocks moves midday by an hour, never into the day before or after.
++            const currentDate = new Date(dayStart + dayMs / 2);
++            const dateKey = currentDate.toISOString();
++            // Filter orders for this specific day; the last hour of a day the clocks went back
++            // on falls past the last bucket, and is counted in it.
+             const ordersForDay = orders.filter(order => {
+                 if (!order.orderPlacedAt)
+                     return false;
+-                const orderDate = new Date(order.orderPlacedAt).toISOString().split('T')[0];
+-                return orderDate === dateKey;
++                const day = Math.floor((new Date(order.orderPlacedAt).getTime() - startDate.getTime()) / dayMs);
++                return Math.min(Math.max(day, 0), nrOfDays - 1) === i;
+             });
+             dataPerDay.set(dateKey, {
+                 orders: ordersForDay,
 diff --git a/src/lib/components/date-range-picker.tsx b/src/lib/components/date-range-picker.tsx
 index be9c6fbfbdfae467bdb604b77189de26b724f39d..645a1a45451b2fb8875d76ba1353efa30fe350c1 100644
 --- a/src/lib/components/date-range-picker.tsx
@@ -13,6 +70,48 @@ index be9c6fbfbdfae467bdb604b77189de26b724f39d..645a1a45451b2fb8875d76ba1353efa3
                  />}>
                      <CalendarIcon className="mr-2 h-4 w-4" />
                      {formatDateRange()}
+diff --git a/src/lib/framework/dashboard-widget/metrics-widget/chart.tsx b/src/lib/framework/dashboard-widget/metrics-widget/chart.tsx
+index ff5a8a9b90f85c64ff24be2e8fdd4323ca1fb00e..94af949b7924f02b49780c964a809cfe8c784e95 100644
+--- a/src/lib/framework/dashboard-widget/metrics-widget/chart.tsx
++++ b/src/lib/framework/dashboard-widget/metrics-widget/chart.tsx
+@@ -15,8 +15,12 @@ export function MetricsChart({
+ 
+     const yAxisWidth = useMemo(() => {
+         const maxValue = Math.max(0, ...chartData.map(d => d.sales));
+-        const formatted = String(formatValue(maxValue));
+-        return Math.max(60, formatted.length * 7);
++        // Deckle patch: the widest label is the top tick, the maximum rounded up (US$ 830
++        // is drawn under US$ 1.000), and the tick and its gap take 8px beside it. Sized
++        // to the maximum alone, a Brazilian label lost its first letter.
++        const topTick = maxValue > 0 ? 10 ** Math.ceil(Math.log10(maxValue)) : 0;
++        const formatted = String(formatValue(topTick));
++        return Math.max(60, formatted.length * 7 + 8);
+     }, [chartData, formatValue]);
+ 
+     return (
+diff --git a/src/lib/framework/dashboard-widget/metrics-widget/index.tsx b/src/lib/framework/dashboard-widget/metrics-widget/index.tsx
+index 2931ab47c452f8edcb08e00a603fc5ee5fcc9b87..b5406c8cdb2528ef0337e2c11de95e1f3d96633d 100644
+--- a/src/lib/framework/dashboard-widget/metrics-widget/index.tsx
++++ b/src/lib/framework/dashboard-widget/metrics-widget/index.tsx
+@@ -6,6 +6,7 @@ import { useLocalFormat } from '@/vdb/hooks/use-local-format.js';
+ import { Trans } from '@lingui/react/macro';
+ import { useLingui } from '@lingui/react/macro';
+ import { useQuery } from '@tanstack/react-query';
++import { endOfDay } from 'date-fns';
+ import { RefreshCw } from 'lucide-react';
+ import { useMemo, useState } from 'react';
+ import { DashboardBaseWidget } from '../base-widget.js';
+@@ -44,7 +45,9 @@ export function MetricsWidget() {
+                 types: [dataType],
+                 refresh: true,
+                 startDate: dateRange.from.toISOString(),
+-                endDate: dateRange.to.toISOString(),
++                // Deckle patch: to the end of the last day. The presets end there, but a range
++                // picked on the calendar ends at its first moment and lost the day.
++                endDate: endOfDay(dateRange.to).toISOString(),
+             });
+         },
+     });
 diff --git a/src/lib/hooks/use-ui-language-loader.ts b/src/lib/hooks/use-ui-language-loader.ts
 index c7822bd5f1fa92369f292e9abe883679945af4b5..74e305c0ac9abfeddcc9728c6bf8fcb8e040d4ff 100644
 --- a/src/lib/hooks/use-ui-language-loader.ts
