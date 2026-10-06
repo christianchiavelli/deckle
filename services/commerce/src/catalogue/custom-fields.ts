@@ -1,8 +1,8 @@
 import { PAPER_SIZE_ORDER, type PaperSize } from '@deckle/print-sizes';
 import { LanguageCode, type CustomFieldConfig } from '@vendure/core';
 
-/** A label or description in the dashboard's two languages; a paper size reads the same in both. */
-const label = (en: string, ptBR = en) => [
+/** A label or description in both of the dashboard's languages; leaving one out is a type error. */
+const label = (en: string, ptBR: string) => [
   { languageCode: LanguageCode.en, value: en },
   { languageCode: LanguageCode.pt_BR, value: ptBR },
 ];
@@ -231,7 +231,8 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     name: 'paperSize',
     type: 'string',
     nullable: true,
-    options: PAPER_SIZE_ORDER.map((size) => ({ value: size, label: label(size) })),
+    // A paper size reads the same in both languages.
+    options: PAPER_SIZE_ORDER.map((size) => ({ value: size, label: label(size, size) })),
     label: label('Paper size', 'Tamanho do papel'),
     ui: print,
   },
