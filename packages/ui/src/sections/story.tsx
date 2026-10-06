@@ -15,6 +15,11 @@ const Grid = styled.div`
   }
 `;
 
+/* Without a detail to show, the text keeps its measure and the band its rhythm. */
+const Alone = styled.div`
+  display: grid;
+`;
+
 const Lede = styled.p`
   font-size: 1.375rem;
   font-weight: 500;
@@ -32,8 +37,22 @@ const Text = styled.div`
     margin-block-end: ${t.space.gapXs};
   }
 
+  h3 {
+    ${typeRole('heading3')}
+    margin-block-start: ${t.space.gapSm};
+  }
+
   p:not(${Lede}) {
     color: ${t.text.secondary};
+  }
+
+  blockquote {
+    padding-inline-start: ${t.space.gapMd};
+    border-inline-start: ${t.strokeWidth.rule} solid ${t.stroke.accent};
+  }
+
+  blockquote p:not(${Lede}) {
+    color: ${t.text.primary};
   }
 `;
 
@@ -55,35 +74,44 @@ const Figure = styled.figure`
   }
 `;
 
+export interface StoryFigure {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  detail: Detail;
+  caption: string;
+}
+
 export interface StoryProps {
   id: string;
   title: string;
-  lede: string;
-  paragraphs: readonly string[];
+  /** The opening sentences, set larger; null when the story has none. */
+  lede: string | null;
+  /** The body: paragraphs, and the headings (level 3) and quotes a story may hold. */
+  children: ReactNode;
   /** Where the facts come from, as the CMS requires for every story. */
   source: ReactNode;
-  figure: {
-    src: string;
-    width: number;
-    height: number;
-    alt: string;
-    detail: Detail;
-    caption: string;
-  };
+  /** The detail the story talks about. Without one, the text has the band to itself. */
+  figure?: StoryFigure | undefined;
 }
 
 /** The work's story from the CMS, beside the detail it talks about. */
-export function Story({ id, title, lede, paragraphs, source, figure }: StoryProps) {
+export function Story({ id, title, lede, children, source, figure }: StoryProps) {
+  const text = (
+    <Text>
+      <h2 id={id}>{title}</h2>
+      {lede !== null && <Lede>{lede}</Lede>}
+      {children}
+      <Source>{source}</Source>
+    </Text>
+  );
+  if (!figure) {
+    return <Alone>{text}</Alone>;
+  }
   return (
     <Grid>
-      <Text>
-        <h2 id={id}>{title}</h2>
-        <Lede>{lede}</Lede>
-        {paragraphs.map((paragraph) => (
-          <p key={paragraph.slice(0, 32)}>{paragraph}</p>
-        ))}
-        <Source>{source}</Source>
-      </Text>
+      {text}
       <Figure>
         <DetailImage
           src={figure.src}

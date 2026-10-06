@@ -79,7 +79,7 @@ export { type NavItem, SiteHeader, type SiteHeaderProps } from './sections/site-
 export { type DiagramSize, SizeDiagram, type SizeDiagramProps } from './sections/size-diagram.tsx';
 export { Stage, type StageImage, type StageProps } from './sections/stage.tsx';
 export { Steps, type StepsProps } from './sections/steps.tsx';
-export { Story, type StoryProps } from './sections/story.tsx';
+export { Story, type StoryFigure, type StoryProps } from './sections/story.tsx';
 export { StoryCard, type StoryCardProps, StoryGrid } from './sections/story-card.tsx';
 export { type Thumbnail, Thumbnails, type ThumbnailsProps } from './sections/thumbnails.tsx';
 

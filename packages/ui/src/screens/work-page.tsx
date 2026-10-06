@@ -162,9 +162,6 @@ export function WorkPage() {
           id="story-title"
           title="About the engraving"
           lede="Dürer cut Melencolia I into copper in 1514, a year after Knight, Death, and the Devil. With Saint Jerome in His Study, the three are known as his master engravings."
-          paragraphs={[
-            'A winged figure sits idle among the tools of measuring and making, a compass slack in her hand. Above her hang an hourglass, a scale and a bell, beside a magic square in which every row, column and diagonal adds up to 34. Its bottom row gives the year: 15 14.',
-          ]}
           source={`Source: The Met, Melencolia I, ${melencolia.accessionNumber}`}
           figure={{
             ...image,
@@ -172,7 +169,14 @@ export function WorkPage() {
             detail: { x: 80, y: 18, zoom: 3 },
             caption: 'The magic square: every row, column and diagonal adds up to 34',
           }}
-        />
+        >
+          <p>
+            A winged figure sits idle among the tools of measuring and making, a compass slack in
+            her hand. Above her hang an hourglass, a scale and a bell, beside a magic square in
+            which every row, column and diagonal adds up to 34. Its bottom row gives the year: 15
+            14.
+          </p>
+        </Story>
       </Band>
 
       <Band tone="band" aria-labelledby="record-title">

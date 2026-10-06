@@ -33,7 +33,8 @@ const Artist = styled.p`
   gap: 0 ${t.space.gapXs};
   font-size: 0.9375rem;
 
-  a {
+  a,
+  strong {
     color: ${t.text.accent};
     font-weight: ${t.type.label.weight};
     text-decoration: none;
@@ -63,7 +64,8 @@ const Facts = styled.p`
 export interface WorkHeadingProps {
   /** The title's id, for the band that it names. */
   id: string;
-  artist: { name: string; href: string; bio: string };
+  /** Without `href`, the name is not a link: there is no page of the artist's to open. */
+  artist: { name: string; href?: string | undefined; bio: string };
   title: string;
   /** Date, technique and size of the original, as one line: "1514 · Engraving · Plate 24 × 18.5 cm". */
   facts: string;
@@ -74,7 +76,11 @@ export function WorkHeading({ id, artist, title, facts }: WorkHeadingProps) {
   return (
     <Heading>
       <Artist>
-        <a href={artist.href}>{artist.name}</a>
+        {artist.href === undefined ? (
+          <strong>{artist.name}</strong>
+        ) : (
+          <a href={artist.href}>{artist.name}</a>
+        )}
         <span>{artist.bio}</span>
       </Artist>
       <Title id={id}>{title}</Title>
