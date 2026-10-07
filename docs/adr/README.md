@@ -49,3 +49,7 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0043](0043-the-store-browses-from-one-cached-catalogue.md) | The store browses from one cached catalogue |
 | [0044](0044-the-search-forgives-a-typo.md) | The search forgives a typo |
 | [0045](0045-the-search-suggests-as-one-types.md) | The search suggests as one types |
+| [0046](0046-the-gateway-keeps-each-browsers-session.md) | The gateway keeps each browser's session |
+| [0047](0047-a-passkey-is-the-whole-account.md) | A passkey is the whole account |
+| [0048](0048-the-cart-is-a-guests-the-numbered-copy-the-customers.md) | The cart is a guest's; a numbered copy is the customer's |
+| [0049](0049-a-drop-never-sells-a-fifty-first-copy.md) | A drop never sells a fifty-first copy |

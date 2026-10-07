@@ -13,6 +13,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/met` | The Met's API client, the curated list of works, and the importer that writes `data/met` |
 | `packages/print-sizes` | Which paper sizes a scan can print, and at what ppi. Plain TypeScript, no I/O |
 | `packages/cache-tags` | The cache tags the store marks its reads with and the gateway drops, spelled in one place |
+| `packages/drops` | The numbered drops the stack opens with: the gateway records them, commerce seeds their editions, the CMS holds their words |
 | `packages/tokens` | The design tokens: DTCG files from the chosen art direction, built by Style Dictionary into CSS, a typed module and the Storybook data |
 | `packages/brand` | The mark, the favicon and the typeface: what the store, Storybook and both admin panels share, with no framework |
 | `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them |
@@ -68,6 +69,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 - **The gateway asks the store to drop cache tags.** `POST http://store:3000/api/revalidate`, with `Authorization: Bearer <STORE_REVALIDATE_SECRET>` and `{ "tags": [...], "profile": "expire" | "max" }`. Tags come from `@deckle/cache-tags`, and the store refuses any other with a 400.
 - **The gateway vouches for its users to commerce.** It signs a short-lived EdDSA JWT (`iss` `deckle-gateway`, `aud` `deckle-commerce`, `sub` the Deckle user id) and publishes its keys at `GET /internal/jwks.json`. Commerce verifies it in a Vendure `AuthenticationStrategy` named `deckle`, so it holds no secret that could mint a login.
 - **The gateway calls the Admin API with an API key, never a session.**
+- **The browser's session is the gateway's.** An `httpOnly` cookie, `deckle_session`, carries a random secret; the gateway keeps its SHA-256 in Postgres, with commerce's session tokens for the cart and for the signed-in customer, which never reach the browser.
 - **Missing data is `null`, never `""` or `0`.** Every reader renders it as a dash.
 - **Commerce's API key is `<lookup id>:<secret>`**, 8 to 64 then 32 to 256 characters of `[A-Za-z0-9_-]`, and the gateway's `COMMERCE_API_KEY` is the same string. Commerce refuses to start with any other shape.
 
