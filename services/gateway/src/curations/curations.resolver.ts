@@ -8,8 +8,8 @@ import type { GatewayContext } from '../graphql/gateway-context.js';
 import { Curation } from './curation.model.js';
 import { CurationsService } from './curations.service.js';
 
-/** Editors keep curations short; the cost estimate assumes no more than this many works. */
-const CURATION_SIZE_ESTIMATE = 48;
+/** The most works the CMS lets a curation hold (`maxRows`), so the estimate is a bound. */
+const CURATION_MAX_WORKS = 24;
 
 @Resolver(() => Curation)
 export class CurationsResolver {
@@ -33,7 +33,7 @@ export class CurationsResolver {
   @ResolveField(() => [Artwork], {
     description:
       'The works in the order the editor set. A work commerce no longer sells is left out.',
-    complexity: (estimate) => crossService(estimate) + listOf(CURATION_SIZE_ESTIMATE)(estimate),
+    complexity: (estimate) => crossService(estimate) + listOf(CURATION_MAX_WORKS)(estimate),
   })
   async artworks(
     @Parent() curation: Curation,
