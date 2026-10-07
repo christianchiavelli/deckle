@@ -94,6 +94,10 @@ export async function seedDemo(
     relations: { product: true },
   });
   const sellable = variants.flatMap((variant): SellableVariant[] => {
+    // A drop's numbered copies are sold through the drop, one per person, never by the demo.
+    if (variant.customFields.editionSize !== null) {
+      return [];
+    }
     const size = variant.customFields.paperSize;
     const work = variant.product.customFields.metObjectId ?? variant.productId;
     return size === null ? [] : [{ sku: variant.sku, work: String(work), size }];

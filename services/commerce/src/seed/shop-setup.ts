@@ -45,13 +45,38 @@ export const TAX_CATEGORY = 'Prints';
 
 export const TAX_RATE = { name: 'No tax', percentage: 0 } as const;
 
+export interface ShippingMethodSetup {
+  readonly code: string;
+  readonly name: string;
+  readonly description: string;
+  /** USD cents, taxes included. */
+  readonly price: number;
+  /** The eligibility checker's code and its arguments. */
+  readonly checker: {
+    readonly code: string;
+    readonly arguments: { name: string; value: string }[];
+  };
+}
+
 export const SHIPPING_METHOD = {
   code: 'standard-shipping',
   name: 'Standard shipping',
   description: 'Rolled in a tube, tracked, one flat rate wherever it goes.',
-  /** USD cents, taxes included. */
   price: 1200,
-} as const;
+  checker: {
+    code: 'default-shipping-eligibility-checker',
+    arguments: [{ name: 'orderMinimum', value: '0' }],
+  },
+} as const satisfies ShippingMethodSetup;
+
+/** A drop's copy ships at no charge: its price includes the tube and the post. */
+export const NUMBERED_COPY_SHIPPING = {
+  code: 'numbered-copy-shipping',
+  name: 'Shipping for a numbered copy',
+  description: 'Rolled in a tube, tracked, and included in the price of a numbered copy.',
+  price: 0,
+  checker: { code: 'numbered-copies-only', arguments: [] },
+} as const satisfies ShippingMethodSetup;
 
 export const PAYMENT_METHOD = {
   code: 'dummy',

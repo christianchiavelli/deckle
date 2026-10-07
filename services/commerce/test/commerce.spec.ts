@@ -210,7 +210,7 @@ async function graphql(
 
 const PRODUCTS = parse(`
   query Products {
-    products(options: { sort: { id: ASC } }) {
+    products(options: { sort: { id: ASC }, filter: { metObjectId: { isNull: false } } }) {
       items {
         slug
         name
@@ -438,7 +438,8 @@ describe('the Admin API', () => {
   it('reads the catalogue with the gateway key, and nothing beyond its role', async () => {
     const key = { 'vendure-api-key': GATEWAY_API_KEY };
     const read = await graphql(commerce.adminApi, '{ products { totalItems } }', key);
-    expect(read.data).toEqual({ products: { totalItems: 2 } });
+    // The two works, and the numbered edition of each drop.
+    expect(read.data).toEqual({ products: { totalItems: 4 } });
     const administrators = await graphql(
       commerce.adminApi,
       '{ administrators { totalItems } }',
@@ -587,24 +588,34 @@ describe('the demo trade', () => {
   it('holds each planned order, in the state and on the date the plan gives it', async () => {
     const catalogue = await graphql(
       commerce.adminApi,
-      '{ products { items { customFields { metObjectId } variants { sku customFields { paperSize } } } } }',
+      '{ products { items { customFields { metObjectId } variants { sku customFields { paperSize editionSize } } } } }',
       { 'vendure-api-key': GATEWAY_API_KEY },
     );
     const products = (
       catalogue.data?.['products'] as {
         items: {
-          customFields: { metObjectId: number };
-          variants: { sku: string; customFields: { paperSize: SellableVariant['size'] } }[];
+          customFields: { metObjectId: number | null };
+          variants: {
+            sku: string;
+            customFields: { paperSize: SellableVariant['size']; editionSize: number | null };
+          }[];
         }[];
       }
     ).items;
+    // The demo sells open editions only; a numbered copy goes through its drop.
     const plan = demoPlan(
       products.flatMap((product) =>
-        product.variants.map((variant) => ({
-          sku: variant.sku,
-          work: String(product.customFields.metObjectId),
-          size: variant.customFields.paperSize,
-        })),
+        product.variants.flatMap((variant) =>
+          variant.customFields.editionSize === null
+            ? [
+                {
+                  sku: variant.sku,
+                  work: String(product.customFields.metObjectId),
+                  size: variant.customFields.paperSize,
+                },
+              ]
+            : [],
+        ),
       ),
       { ...DEMO_TRADE, now: DEMO_NOW },
     );
@@ -678,5 +689,161 @@ describe("the dashboard's order chart", () => {
       })),
     );
     expect(summary?.entries.some((entry) => entry.value > 0)).toBe(true);
+  });
+});
+
+// Last: the orders these place would change what the demo trade's tests count.
+describe("drops' numbered editions", () => {
+  const AUTHENTICATE = parse(`
+    mutation Authenticate($token: String!) {
+      authenticate(input: { deckle: { token: $token } }) {
+        __typename
+      }
+    }
+  `);
+  const EDITION = parse(`
+    query Edition($slug: String!) {
+      product(slug: $slug) {
+        facetValues { code facet { code } }
+        variants { id sku price priceWithTax stockLevel customFields { paperSize editionSize ppi } }
+      }
+    }
+  `);
+  const ADD = parse(`
+    mutation Add($id: ID!, $quantity: Int!) {
+      addItemToOrder(productVariantId: $id, quantity: $quantity) {
+        __typename
+        ... on Order { code }
+        ... on ErrorResult { errorCode }
+        ... on InsufficientStockError { quantityAvailable }
+      }
+    }
+  `);
+  const SHIPPING = parse('query { eligibleShippingMethods { id code priceWithTax } }');
+  const CHECKOUT = parse(`
+    mutation Checkout($methodId: [ID!]!, $email: String!) {
+      setOrderCustomFields(input: { customFields: { copyNumber: 7, receiptEmail: $email } }) {
+        __typename
+      }
+      setOrderShippingAddress(
+        input: { fullName: "Ana Souza", streetLine1: "1000 Fifth Avenue", city: "New York", postalCode: "10028", countryCode: "US" }
+      ) {
+        __typename
+      }
+      setOrderShippingMethod(shippingMethodId: $methodId) {
+        __typename
+      }
+      transitionOrderToState(state: "ArrangingPayment") {
+        __typename
+      }
+      addPaymentToOrder(input: { method: "dummy", metadata: {} }) {
+        __typename
+        ... on Order { state shippingWithTax totalWithTax customFields { copyNumber receiptEmail } }
+      }
+    }
+  `);
+
+  interface Edition {
+    product: {
+      facetValues: { code: string; facet: { code: string } }[];
+      variants: {
+        id: string;
+        sku: string;
+        priceWithTax: number;
+        stockLevel: string;
+        customFields: { paperSize: string; editionSize: number; ppi: number };
+      }[];
+    } | null;
+  }
+
+  const edition = async (slug: string) =>
+    (await commerce.shop.query<Edition>(EDITION, { slug })).product;
+
+  it('sells each drop as one counted A3 variant, filed as a numbered edition', async () => {
+    expect(commerce.seeds.map((seed) => seed.catalogue.editionsCreated)).toEqual([2, 0]);
+    const melencolia = await edition('melencolia-i-numbered');
+    expect(melencolia?.variants).toEqual([
+      expect.objectContaining({
+        sku: '336228-A3-N50',
+        priceWithTax: 18_000,
+        stockLevel: 'IN_STOCK',
+        customFields: expect.objectContaining({ paperSize: 'A3', editionSize: 50 }),
+      }),
+    ]);
+    expect(melencolia?.facetValues).toContainEqual({
+      code: 'numbered',
+      facet: { code: 'edition' },
+    });
+    expect(melencolia?.facetValues).not.toContainEqual({
+      code: 'open',
+      facet: { code: 'edition' },
+    });
+  });
+
+  it('ships a numbered copy free, and a cart of open editions never', async () => {
+    await commerce.shop.asAnonymousUser();
+    const print = (await edition('melencolia-i'))?.variants[0];
+    await commerce.shop.query(ADD, { id: print?.id ?? '', quantity: 1 });
+    const open = await commerce.shop.query<{ eligibleShippingMethods: { code: string }[] }>(
+      SHIPPING,
+    );
+    expect(open.eligibleShippingMethods.map(({ code }) => code)).toEqual(['standard-shipping']);
+
+    // A fresh session: signed in on the guest's, commerce would merge the guest's cart in.
+    await commerce.shop.asAnonymousUser();
+    const token = await commerce.gateway.signToken(randomUUID());
+    await commerce.shop.query(AUTHENTICATE, { token });
+    const copy = (await edition('melencolia-i-numbered'))?.variants[0];
+    await commerce.shop.query(ADD, { id: copy?.id ?? '', quantity: 1 });
+    const numbered = await commerce.shop.query<{
+      eligibleShippingMethods: { code: string; priceWithTax: number }[];
+    }>(SHIPPING);
+    expect(numbered.eligibleShippingMethods).toContainEqual(
+      expect.objectContaining({ code: 'numbered-copy-shipping', priceWithTax: 0 }),
+    );
+  });
+
+  it("takes a copy's payment as the customer's, with its number and its receipt's address", async () => {
+    await commerce.shop.asAnonymousUser();
+    await commerce.shop.query(AUTHENTICATE, {
+      token: await commerce.gateway.signToken(randomUUID()),
+    });
+    const copy = (await edition('the-great-wave-numbered'))?.variants[0];
+    await commerce.shop.query(ADD, { id: copy?.id ?? '', quantity: 1 });
+    const methods = await commerce.shop.query<{
+      eligibleShippingMethods: { id: string; code: string }[];
+    }>(SHIPPING);
+    const free = methods.eligibleShippingMethods.find(
+      ({ code }) => code === 'numbered-copy-shipping',
+    );
+
+    const paid = await commerce.shop.query<{
+      addPaymentToOrder: { state: string; shippingWithTax: number; totalWithTax: number };
+    }>(CHECKOUT, { methodId: [free?.id ?? ''], email: 'ana@example.com' });
+
+    expect(paid.addPaymentToOrder).toEqual({
+      __typename: 'Order',
+      state: 'PaymentSettled',
+      shippingWithTax: 0,
+      totalWithTax: 18_000,
+      customFields: { copyNumber: 7, receiptEmail: 'ana@example.com' },
+    });
+  });
+
+  it("never sells more copies than the edition has: commerce's stock is the second barrier", async () => {
+    await commerce.shop.asAnonymousUser();
+    await commerce.shop.query(AUTHENTICATE, {
+      token: await commerce.gateway.signToken(randomUUID()),
+    });
+    const copy = (await edition('melencolia-i-numbered'))?.variants[0];
+
+    const tooMany = await commerce.shop.query<{
+      addItemToOrder: { __typename: string; errorCode?: string; quantityAvailable?: number };
+    }>(ADD, { id: copy?.id ?? '', quantity: 51 });
+
+    expect(tooMany.addItemToOrder).toMatchObject({
+      errorCode: 'INSUFFICIENT_STOCK_ERROR',
+      quantityAvailable: 50,
+    });
   });
 });

@@ -280,6 +280,54 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
     ),
     ui: print,
   },
+  {
+    name: 'editionSize',
+    type: 'int',
+    nullable: true,
+    // The seed sets it with the edition; a numbered copy cannot become an open one.
+    readonly: true,
+    min: 1,
+    label: label('Numbered edition of', 'Tiragem numerada de'),
+    description: label(
+      "How many numbered copies a drop's edition has; empty for an open edition",
+      'Quantas cópias numeradas a tiragem de um drop tem; vazio numa tiragem aberta',
+    ),
+    ui: print,
+  },
+];
+
+const drop = { tab: 'Drop' };
+
+/**
+ * What an order for a drop's numbered copy carries besides its lines. The gateway
+ * sets both through the Shop API, which only it can reach: the copy's number for
+ * whoever pencils it, and where the receipt goes, since a customer who signed in
+ * with a passkey has no address of their own.
+ */
+export const orderCustomFields: CustomFieldConfig[] = [
+  {
+    name: 'copyNumber',
+    type: 'int',
+    nullable: true,
+    min: 1,
+    label: label('Copy number', 'Número da cópia'),
+    description: label(
+      'The number to write in pencil, out of the edition',
+      'O número a escrever a lápis, dentro da tiragem',
+    ),
+    ui: drop,
+  },
+  {
+    name: 'receiptEmail',
+    type: 'string',
+    nullable: true,
+    label: label('Receipt email', 'E-mail do recibo'),
+    description: label(
+      'Where the order confirmation goes, when it is not the customer’s own address',
+      'Para onde vai a confirmação do pedido, quando não é o endereço do próprio cliente',
+    ),
+    ui: drop,
+  },
 ];
 
 declare module '@vendure/core/dist/entity/custom-entity-fields.js' {
@@ -314,5 +362,11 @@ declare module '@vendure/core/dist/entity/custom-entity-fields.js' {
     imageWidthCm: number | null;
     imageHeightCm: number | null;
     ppi: number | null;
+    editionSize: number | null;
+  }
+
+  interface CustomOrderFields {
+    copyNumber: number | null;
+    receiptEmail: string | null;
   }
 }

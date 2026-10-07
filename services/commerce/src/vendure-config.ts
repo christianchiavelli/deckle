@@ -5,21 +5,24 @@ import {
   DefaultLogger,
   DefaultSchedulerPlugin,
   DefaultSearchPlugin,
+  defaultShippingEligibilityChecker,
   dummyPaymentHandler,
   LogLevel,
   type VendureConfig,
   type VendureLogger,
 } from '@vendure/core';
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
-import {
-  EmailPlugin,
-  FileBasedTemplateLoader,
-  orderConfirmationHandler,
-} from '@vendure/email-plugin';
+import { EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
 import { withholdSessionTokenHeader } from './auth/admin-session.js';
 import { redirectRootTo } from './dashboard-root.js';
 import { adminApiKeyStrategy, ProvisionedApiKeyStrategy, splitApiKey } from './auth/api-keys.js';
-import { productCustomFields, productVariantCustomFields } from './catalogue/custom-fields.js';
+import {
+  orderCustomFields,
+  productCustomFields,
+  productVariantCustomFields,
+} from './catalogue/custom-fields.js';
+import { orderReceiptHandler } from './checkout/receipt-email.js';
+import { numberedCopiesOnly } from './checkout/shipping-eligibility.js';
 import type { CommerceEnv } from './env.js';
 import { JsonLogger } from './logging/json-logger.js';
 import { migrations } from './migrations/index.js';
@@ -40,7 +43,7 @@ export const paths = {
   assets: `${packageRoot}assets`,
   /** The dashboard's build output, served at `/dashboard`. */
   dashboard: `${packageRoot}dist/dashboard`,
-  /** The email plugin's own templates; order confirmation is the only one Deckle sends. */
+  /** The email plugin's own templates; the order confirmation is the only one Deckle sends. */
   emailTemplates: fileURLToPath(
     new URL('templates', import.meta.resolve('@vendure/email-plugin/package.json')),
   ),
@@ -145,9 +148,14 @@ export function createVendureConfig(env: CommerceEnv, options: ConfigOptions): V
     paymentOptions: {
       paymentMethodHandlers: [dummyPaymentHandler],
     },
+    shippingOptions: {
+      // The flat rate for open editions, and the free method a numbered copy ships by.
+      shippingEligibilityCheckers: [defaultShippingEligibilityChecker, numberedCopiesOnly],
+    },
     customFields: {
       Product: productCustomFields,
       ProductVariant: productVariantCustomFields,
+      Order: orderCustomFields,
     },
     logger: createLogger(options),
     plugins: [
@@ -191,7 +199,8 @@ export function createVendureConfig(env: CommerceEnv, options: ConfigOptions): V
           secure: false,
           ignoreTLS: true,
         },
-        handlers: [orderConfirmationHandler],
+        // The order confirmation, sent to the address given for the receipt.
+        handlers: [orderReceiptHandler],
         templateLoader: new FileBasedTemplateLoader(paths.emailTemplates),
         globalTemplateVars: { fromAddress: '"Deckle" <orders@deckle.invalid>' },
       }),

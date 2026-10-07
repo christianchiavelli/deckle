@@ -2296,7 +2296,7 @@ type Order implements Node {
   couponCodes: [String!]!
   createdAt: DateTime!
   currencyCode: CurrencyCode!
-  customFields: JSON
+  customFields: OrderCustomFields
   customer: Customer
   discounts: [Discount!]!
   fulfillments: [Fulfillment!]
@@ -2369,6 +2369,11 @@ type OrderAddress {
   streetLine2: String
 }
 
+type OrderCustomFields {
+  copyNumber: Int
+  receiptEmail: String
+}
+
 input OrderFilterParameter {
   _and: [OrderFilterParameter!]
   _or: [OrderFilterParameter!]
@@ -2380,6 +2385,7 @@ input OrderFilterParameter {
 
   """A unique code for the Order"""
   code: StringOperators
+  copyNumber: NumberOperators
   createdAt: DateOperators
   currencyCode: StringOperators
   id: IDOperators
@@ -2389,6 +2395,7 @@ input OrderFilterParameter {
   completed the checkout and the Order is no longer "active"
   """
   orderPlacedAt: DateOperators
+  receiptEmail: StringOperators
   shipping: NumberOperators
   shippingWithTax: NumberOperators
   state: StringOperators
@@ -2559,6 +2566,7 @@ type OrderPaymentStateError implements ErrorResult {
 input OrderSortParameter {
   """A unique code for the Order"""
   code: SortOrder
+  copyNumber: SortOrder
   createdAt: SortOrder
   id: SortOrder
 
@@ -2567,6 +2575,7 @@ input OrderSortParameter {
   completed the checkout and the Order is no longer "active"
   """
   orderPlacedAt: SortOrder
+  receiptEmail: SortOrder
   shipping: SortOrder
   shippingWithTax: SortOrder
   state: SortOrder
@@ -3300,6 +3309,7 @@ type ProductVariant implements Node {
 }
 
 type ProductVariantCustomFields {
+  editionSize: Int
   imageHeightCm: Float
   imageWidthCm: Float
   paperHeightCm: Float
@@ -3313,6 +3323,7 @@ input ProductVariantFilterParameter {
   _or: [ProductVariantFilterParameter!]
   createdAt: DateOperators
   currencyCode: StringOperators
+  editionSize: NumberOperators
   id: IDOperators
   imageHeightCm: NumberOperators
   imageWidthCm: NumberOperators
@@ -3356,6 +3367,7 @@ input ProductVariantListOptions {
 
 input ProductVariantSortParameter {
   createdAt: SortOrder
+  editionSize: SortOrder
   id: SortOrder
   imageHeightCm: SortOrder
   imageWidthCm: SortOrder
@@ -3987,8 +3999,13 @@ type UpdateMultipleOrderItemsResult {
   order: Order!
 }
 
+input UpdateOrderCustomFieldsInput {
+  copyNumber: Int
+  receiptEmail: String
+}
+
 input UpdateOrderInput {
-  customFields: JSON
+  customFields: UpdateOrderCustomFieldsInput
 }
 
 """

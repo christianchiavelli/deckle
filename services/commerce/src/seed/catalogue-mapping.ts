@@ -1,3 +1,4 @@
+import type { DropDefinition } from '@deckle/drops';
 import type { Work } from '@deckle/met';
 import { availableSizes, type PaperSize, type PrintOption } from '@deckle/print-sizes';
 
@@ -19,7 +20,7 @@ export interface FacetDefinition {
 /**
  * The four facets a visitor browses by, and `edition`, which every open-edition
  * product carries so that "All prints" can be a facet filter like the other
- * collections (drops will add a "limited" value).
+ * collections; a drop's edition carries the "numbered" value instead.
  */
 export const FACETS: readonly FacetDefinition[] = [
   { code: 'artist', name: 'Artist' },
@@ -30,6 +31,9 @@ export const FACETS: readonly FacetDefinition[] = [
 ];
 
 export const OPEN_EDITION = { code: 'open', name: 'Open edition' } as const;
+
+/** What a drop's edition is filed under instead, which keeps it out of "All prints". */
+export const NUMBERED_EDITION = { code: 'numbered', name: 'Numbered edition' } as const;
 
 export interface FacetValueRef {
   readonly facet: FacetCode;
@@ -129,6 +133,13 @@ export function facetValuesOf(work: Work): FacetValueRef[] {
   }
   values.push({ facet: 'edition', ...OPEN_EDITION });
   return values;
+}
+
+/** A drop's edition is filed where its work is, but as a numbered edition instead of an open one. */
+export function editionFacetValuesOf(work: Work): FacetValueRef[] {
+  return facetValuesOf(work).map((value) =>
+    value.facet === 'edition' ? { facet: 'edition', ...NUMBERED_EDITION } : value,
+  );
 }
 
 /** The museum record, field for field as `custom-fields.ts` declares it. */
@@ -233,4 +244,49 @@ function variantOf(work: Work, option: PrintOption): VariantPlan {
 export function variantsOf(work: Work): VariantPlan[] {
   const scan = { width: work.image.originalWidth, height: work.image.originalHeight };
   return availableSizes(scan).map((option) => variantOf(work, option));
+}
+
+/** The variant a drop sells: one per edition, its copies told apart by number, not by SKU. */
+export function editionSkuOf(work: Work, drop: DropDefinition): string {
+  return `${skuOf(work, drop.paperSize)}-N${String(drop.editionSize)}`;
+}
+
+export interface EditionPlan {
+  readonly slug: string;
+  readonly name: string;
+  readonly description: string;
+  readonly editionSize: number;
+  readonly variant: VariantPlan & {
+    readonly customFields: VariantPlan['customFields'] & { editionSize: number };
+  };
+}
+
+/**
+ * A drop as commerce sells it: a product of its own, whose one variant is the
+ * paper size the drop prints, at the drop's price, with the edition's size as its
+ * stock. Its own product because every work shares the one paper-size option
+ * group, so a second A3 variant beside the open edition's would repeat an option.
+ * Null when the scan cannot print the drop's size at the minimum resolution.
+ */
+export function editionOf(work: Work, drop: DropDefinition): EditionPlan | null {
+  const scan = { width: work.image.originalWidth, height: work.image.originalHeight };
+  const option = availableSizes(scan).find((candidate) => candidate.size === drop.paperSize);
+  if (option === undefined) {
+    return null;
+  }
+  const variant = variantOf(work, option);
+  const copies = String(drop.editionSize);
+  return {
+    slug: drop.slug,
+    name: `${work.shortTitle}, numbered edition`,
+    description: `${copies} numbered copies at ${drop.paperSize}, each numbered in pencil. ${labelOf(work)}.`,
+    editionSize: drop.editionSize,
+    variant: {
+      ...variant,
+      sku: editionSkuOf(work, drop),
+      name: `${work.shortTitle} (${drop.paperSize}, numbered of ${copies})`,
+      price: drop.price,
+      customFields: { ...variant.customFields, editionSize: drop.editionSize },
+    },
+  };
 }

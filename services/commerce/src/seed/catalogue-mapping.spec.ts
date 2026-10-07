@@ -1,9 +1,12 @@
 import { fileURLToPath } from 'node:url';
+import { DROPS } from '@deckle/drops';
 import { readCatalog, type Work } from '@deckle/met';
 import { printOptions } from '@deckle/print-sizes';
 import { describe, expect, it } from 'vitest';
 import {
   centuryOf,
+  editionFacetValuesOf,
+  editionOf,
   facetValuesOf,
   imageTypeOf,
   labelOf,
@@ -245,6 +248,57 @@ describe('variantsOf', () => {
   });
 });
 
+describe('editionOf', () => {
+  const wave = {
+    slug: 'the-great-wave-numbered',
+    artworkSlug: 'under-the-wave-off-kanagawa',
+    paperSize: 'A3',
+    editionSize: 50,
+    price: 18_000,
+    opensAfterDays: 8,
+  } as const;
+
+  it("sells a drop as one counted variant at the drop's size and price", () => {
+    const a3 = printOptions({ width: 3859, height: 2594 }).find(({ size }) => size === 'A3');
+    expect(editionOf(work, wave)).toEqual({
+      slug: 'the-great-wave-numbered',
+      name: 'Under the Wave off Kanagawa, numbered edition',
+      description: `50 numbered copies at A3, each numbered in pencil. ${labelOf(work)}.`,
+      editionSize: 50,
+      variant: {
+        size: 'A3',
+        sku: '45434-A3-N50',
+        name: 'Under the Wave off Kanagawa (A3, numbered of 50)',
+        price: 18_000,
+        customFields: {
+          paperSize: 'A3',
+          paperWidthCm: a3?.paper.width,
+          paperHeightCm: a3?.paper.height,
+          imageWidthCm: a3?.image.width,
+          imageHeightCm: a3?.image.height,
+          ppi: a3?.ppi,
+          editionSize: 50,
+        },
+      },
+    });
+  });
+
+  it('refuses a size the scan cannot hold', () => {
+    expect(editionOf(work, { ...wave, paperSize: 'A1' })).toBeNull();
+  });
+
+  it('files the edition with its work, as numbered rather than open', () => {
+    const open = facetValuesOf(work);
+    const numbered = editionFacetValuesOf(work);
+    expect(numbered.filter(({ facet }) => facet !== 'edition')).toEqual(
+      open.filter(({ facet }) => facet !== 'edition'),
+    );
+    expect(numbered.filter(({ facet }) => facet === 'edition')).toEqual([
+      { facet: 'edition', code: 'numbered', name: 'Numbered edition' },
+    ]);
+  });
+});
+
 describe('the data set in data/met', async () => {
   const catalog = await readCatalog(dataSet);
 
@@ -270,6 +324,15 @@ describe('the data set in data/met', async () => {
       expect(new Set(variants.map(({ sku }) => sku)).size).toBe(variants.length);
       expect(() => imageTypeOf(each.image.file)).not.toThrow();
       expect(productCustomFieldsOf(each).metObjectId).toBe(each.objectId);
+    },
+  );
+
+  it.each(DROPS.map((drop) => [drop.slug, drop] as const))(
+    '%s prints a work of the data set at a size its scan holds',
+    (_slug, drop) => {
+      const printed = catalog.works.find((each) => each.slug === drop.artworkSlug);
+      expect(printed, drop.artworkSlug).toBeDefined();
+      expect(printed && editionOf(printed, drop)).not.toBeNull();
     },
   );
 });

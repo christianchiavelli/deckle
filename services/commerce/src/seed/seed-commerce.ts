@@ -1,3 +1,4 @@
+import { DROPS, type DropDefinition } from '@deckle/drops';
 import type { Catalog } from '@deckle/met';
 import type { INestApplicationContext } from '@nestjs/common';
 import { CatalogueSeeder, type CatalogueSeedReport } from './seed-catalogue.js';
@@ -17,6 +18,8 @@ export interface SeedInput {
   readonly catalogDir: string;
   /** `GATEWAY_API_KEY`. */
   readonly gatewayApiKey: string;
+  /** The drops whose numbered editions commerce sells; by default, the ones the stack opens with. */
+  readonly drops?: readonly DropDefinition[];
 }
 
 /**
@@ -34,6 +37,7 @@ export async function seedCommerce(
   const catalogue = await new CatalogueSeeder(app, ctx, taxCategoryId).seed(
     input.catalog,
     input.catalogDir,
+    input.drops ?? DROPS,
   );
   const gatewayApiKey = await seedGatewayApiKey(app, ctx, input.gatewayApiKey);
   return { shop, catalogue, gatewayApiKey };
@@ -56,6 +60,7 @@ export function isNoOp(report: SeedReport): boolean {
     catalogue.facetValuesCreated === 0 &&
     catalogue.productsCreated === 0 &&
     catalogue.collectionsCreated === 0 &&
+    catalogue.editionsCreated === 0 &&
     gatewayApiKey === 'unchanged'
   );
 }

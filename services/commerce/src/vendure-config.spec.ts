@@ -105,8 +105,33 @@ describe('createVendureConfig', () => {
       'imageWidthCm',
       'imageHeightCm',
       'ppi',
+      'editionSize',
     ]);
-    expect(variant.every((field) => field.readonly !== true)).toBe(true);
+    const editable = variant.filter(({ name }) => name !== 'editionSize');
+    expect(editable.every((field) => field.readonly !== true)).toBe(true);
+    expect(variant.find(({ name }) => name === 'editionSize')).toMatchObject({
+      type: 'int',
+      nullable: true,
+      readonly: true,
+    });
+  });
+
+  it("lets the gateway mark a drop's order with its copy and its receipt's address", () => {
+    const order = config.customFields?.Order ?? [];
+    expect(order.map(({ name }) => name)).toEqual(['copyNumber', 'receiptEmail']);
+    for (const field of order) {
+      expect(field, field.name).toMatchObject({ nullable: true });
+      expect(field.readonly, field.name).not.toBe(true);
+      expect(field.public, field.name).not.toBe(false);
+    }
+  });
+
+  it('ships open editions at the flat rate and numbered copies by their own method', () => {
+    const checkers = config.shippingOptions?.shippingEligibilityCheckers ?? [];
+    expect(checkers.map(({ code }) => code)).toEqual([
+      'default-shipping-eligibility-checker',
+      'numbered-copies-only',
+    ]);
   });
 });
 

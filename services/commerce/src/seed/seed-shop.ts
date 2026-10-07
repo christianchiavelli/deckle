@@ -17,6 +17,7 @@ import {
 } from '@vendure/core';
 import {
   COUNTRIES,
+  NUMBERED_COPY_SHIPPING,
   PAYMENT_METHOD,
   SHIPPING_METHOD,
   SHIPPING_ZONE,
@@ -42,7 +43,10 @@ const en = LanguageCode.en;
 
 const idOf = (entity: { id: ID } | null | undefined) => entity?.id;
 
-/** Countries, the one zone, tax, shipping, payment and the channel's settings; each only if missing. */
+/**
+ * Countries, the one zone, tax, the two shipping methods, payment and the channel's
+ * settings; each only if missing.
+ */
 export async function seedShop(
   app: INestApplicationContext,
   ctx: RequestContext,
@@ -136,32 +140,34 @@ export async function seedShop(
   }
 
   const shippingMethodService = app.get(ShippingMethodService);
-  let shippingOutcome: SeedOutcome = 'unchanged';
-  const shippingMethods = await shippingMethodService.findAll(ctx, {
-    filter: { code: { eq: SHIPPING_METHOD.code } },
-  });
-  if (shippingMethods.items.length === 0) {
+  const shippingOutcomes: SeedOutcome[] = [];
+  for (const method of [SHIPPING_METHOD, NUMBERED_COPY_SHIPPING]) {
+    const found = await shippingMethodService.findAll(ctx, {
+      filter: { code: { eq: method.code } },
+    });
+    if (found.items.length > 0) {
+      shippingOutcomes.push('unchanged');
+      continue;
+    }
     await shippingMethodService.create(ctx, {
-      code: SHIPPING_METHOD.code,
+      code: method.code,
       fulfillmentHandler: 'manual-fulfillment',
-      checker: {
-        code: 'default-shipping-eligibility-checker',
-        arguments: [{ name: 'orderMinimum', value: '0' }],
-      },
+      checker: { code: method.checker.code, arguments: [...method.checker.arguments] },
       calculator: {
         code: 'default-shipping-calculator',
         arguments: [
-          { name: 'rate', value: String(SHIPPING_METHOD.price) },
+          { name: 'rate', value: String(method.price) },
           { name: 'includesTax', value: 'include' },
           { name: 'taxRate', value: String(TAX_RATE.percentage) },
         ],
       },
-      translations: [
-        { languageCode: en, name: SHIPPING_METHOD.name, description: SHIPPING_METHOD.description },
-      ],
+      translations: [{ languageCode: en, name: method.name, description: method.description }],
     });
-    shippingOutcome = 'created';
+    shippingOutcomes.push('created');
   }
+  const shippingOutcome: SeedOutcome = shippingOutcomes.includes('created')
+    ? 'created'
+    : 'unchanged';
 
   const paymentMethodService = app.get(PaymentMethodService);
   let paymentOutcome: SeedOutcome = 'unchanged';

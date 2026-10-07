@@ -1,5 +1,6 @@
 import { createReadStream } from 'node:fs';
 import { join } from 'node:path';
+import type { DropDefinition } from '@deckle/drops';
 import type { Catalog, Work } from '@deckle/met';
 import { PAPER_SIZE_ORDER, type PaperSize } from '@deckle/print-sizes';
 import type { INestApplicationContext } from '@nestjs/common';
@@ -16,6 +17,7 @@ import {
   ProductOptionGroupService,
   ProductOptionService,
   ProductService,
+  ProductTranslation,
   ProductVariantService,
   TransactionalConnection,
   type Facet,
@@ -25,10 +27,13 @@ import {
 import { In } from 'typeorm';
 import {
   centuryOf,
+  editionFacetValuesOf,
+  editionOf,
   FACETS,
   facetValuesOf,
   imageTypeOf,
   labelOf,
+  NUMBERED_EDITION,
   OPEN_EDITION,
   productCustomFieldsOf,
   variantsOf,
@@ -51,6 +56,8 @@ export interface CatalogueSeedReport {
   /** Works whose scan cannot print even an A4 at the minimum resolution. */
   unsellable: number[];
   collectionsCreated: number;
+  /** Drops' numbered editions, each a product with one counted variant. */
+  editionsCreated: number;
 }
 
 const valueKey = (facet: FacetCode, code: string) => `${facet}:${code}`;
@@ -91,6 +98,7 @@ export class CatalogueSeeder {
     productsSkipped: 0,
     unsellable: [],
     collectionsCreated: 0,
+    editionsCreated: 0,
   };
 
   constructor(
@@ -99,11 +107,16 @@ export class CatalogueSeeder {
     private readonly taxCategoryId: ID,
   ) {}
 
-  async seed(catalog: Catalog, catalogDir: string): Promise<CatalogueSeedReport> {
+  async seed(
+    catalog: Catalog,
+    catalogDir: string,
+    drops: readonly DropDefinition[],
+  ): Promise<CatalogueSeedReport> {
     const paperSizes = await this.paperSizes();
     const facetValueIds = await this.facetValues(catalog.works);
     await this.products(catalog.works, catalogDir, paperSizes, facetValueIds);
     await this.collections(catalog.works, facetValueIds);
+    await this.editions(catalog.works, drops, paperSizes, facetValueIds);
     return this.report;
   }
 
@@ -161,7 +174,10 @@ export class CatalogueSeeder {
     }
 
     const wanted = new Map<string, FacetValueRef>();
-    for (const value of works.flatMap(facetValuesOf)) {
+    for (const value of [
+      ...works.flatMap(facetValuesOf),
+      { facet: 'edition' as const, ...NUMBERED_EDITION },
+    ]) {
       wanted.set(valueKey(value.facet, value.code), value);
     }
     for (const [key, value] of wanted) {
@@ -382,6 +398,89 @@ export class CatalogueSeeder {
       });
       ids.set(plan.slug, created.id);
       this.report.collectionsCreated++;
+    }
+  }
+
+  /**
+   * Each drop's numbered edition: a product of its own, on its work's image, with
+   * one variant whose stock is the number of copies. Recognised by its slug, an
+   * edition an editor has deleted included.
+   */
+  private async editions(
+    works: readonly Work[],
+    drops: readonly DropDefinition[],
+    paperSizes: PaperSizes,
+    facetValueIds: ReadonlyMap<string, ID>,
+  ): Promise<void> {
+    const connection = this.app.get(TransactionalConnection);
+    for (const drop of drops) {
+      const work = works.find((candidate) => candidate.slug === drop.artworkSlug);
+      if (!work) {
+        throw new Error(
+          `The drop ${drop.slug} prints ${drop.artworkSlug}, which the data set lacks`,
+        );
+      }
+      const plan = editionOf(work, drop);
+      if (!plan) {
+        throw new Error(
+          `The drop ${drop.slug} prints ${drop.artworkSlug} at ${drop.paperSize}, which its scan cannot hold`,
+        );
+      }
+      const seeded = await connection.rawConnection
+        .getRepository(ProductTranslation)
+        .count({ where: { slug: plan.slug } });
+      if (seeded > 0) {
+        continue;
+      }
+      const artwork = await connection.rawConnection.getRepository(Product).findOne({
+        select: { id: true, featuredAssetId: true },
+        where: { customFields: { metObjectId: work.objectId } },
+      });
+      // The column is nullable whatever the entity's type says: a product may have no image.
+      const assetId = artwork?.featuredAssetId;
+      if (!assetId) {
+        throw new Error(`The drop ${drop.slug} needs ${drop.artworkSlug} in the catalogue first`);
+      }
+      await connection.withTransaction(this.ctx, async (ctx) => {
+        const product = await this.app.get(ProductService).create(ctx, {
+          enabled: true,
+          featuredAssetId: assetId,
+          assetIds: [assetId],
+          facetValueIds: editionFacetValuesOf(work).map((value) =>
+            required(
+              facetValueIds,
+              valueKey(value.facet, value.code),
+              `the ${value.facet} "${value.name}"`,
+            ),
+          ),
+          translations: [
+            { languageCode: en, name: plan.name, slug: plan.slug, description: plan.description },
+          ],
+        });
+        await this.app
+          .get(ProductService)
+          .addOptionGroupToProduct(ctx, product.id, paperSizes.groupId);
+        await this.app.get(ProductVariantService).create(ctx, [
+          {
+            productId: product.id,
+            sku: plan.variant.sku,
+            price: plan.variant.price,
+            taxCategoryId: this.taxCategoryId,
+            optionIds: [
+              required(paperSizes.optionIds, drop.paperSize, `the ${drop.paperSize} option`),
+            ],
+            // Every copy is counted: commerce's stock is the second barrier against a
+            // fifty-first sale, behind the gateway's lock.
+            trackInventory: GlobalFlag.TRUE,
+            stockOnHand: plan.editionSize,
+            useGlobalOutOfStockThreshold: false,
+            outOfStockThreshold: 0,
+            translations: [{ languageCode: en, name: plan.variant.name }],
+            customFields: plan.variant.customFields,
+          },
+        ]);
+      });
+      this.report.editionsCreated++;
     }
   }
 }
