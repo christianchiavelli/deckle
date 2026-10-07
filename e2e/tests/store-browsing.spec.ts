@@ -52,6 +52,31 @@ test.describe('the header', () => {
   });
 });
 
+test.describe('the links', () => {
+  test('lead to a page, every one the store shows', async ({ page, request }) => {
+    const hrefs = new Set<string>();
+    for (const path of ['/', '/prints/melencolia-i', ...pages.map(([, path]) => path)]) {
+      await page.goto(`${store}${path}`);
+      const found = await page
+        .locator('a[href^="/"]')
+        .evaluateAll((links) => links.map((link) => link.getAttribute('href') ?? ''));
+      for (const href of found) {
+        hrefs.add(href.replace(/#.*$/, ''));
+      }
+    }
+    const broken: string[] = [];
+    for (const href of hrefs) {
+      const response = await request.get(`${store}${href}`);
+      if (!response.ok()) {
+        broken.push(`${href} answers ${String(response.status())}`);
+      }
+    }
+    // The pages link every print, so this follows more than fifty links.
+    expect(hrefs.size).toBeGreaterThan(50);
+    expect(broken).toEqual([]);
+  });
+});
+
 test.describe('the prints', () => {
   test('lists every print oldest first, and narrows them by a choice the address keeps', async ({
     page,
@@ -146,6 +171,19 @@ test.describe('how prints are sized', () => {
 });
 
 test.describe('the search', () => {
+  test('takes the key its hint shows, from anywhere on the page', async ({ page }) => {
+    await page.goto(`${store}/prints`);
+    await page.keyboard.press('/');
+    await expect(page.getByRole('banner').getByRole('searchbox')).toBeFocused();
+  });
+
+  test('forgives a typo, and finds a word by its start', async ({ page }) => {
+    await page.goto(`${store}/search?q=melancolia`);
+    await expect(page.getByRole('link', { name: /Melencolia I/ })).toBeVisible();
+    await page.goto(`${store}/search?q=rembr`);
+    await expect(page.getByText('2 prints', { exact: true })).toBeVisible();
+  });
+
   test('finds a maker without the accent, and says so when nothing matches', async ({ page }) => {
     await page.goto(`${store}/`);
     await page.getByRole('searchbox').first().fill('durer');
