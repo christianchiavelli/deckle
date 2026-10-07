@@ -100,3 +100,25 @@ export const COLLECTION_BY_SLUG = /* GraphQL */ `
     }
   }
 `;
+
+/**
+ * Drops' editions, by the drops' slugs: each a product of its own, named after
+ * its drop, whose one variant is counted stock.
+ */
+export const EDITIONS = /* GraphQL */ `
+  query Editions($options: ProductListOptions) {
+    products(options: $options) {
+      items {
+        slug
+        variants {
+          id
+          priceWithTax
+          currencyCode
+          customFields {
+            editionSize
+          }
+        }
+      }
+    }
+  }
+`;

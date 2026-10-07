@@ -1,5 +1,6 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
+import { FakeShop } from './fake-shop.js';
 import * as fixtures from './fixtures.js';
 
 export interface RecordedRequest {
@@ -27,6 +28,8 @@ export class FakeUpstreams {
   };
   modes = { commerce: 'ok' as UpstreamMode, cms: 'ok' as UpstreamMode };
   storeStatus = 204;
+  /** Commerce's carts, checkouts and customer sessions. */
+  readonly shop = new FakeShop();
   products = fixtures.products;
   stories = fixtures.stories;
   /** Answers drafts even to a published-only query, as a misconfigured CMS would. */
@@ -56,6 +59,7 @@ export class FakeUpstreams {
     this.requests.store.length = 0;
     this.modes = { commerce: 'ok', cms: 'ok' };
     this.storeStatus = 204;
+    this.shop.reset();
     this.products = fixtures.products;
     this.stories = fixtures.stories;
     this.ignoreStatusFilter = false;
@@ -124,6 +128,15 @@ export class FakeUpstreams {
       operationName: string;
       variables: Record<string, Record<string, unknown> | undefined>;
     };
+    const sold = this.shop.answer(operationName, variables, request.headers.authorization);
+    if (sold !== null) {
+      return response
+        .writeHead(sold.status, {
+          'content-type': 'application/json',
+          ...(sold.token === undefined ? {} : { 'vendure-auth-token': sold.token }),
+        })
+        .end(JSON.stringify(sold.body));
+    }
     switch (operationName) {
       case 'ArtworkProducts': {
         const options = (variables['options'] ?? {}) as {
@@ -210,6 +223,13 @@ export class FakeUpstreams {
       const docs = this.stories.filter(
         (story) =>
           slugs.includes(story.artworkSlug) && (status === null || story._status === status),
+      );
+      return json(response, 200, payloadList(docs.slice(0, limit)));
+    }
+    if (path === '/api/drop-pages') {
+      const slugs = (query.get('where[slug][in]') ?? '').split(',');
+      const docs = fixtures.dropPages.filter(
+        (page) => slugs.includes(page.slug) && (status === null || page._status === status),
       );
       return json(response, 200, payloadList(docs.slice(0, limit)));
     }

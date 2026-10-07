@@ -71,9 +71,21 @@ export const cmsCurationSchema = z.object({
   _status: publicationStatus,
 });
 
+/** The words on a drop's page. The drop's dates, copies and price are not the CMS's. */
+export const cmsDropPageSchema = z.object({
+  id: documentId,
+  slug: z.string().min(1),
+  artworkSlug: z.string().min(1),
+  headline: requiredText,
+  body: z.unknown(),
+  updatedAt: timestamp,
+  _status: publicationStatus,
+});
+
 /** Payload's paginated list envelope; only `docs` matters to the gateway. */
 export const payloadList = <T extends z.ZodType>(document: T) =>
   z.object({ docs: z.array(document) });
 
 export type CmsStory = z.output<typeof cmsStorySchema>;
 export type CmsCuration = z.output<typeof cmsCurationSchema>;
+export type CmsDropPage = z.output<typeof cmsDropPageSchema>;

@@ -347,3 +347,45 @@ export const curations = [
     createdAt: '2026-10-02T10:00:00.000Z',
   },
 ];
+
+/** The words on the drops' pages; the second is still a draft. */
+export const dropPages = [
+  {
+    id: 21,
+    slug: 'melencolia-i-numbered',
+    artworkSlug: 'melencolia-i',
+    headline: 'Melencolia I, in fifty numbered copies',
+    body: {
+      root: {
+        type: 'root',
+        version: 1,
+        children: [
+          {
+            type: 'paragraph',
+            version: 1,
+            children: [
+              {
+                type: 'text',
+                text: 'Each copy is A3 and numbered in pencil, from 1/50 to 50/50.',
+                format: 0,
+                version: 1,
+              },
+            ],
+          },
+          { type: 'upload', version: 3, value: 9, relationTo: 'media' },
+        ],
+      },
+    },
+    _status: 'published',
+    updatedAt: '2026-10-07T09:00:00.000Z',
+  },
+  {
+    id: 22,
+    slug: 'the-great-wave-numbered',
+    artworkSlug: 'under-the-wave-off-kanagawa',
+    headline: 'The Great Wave, in fifty numbered copies',
+    body: { root: { type: 'root', children: [] } },
+    _status: 'draft',
+    updatedAt: '2026-10-07T09:00:00.000Z',
+  },
+];

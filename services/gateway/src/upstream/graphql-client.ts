@@ -35,6 +35,19 @@ const graphqlResponse = z.object({
     .optional(),
 });
 
+export interface GraphQLExchange {
+  /** Headers for this call only, on top of the client's own. */
+  readonly headers?: Readonly<Record<string, string>>;
+  /** A read, safe to send again if the connection fails; a write never is. */
+  readonly idempotent: boolean;
+}
+
+/** `data`, parsed, and the response's headers, for an upstream that answers in them too. */
+export interface GraphQLAnswer<T> {
+  readonly data: T;
+  readonly headers: Headers;
+}
+
 /**
  * GraphQL over HTTP to one upstream. Responses are parsed, never trusted:
  * `data` goes through the operation's schema, and `errors` become typed errors.
@@ -43,22 +56,25 @@ export class GraphQLClient {
   constructor(private readonly options: GraphQLClientOptions) {}
 
   /** A read: retried once if the connection fails, since running it twice is harmless. */
-  query<T>(operation: GraphQLOperation<T>): Promise<T> {
-    return this.send(operation, true);
+  async query<T>(operation: GraphQLOperation<T>): Promise<T> {
+    return (await this.exchange(operation, { idempotent: true })).data;
   }
 
   /** A write: never retried, because a lost answer does not mean it did not run. */
-  mutate<T>(operation: GraphQLOperation<T>): Promise<T> {
-    return this.send(operation, false);
+  async mutate<T>(operation: GraphQLOperation<T>): Promise<T> {
+    return (await this.exchange(operation, { idempotent: false })).data;
   }
 
-  private async send<T>(operation: GraphQLOperation<T>, idempotent: boolean): Promise<T> {
+  async exchange<T>(
+    operation: GraphQLOperation<T>,
+    { headers = {}, idempotent }: GraphQLExchange,
+  ): Promise<GraphQLAnswer<T>> {
     const { service } = this.options;
     const response = await sendUpstream({
       service,
       url: this.options.url,
       method: 'POST',
-      headers: this.options.headers ?? {},
+      headers: { ...this.options.headers, ...headers },
       body: {
         operationName: operation.operationName,
         query: operation.document,
@@ -95,6 +111,6 @@ export class GraphQLClient {
     if (!parsed.success) {
       throw new UpstreamContractError(service, operation.operationName, parsed.error);
     }
-    return parsed.data;
+    return { data: parsed.data, headers: response.headers };
   }
 }

@@ -27,7 +27,16 @@ describe('runMigrations on Postgres 18', () => {
     const { rows } = await first.pool.query<{ table_name: string }>(
       "select table_name from information_schema.tables where table_schema = 'public' order by table_name",
     );
-    expect(rows.map((row) => row.table_name)).toEqual(['signing_keys', 'webhook_deliveries']);
+    expect(rows.map((row) => row.table_name)).toEqual([
+      'drop_copies',
+      'drops',
+      'passkey_ceremonies',
+      'passkeys',
+      'sessions',
+      'signing_keys',
+      'users',
+      'webhook_deliveries',
+    ]);
 
     await runMigrations(second.pool, logger);
 

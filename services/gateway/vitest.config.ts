@@ -19,11 +19,18 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],
-      // Entry points: CI runs the schema CLI as `schema:check`, and boots main.ts in the image.
-      exclude: ['src/**/*.spec.ts', 'src/main.ts', 'src/graphql/schema-cli.ts'],
-      // What the suite reached: raise them as it grows, never lower them. Most of the
-      // rest is the Postgres code, which test:integration covers against a real one.
-      thresholds: { statements: 87, branches: 77, functions: 87, lines: 88 },
+      exclude: [
+        'src/**/*.spec.ts',
+        // Entry points: CI runs the schema CLI as `schema:check`, and boots main.ts in the image.
+        'src/main.ts',
+        'src/graphql/schema-cli.ts',
+        // The Postgres implementations: only a real Postgres can test them, and
+        // test:integration does, in CI, on every push. Here they would only dilute
+        // what this suite is asked to reach.
+        'src/**/pg-*.ts',
+      ],
+      // What the suite reached: raise them as it grows, never lower them.
+      thresholds: { statements: 95, branches: 82, functions: 95, lines: 96 },
     },
   },
 });

@@ -10,8 +10,10 @@ import {
 } from '../upstream/upstream-errors.js';
 import {
   type CmsCuration,
+  type CmsDropPage,
   type CmsStory,
   cmsCurationSchema,
+  cmsDropPageSchema,
   cmsStorySchema,
   payloadList,
 } from './cms.responses.js';
@@ -34,7 +36,7 @@ const PUBLISHED_ONLY = { 'where[_status][equals]': 'published' } as const;
 
 type Publishable = z.ZodType<{ readonly _status: 'draft' | 'published' | null }>;
 
-/** The CMS's REST API, read-only: published stories and curations, without relations. */
+/** The CMS's REST API, read-only: published stories, curations and drop pages, without relations. */
 @Injectable()
 export class CmsClient {
   private readonly logger = new Logger(CmsClient.name);
@@ -73,6 +75,16 @@ export class CmsClient {
       limit: '1',
     });
     return curation ?? null;
+  }
+
+  /** The published page of each of these drops that has one: one request for the drops page. */
+  async dropPages(slugs: readonly string[]): Promise<readonly CmsDropPage[]> {
+    if (slugs.length === 0) return [];
+    return this.find('drop-pages', cmsDropPageSchema, {
+      'where[slug][in]': slugs.join(','),
+      ...PUBLISHED_ONLY,
+      limit: String(slugs.length),
+    });
   }
 
   private async find<T extends Publishable>(

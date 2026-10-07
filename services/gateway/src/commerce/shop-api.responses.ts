@@ -83,6 +83,25 @@ export const collectionsSchema = z.object({
 
 export const collectionBySlugSchema = z.object({ collection: shopCollectionSchema.nullable() });
 
+export const editionsSchema = z.object({
+  products: z.object({
+    items: z.array(
+      z.object({
+        slug: z.string().min(1),
+        variants: z.array(
+          z.object({
+            id,
+            /** Minor units, taxes included. */
+            priceWithTax: z.int().nonnegative(),
+            currencyCode: z.string().regex(/^[A-Z]{3}$/),
+            customFields: z.object({ editionSize: z.int().positive().nullable() }),
+          }),
+        ),
+      }),
+    ),
+  }),
+});
+
 export type ShopProduct = z.output<typeof shopProductSchema>;
 export type ShopVariant = z.output<typeof shopVariantSchema>;
 export type ShopCollection = z.output<typeof shopCollectionSchema>;

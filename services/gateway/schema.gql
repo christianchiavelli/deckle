@@ -123,6 +123,25 @@ type ArtworkImage {
   width: Int!
 }
 
+"""
+This browser's cart: open-edition prints, with the flat rate for shipping once there is something to ship.
+"""
+type Cart {
+  lines: [OrderLine!]!
+
+  """How many prints, every copy counted."""
+  quantity: Int!
+
+  """Null while the cart is empty."""
+  shipping: Money
+
+  """Null while the cart is empty."""
+  subtotal: Money
+
+  """Null while the cart is empty."""
+  total: Money
+}
+
 """A width and a height, in centimetres."""
 type Centimetres {
   height: Float!
@@ -133,6 +152,21 @@ enum ChangeAction {
   CREATED
   DELETED
   UPDATED
+}
+
+"""Who an order is for and where it goes: the checkout form, as typed."""
+input CheckoutInput {
+  city: String!
+
+  """ISO 3166-1 alpha-2, one of `countries`."""
+  countryCode: String!
+
+  """Where the receipt goes, and nothing else."""
+  email: String!
+  fullName: String!
+  postalCode: String!
+  streetLine1: String!
+  streetLine2: String
 }
 
 """
@@ -150,6 +184,25 @@ type Collection {
   id: ID!
   name: String!
   slug: String!
+}
+
+"""Where one numbered copy stands."""
+enum CopyState {
+  """Held for someone for ten minutes while they pay."""
+  HELD
+
+  """The next claim may take it."""
+  OPEN
+
+  """Paid for: it is printed, numbered and posted."""
+  SOLD
+}
+
+"""A country the shop ships to."""
+type Country {
+  """ISO 3166-1 alpha-2."""
+  code: String!
+  name: String!
 }
 
 """Works an editor grouped in the CMS, in the order they chose."""
@@ -171,6 +224,80 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""
+Fifty numbered copies of one print, released at a set hour: first come, first served, one per person.
+"""
+type Drop {
+  """The work the drop prints."""
+  artwork: Artwork
+
+  """The work's slug; its `artwork` is resolved from it."""
+  artworkSlug: String!
+
+  """How many numbered copies there are."""
+  editionSize: Int!
+
+  """When the first claim may be made."""
+  opensAt: DateTime!
+
+  """The words on the drop's page; null until an editor publishes them."""
+  page: DropPage
+
+  """
+  A copy's price, shipping included; null when commerce sells no edition of it.
+  """
+  price: Money
+  slug: String!
+
+  """
+  Where its copies stand now. Never cached: read it fresh, then follow `dropStockChanged`.
+  """
+  stock: DropStock!
+
+  """
+  The signed-in account's copy of this drop, held or bought; null for a guest or none.
+  """
+  viewerCopy: DropCopy
+}
+
+"""A numbered copy that belongs to the signed-in account."""
+type DropCopy {
+  """The drop's slug."""
+  drop: String!
+
+  """When a hold runs out."""
+  heldUntil: DateTime
+
+  """The number pencilled on it, out of the edition."""
+  number: Int!
+
+  """Commerce's order, once paid."""
+  orderCode: String
+
+  """
+  Whole seconds left on a hold, by the database's clock: count down from this, not from the browser's clock.
+  """
+  secondsLeft: Int
+
+  """HELD while it waits for payment, SOLD once paid."""
+  state: CopyState!
+}
+
+"""The words on a drop's page, from the CMS."""
+type DropPage {
+  blocks: [StoryBlock!]!
+  headline: String!
+}
+
+"""Where a drop's copies stand, by the database's clock."""
+type DropStock {
+  """Each copy, copy 1 first."""
+  copies: [CopyState!]!
+  held: Int!
+  open: Int!
+  sold: Int!
+}
+
 type HeadingBlock {
   """2 or 3: the levels under the story title."""
   level: Int!
@@ -184,6 +311,100 @@ type Money {
 
   """ISO 4217 code, e.g. USD."""
   currencyCode: String!
+}
+
+type Mutation {
+  """Adds a print to the cart, starting the cart if there was none."""
+  addToCart(
+    """The work's slug."""
+    artwork: String!
+
+    """From 1 to 10."""
+    quantity: Int! = 1
+    size: PaperSize!
+  ): Cart!
+
+  """
+  Claims the lowest open copy, held for this account for ten minutes. One per person; a signed-in account only.
+  """
+  claimCopy(drop: String!): DropCopy!
+
+  """
+  Finishes making a passkey with the JSON the device answered: the account is made and signed in.
+  """
+  finishPasskeyRegistration(response: String!): Viewer!
+
+  """
+  Finishes signing in with the JSON the device answered; the cart stays as it was.
+  """
+  finishPasskeySignIn(response: String!): Viewer!
+
+  """
+  Pays for the copy this account holds: its shipping is included, and the test payment settles at once.
+  """
+  payForCopy(drop: String!, input: CheckoutInput!): PlacedOrder!
+
+  """
+  Places the cart as a guest order: contact, address, the flat rate, and the test payment, which settles at once.
+  """
+  placeOrder(input: CheckoutInput!): PlacedOrder!
+
+  """
+  Gives back the copy this account holds, for the next person. False when it held none.
+  """
+  releaseCopy(drop: String!): Boolean!
+
+  """Changes how many of a line the cart holds; 0 removes it."""
+  setCartLineQuantity(
+    line: ID!
+
+    """From 0, which removes the line, to 10."""
+    quantity: Int!
+  ): Cart!
+
+  """
+  Signs this browser out. The cart stays: it was the browser’s, not the account’s.
+  """
+  signOut: Boolean!
+
+  """
+  Starts making a passkey, which makes an account: the options for `navigator.credentials.create()`, as JSON.
+  """
+  startPasskeyRegistration: String!
+
+  """
+  Starts signing in with a passkey: the options for `navigator.credentials.get()`, as JSON.
+  """
+  startPasskeySignIn: String!
+}
+
+"""One line of a cart or an order: a work at one size, so many times."""
+type OrderLine {
+  """The work the line prints; null if commerce no longer sells it."""
+  artwork: Artwork
+
+  """The work's slug; its `artwork` is resolved from it."""
+  artworkSlug: String!
+
+  """The number pencilled on a numbered copy; null for an open edition."""
+  copyNumber: Int
+
+  """
+  The drop's slug when the line is a numbered copy; null for an open edition.
+  """
+  drop: String
+
+  """How many copies the line's edition has; null for an open edition."""
+  editionSize: Int
+  id: ID!
+
+  """The line, taxes included."""
+  price: Money!
+  quantity: Int!
+  size: PaperSize
+
+  """One print, taxes included."""
+  unitPrice: Money!
 }
 
 """Where a page sits in the whole list (Relay cursor connections)."""
@@ -204,6 +425,21 @@ enum PaperSize {
 
 type ParagraphBlock {
   text: [TextRun!]!
+}
+
+"""An order once paid: what its confirmation shows."""
+type PlacedOrder {
+  """Commerce's order code, quoted in the receipt."""
+  code: String!
+
+  """Where the receipt went."""
+  email: String
+  lines: [OrderLine!]!
+  placedAt: DateTime!
+  shipTo: ShippingAddress
+  shipping: Money!
+  subtotal: Money!
+  total: Money!
 }
 
 """
@@ -264,21 +500,56 @@ type Query {
     first: Int = 24
   ): ArtworkConnection!
 
+  """This browser's cart; empty until something is added."""
+  cart: Cart!
+
   """Null when no collection has this slug."""
   collection(slug: String!): Collection
 
   """The commerce taxonomy, in the order commerce keeps it."""
   collections: [Collection!]!
 
+  """Where the shop ships, for the checkout form."""
+  countries: [Country!]!
+
   """Null when no curation has this slug."""
   curation(slug: String!): Curation
 
   """Every published curation, by title."""
   curations: [Curation!]!
+
+  """Null when no drop has this slug."""
+  drop(slug: String!): Drop
+
+  """Every drop, the soonest to open first."""
+  drops: [Drop!]!
+
+  """
+  An order this browser placed, for its confirmation; null when it is not this browser’s or not placed.
+  """
+  order(code: String!): PlacedOrder
+
+  """The account signed in on this browser; null for a guest."""
+  viewer: Viewer
 }
 
 type QuoteBlock {
   text: [TextRun!]!
+}
+
+"""Where an order is going."""
+type ShippingAddress {
+  city: String
+
+  """The country as commerce names it."""
+  country: String
+
+  """ISO 3166-1 alpha-2."""
+  countryCode: String
+  fullName: String
+  postalCode: String
+  streetLine1: String
+  streetLine2: String
 }
 
 """Where the story got a fact."""
@@ -322,6 +593,11 @@ type Subscription {
   Changes commerce makes to one artwork, from whichever replica hears of them.
   """
   artworkChanged(slug: String!): ArtworkChange!
+
+  """
+  A drop's stock each time a copy is claimed, given back, sold or let go; the stock as it stands is the `drop` query's.
+  """
+  dropStockChanged(drop: String!): DropStock!
 }
 
 """A stretch of text with one formatting."""
@@ -332,4 +608,16 @@ type TextRun {
   href: String
   italic: Boolean!
   text: String!
+}
+
+"""
+The account signed in on this browser: a passkey and nothing else, no name, no password.
+"""
+type Viewer {
+  """The copies this account holds or has bought, the first claimed first."""
+  copies: [DropCopy!]!
+  id: ID!
+
+  """When the account and its first passkey were made."""
+  since: DateTime!
 }

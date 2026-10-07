@@ -2,9 +2,13 @@ import { fileURLToPath } from 'node:url';
 import { NestFactory } from '@nestjs/core';
 import { GraphQLSchemaBuilderModule, GraphQLSchemaFactory } from '@nestjs/graphql';
 import { type GraphQLSchema, lexicographicSortSchema, printSchema } from 'graphql';
+import { AccountsResolver } from '../accounts/accounts.resolver.js';
 import { ArtworksResolver } from '../catalog/artworks.resolver.js';
 import { CollectionsResolver } from '../catalog/collections.resolver.js';
+import { CartResolver } from '../checkout/cart.resolver.js';
 import { CurationsResolver } from '../curations/curations.resolver.js';
+import { DropsResolver } from '../drops/drops.resolver.js';
+import { ViewerCopiesResolver } from '../drops/viewer-copies.resolver.js';
 import { ArtworkChangesResolver } from '../live/artwork-changes.resolver.js';
 import { ArtworkStoryResolver } from '../stories/artwork-story.resolver.js';
 import { GATEWAY_SCHEMA_OPTIONS } from './schema-options.js';
@@ -23,6 +27,10 @@ export const GATEWAY_RESOLVERS = [
   ArtworkStoryResolver,
   CurationsResolver,
   ArtworkChangesResolver,
+  AccountsResolver,
+  CartResolver,
+  DropsResolver,
+  ViewerCopiesResolver,
 ];
 
 const HEADER = `# The gateway's GraphQL contract, generated from the code-first resolvers.

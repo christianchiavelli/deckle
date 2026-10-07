@@ -2,13 +2,17 @@ import type { LoggerService } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { vi } from 'vitest';
+import { AccountStore } from '../../src/accounts/account-store.js';
 import { AppModule } from '../../src/app.module.js';
 import { DATABASE, PG_POOL } from '../../src/database/database.js';
 import { DatabaseLifecycle } from '../../src/database/database.module.js';
+import { DropEvents } from '../../src/drops/drop-events.js';
+import { DropStore } from '../../src/drops/drop-store.js';
 import { WebhookDeliveries } from '../../src/hooks/webhook-deliveries.js';
 import { configureHttp } from '../../src/http/configure-http.js';
 import { SigningKeyStore } from '../../src/identity/signing-key.store.js';
 import { PubSub } from '../../src/pubsub/pubsub.js';
+import { SessionStore } from '../../src/sessions/session-store.js';
 import { CMS_TEST_API_KEY, type FakeUpstreams } from './fake-upstreams.js';
 import {
   fakePool,
@@ -16,6 +20,11 @@ import {
   InMemorySigningKeyStore,
   InMemoryWebhookDeliveries,
 } from './in-memory.js';
+import {
+  InMemoryAccountStore,
+  InMemoryDropStore,
+  InMemorySessionStore,
+} from './in-memory-accounts.js';
 
 export const TEST_SECRETS = {
   COMMERCE_HOOK_SECRET: 'commerce-hook-secret-for-the-test-suite',
@@ -59,11 +68,15 @@ export interface TestApp extends ListeningGateway {
   readonly pubSub: InMemoryPubSub;
   readonly deliveries: InMemoryWebhookDeliveries;
   readonly signingKeys: InMemorySigningKeyStore;
+  readonly sessions: InMemorySessionStore;
+  readonly accounts: InMemoryAccountStore;
+  readonly drops: InMemoryDropStore;
 }
 
 /**
  * The whole gateway on a free port, through the same HTTP pipeline as `main.ts`,
- * with Postgres replaced by in-memory stand-ins.
+ * with Postgres replaced by in-memory stand-ins. The drops the stack opens with
+ * are recorded as it starts, as in production.
  */
 export async function createTestApp(options: TestAppOptions): Promise<TestApp> {
   for (const [name, value] of Object.entries(options.env)) vi.stubEnv(name, value);
@@ -71,6 +84,9 @@ export async function createTestApp(options: TestAppOptions): Promise<TestApp> {
   const pubSub = new InMemoryPubSub();
   const deliveries = new InMemoryWebhookDeliveries();
   const signingKeys = new InMemorySigningKeyStore();
+  const sessions = new InMemorySessionStore();
+  const accounts = new InMemoryAccountStore();
+  const drops = new InMemoryDropStore(new DropEvents(pubSub));
   const moduleRef = await Test.createTestingModule({ imports: [AppModule.forRoot()] })
     .overrideProvider(PG_POOL)
     .useValue(fakePool(options.healthyDatabase ?? true))
@@ -84,9 +100,23 @@ export async function createTestApp(options: TestAppOptions): Promise<TestApp> {
     .useValue(deliveries)
     .overrideProvider(SigningKeyStore)
     .useValue(signingKeys)
+    .overrideProvider(SessionStore)
+    .useValue(sessions)
+    .overrideProvider(AccountStore)
+    .useValue(accounts)
+    .overrideProvider(DropStore)
+    .useValue(drops)
     .compile();
 
-  return { ...(await listen(moduleRef, options.logger)), pubSub, deliveries, signingKeys };
+  return {
+    ...(await listen(moduleRef, options.logger)),
+    pubSub,
+    deliveries,
+    signingKeys,
+    sessions,
+    accounts,
+    drops,
+  };
 }
 
 /**

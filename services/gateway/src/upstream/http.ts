@@ -21,6 +21,7 @@ export interface UpstreamResponse {
   readonly status: number;
   /** The parsed body, or `undefined` when it was empty or not JSON. */
   readonly json: unknown;
+  readonly headers: Headers;
 }
 
 const RETRY_DELAY_MS = { min: 50, spread: 100 };
@@ -44,7 +45,7 @@ export async function sendUpstream(request: UpstreamRequest): Promise<UpstreamRe
         signal: AbortSignal.timeout(request.timeoutMs),
       });
       const text = await response.text();
-      return { status: response.status, json: parseJson(text) };
+      return { status: response.status, json: parseJson(text), headers: response.headers };
     } catch (error) {
       if (isTimeout(error)) {
         throw new UpstreamUnavailableError(
