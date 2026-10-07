@@ -1,5 +1,7 @@
+'use client';
+
 import { tokens as t } from '@deckle/tokens';
-import { useId } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import styled from 'styled-components';
 import { Icon } from '../icon/icon.tsx';
 import { VisuallyHidden } from '../visually-hidden/visually-hidden.tsx';
@@ -82,6 +84,37 @@ export function SearchField({
   className,
 }: SearchFieldProps) {
   const id = useId();
+  const field = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!shortcut) {
+      return;
+    }
+    const focus = (event: KeyboardEvent) => {
+      const input = field.current;
+      if (
+        event.key !== shortcut ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        // A key typed into a field is that field's.
+        (event.target instanceof Element &&
+          event.target.closest('input, textarea, select, [contenteditable]')) ||
+        // On a phone the header's field is folded away, with nothing to focus.
+        !input?.checkVisibility()
+      ) {
+        return;
+      }
+      event.preventDefault();
+      input.focus();
+      input.select();
+    };
+    document.addEventListener('keydown', focus);
+    return () => {
+      document.removeEventListener('keydown', focus);
+    };
+  }, [shortcut]);
+
   return (
     <Form role="search" action={action} aria-label={landmark} className={className}>
       <VisuallyHidden as="label" htmlFor={id}>
@@ -89,6 +122,7 @@ export function SearchField({
       </VisuallyHidden>
       <Icon name="search" size="small" />
       <Input
+        ref={field}
         id={id}
         type="search"
         name="q"

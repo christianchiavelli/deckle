@@ -34,3 +34,14 @@ export const Typing = meta.story({
     await expect(canvas.getByRole('search')).toBeInTheDocument();
   },
 });
+
+/** The key the hint shows focuses the field from anywhere on the page, and is not typed into it. */
+export const Shortcut = meta.story({
+  globals: { theme: 'light' },
+  play: async ({ canvas, userEvent }) => {
+    const field = canvas.getByRole('searchbox', { name: 'Search' });
+    await userEvent.keyboard('/');
+    await expect(field).toHaveFocus();
+    await expect(field).toHaveValue('');
+  },
+});
