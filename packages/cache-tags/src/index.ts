@@ -6,6 +6,10 @@
 
 /** Every page that lists works: a work's title, image or price can change any list. */
 export const CATALOG = 'catalog';
+/** Every page that lists the editor's curations: one added or removed changes the list. */
+export const CURATIONS = 'curations';
+/** Every page that lists stories, such as the journal: a story added or removed changes it. */
+export const STORIES = 'stories';
 
 /** A work as commerce sells it: its title, images and which sizes it offers. */
 export const artworkTag = (slug: string) => `artwork:${slug}`;
@@ -35,9 +39,9 @@ export type RevalidationProfile = 'expire' | 'max';
 /** The longest tag Next.js accepts. */
 export const MAX_TAG_LENGTH = 256;
 
-/** A tag this vocabulary can spell: `catalog`, or a kind and a slug of lowercase words. */
+/** A tag this vocabulary can spell: a list's name, or a kind and a slug of lowercase words. */
 export const TAG_PATTERN =
-  /^(?:catalog|(?:artwork|price|stock|collection|story|curation|drop-page):[a-z0-9]+(?:-[a-z0-9]+)*)$/;
+  /^(?:catalog|curations|stories|(?:artwork|price|stock|collection|story|curation|drop-page):[a-z0-9]+(?:-[a-z0-9]+)*)$/;
 
 export function isCacheTag(value: string): boolean {
   return value.length <= MAX_TAG_LENGTH && TAG_PATTERN.test(value);

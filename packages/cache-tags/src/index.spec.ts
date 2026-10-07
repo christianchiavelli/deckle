@@ -3,10 +3,12 @@ import {
   artworkTag,
   CATALOG,
   collectionTag,
+  CURATIONS,
   curationTag,
   dropPageTag,
   isCacheTag,
   priceTag,
+  STORIES,
   stockTag,
   storyTag,
   workTags,
@@ -45,7 +47,14 @@ describe('the tag vocabulary', () => {
 
 describe('isCacheTag', () => {
   it('accepts every tag the vocabulary spells', () => {
-    for (const tag of [CATALOG, ...workTags('a-3'), curationTag('x'), dropPageTag('y-2')]) {
+    for (const tag of [
+      CATALOG,
+      CURATIONS,
+      STORIES,
+      ...workTags('a-3'),
+      curationTag('x'),
+      dropPageTag('y-2'),
+    ]) {
       expect(isCacheTag(tag), tag).toBe(true);
     }
   });
@@ -54,6 +63,8 @@ describe('isCacheTag', () => {
     for (const tag of [
       '',
       'catalogue',
+      'curation',
+      'story',
       'artwork:',
       'artwork:Melencolia',
       'artwork:melencolia--i',

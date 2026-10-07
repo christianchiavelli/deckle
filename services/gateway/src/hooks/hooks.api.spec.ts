@@ -59,7 +59,7 @@ describe('webhooks', () => {
 
     expect(response.status).toBe(204);
     expect(upstreams.requests.store.map((entry) => entry.body)).toEqual([
-      { tags: ['story:melencolia-i'], profile: 'max' },
+      { tags: ['story:melencolia-i', 'stories'], profile: 'max' },
     ]);
   });
 

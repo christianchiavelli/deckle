@@ -40,13 +40,13 @@ describe('revalidationFor', () => {
     [
       'a story',
       cms('story', { slug: 'melencolia-i-story', artworkSlug: 'melencolia-i' }),
-      ['story:melencolia-i'],
+      ['story:melencolia-i', 'stories'],
       'max',
     ],
     [
       'a curation',
       cms('curation', { slug: 'durer-and-the-occult' }),
-      ['curation:durer-and-the-occult'],
+      ['curation:durer-and-the-occult', 'curations'],
       'max',
     ],
     ['a drop page', cms('drop-page', { slug: 'first-drop' }), ['drop-page:first-drop'], 'max'],

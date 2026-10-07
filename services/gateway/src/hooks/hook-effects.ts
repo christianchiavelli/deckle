@@ -2,10 +2,12 @@ import {
   artworkTag,
   CATALOG,
   collectionTag,
+  CURATIONS,
   curationTag,
   dropPageTag,
   priceTag,
   type RevalidationProfile,
+  STORIES,
   stockTag,
   storyTag,
 } from '@deckle/cache-tags';
@@ -25,6 +27,8 @@ export interface Revalidation {
  * at what price) must never be served stale; editorial text can be, for a moment.
  * `catalog` is every page that lists works, which a product's title, image or
  * price can change. An asset event names no work, so it can only reach the lists.
+ * A story or a curation also changes the pages that list them all, such as the
+ * journal: one added or removed is in no page's own tags yet.
  */
 export function revalidationFor(event: HookEvent): Revalidation {
   switch (event.type) {
@@ -46,9 +50,9 @@ export function revalidationFor(event: HookEvent): Revalidation {
     case 'asset':
       return expire(CATALOG);
     case 'story':
-      return { tags: [storyTag(event.subject.artworkSlug)], profile: 'max' };
+      return { tags: [storyTag(event.subject.artworkSlug), STORIES], profile: 'max' };
     case 'curation':
-      return { tags: [curationTag(event.subject.slug)], profile: 'max' };
+      return { tags: [curationTag(event.subject.slug), CURATIONS], profile: 'max' };
     case 'drop-page':
       return { tags: [dropPageTag(event.subject.slug)], profile: 'max' };
   }
