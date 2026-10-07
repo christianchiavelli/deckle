@@ -188,8 +188,10 @@ export interface SiteHeaderProps {
   nav: { label: string; items: readonly NavItem[] };
   search: SearchFieldProps;
   theme: { label: string; onToggle?: () => void };
-  account: { label: string; href: string };
-  cart: { label: string; href: string; count: number };
+  /** Left out while a shop has no accounts: a link must lead to a page. */
+  account?: { label: string; href: string };
+  /** Left out while a shop has no cart. */
+  cart?: { label: string; href: string; count: number };
   menu: { open: string; close: string };
 }
 
@@ -224,12 +226,12 @@ export function SiteHeader({ home, nav, search, theme, account, cart, menu }: Si
       <Tools>
         <Wide>
           <IconButton icon="theme" label={theme.label} onClick={theme.onToggle} />
-          <IconLink icon="user" label={account.label} href={account.href} />
+          {account && <IconLink icon="user" label={account.label} href={account.href} />}
         </Wide>
         <Narrow>
           <IconLink icon="search" label={search.label} href={search.action} />
         </Narrow>
-        <IconLink icon="bag" label={cart.label} href={cart.href} badge={cart.count} />
+        {cart && <IconLink icon="bag" label={cart.label} href={cart.href} badge={cart.count} />}
       </Tools>
 
       <Sheet id={menuId} popover="auto">
@@ -248,12 +250,14 @@ export function SiteHeader({ home, nav, search, theme, account, cart, menu }: Si
             <ul>{links(true)}</ul>
           </SheetNav>
           <SheetLinks>
-            <li>
-              <a href={account.href}>
-                <Icon name="user" />
-                {account.label}
-              </a>
-            </li>
+            {account && (
+              <li>
+                <a href={account.href}>
+                  <Icon name="user" />
+                  {account.label}
+                </a>
+              </li>
+            )}
             <li>
               <button type="button" onClick={theme.onToggle}>
                 <Icon name="theme" />
