@@ -30,7 +30,7 @@ The approved browsing screens add a page of every print with filters by techniqu
 
 - Every list renders from reads the store already caches, with no request to the gateway per filter or search.
 - It holds while the catalogue fits in one page. Past 48 works, filtering, counting and searching move to the gateway, on Vendure's search index and its facet counts; the addresses and the pages stay as they are.
-- The search has no stemming or typo tolerance: "etchng" finds nothing. With 48 works and the suggestions on an empty result, that is enough.
+- The search had no typo tolerance: "melancolia" found nothing, about a print the shop sells. ADR 0044 adds it.
 - React reveals the streamed part of a page in batches, after the document has loaded, too late for the browser to scroll to `#story`. A client effect on the work's page scrolls there once the story is shown, unless the reader has already scrolled.
 - A stack created before this change keeps the old taxonomy, the uncropped scan and stories without details, because the seeds only create. `docker compose down -v` and `up` start it fresh.
 
