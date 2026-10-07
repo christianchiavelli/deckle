@@ -1,4 +1,5 @@
 import preview from '#storybook/preview';
+import { expect } from 'storybook/test';
 import { SearchPage } from './search-page.tsx';
 
 const meta = preview.meta({
@@ -40,11 +41,17 @@ export const NoResultsPhoneDark = meta.story({
 /** On a phone the header's search icon leads here, and this field suggests as one types. */
 export const PhoneSuggesting = meta.story({
   globals: { theme: 'light', viewport: { value: 'phone' } },
-  play: async ({ canvas, userEvent }) => {
+  play: async ({ canvas, canvasElement, userEvent }) => {
     const field = canvas.getByRole('combobox', { name: 'Search' });
     await userEvent.clear(field);
     await userEvent.type(field, 'hok');
     await canvas.findByRole('option', { name: /^Katsushika Hokusai \d+ prints$/ });
+    // The waterfall is a tall print: it must stay inside its mat like the wide ones.
+    for (const picture of canvasElement.querySelectorAll<HTMLImageElement>('[role="option"] img')) {
+      await expect(picture.offsetHeight).toBeLessThanOrEqual(
+        picture.parentElement?.clientHeight ?? 0,
+      );
+    }
   },
 });
 

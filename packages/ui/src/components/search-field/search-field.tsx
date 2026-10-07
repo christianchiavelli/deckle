@@ -104,9 +104,10 @@ const Option = styled.a<{ $pictured?: boolean }>`
   }
 `;
 
+/* The picture fills the mat's square and is fitted inside it, a tall print as
+   surely as a wide one: a picture sized by its own height would spill out. */
 const Mat = styled.span`
-  display: grid;
-  place-items: center;
+  display: block;
   inline-size: 2.75rem;
   block-size: 2.75rem;
   padding: 0.25rem;
@@ -114,10 +115,10 @@ const Mat = styled.span`
   background: ${t.surface.stage};
 
   img {
-    max-inline-size: 100%;
-    max-block-size: 100%;
-    inline-size: auto;
-    block-size: auto;
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
   }
 `;
 
