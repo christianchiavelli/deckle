@@ -6,7 +6,7 @@ Every work is offered only in the paper sizes its scan can hold at 240 ppi, so a
 
 Next.js 16 and React 19.3 in front, a NestJS 12 GraphQL gateway in the middle, Vendure 3.7 and Payload 3 behind it, all on Postgres 18.
 
-> The store is being built page by page, each from a design approved first. Today it serves the front page and every work's page, with live prices, sizes and stories; the lists, the cart and the drops come next.
+> The store is being built page by page, each from a design approved first. Today it serves the front page, every work's page, the prints with their filters, the collections, the journal, the search and the page on how prints are sized; the cart and the drops come next.
 
 ---
 
@@ -22,7 +22,7 @@ That pulls the images CI publishes; add `--build` to build them from the checkou
 
 | Where | What |
 | --- | --- |
-| `http://localhost:8080` | The store: the front page, and each work's page, such as `/prints/melencolia-i` |
+| `http://localhost:8080` | The store: the prints at `/prints`, each work's page such as `/prints/melencolia-i`, `/collections` and `/journal` |
 | `http://localhost:8080/graphql` | The gateway: the only API the browser will ever see |
 | `http://localhost:8081/admin` | Payload, for stories, curations and drop pages: `editor@deckle.localhost`, `deckle-editor` |
 | `http://localhost:8082/dashboard` | Vendure's dashboard: `superadmin`, `deckle-superadmin` |

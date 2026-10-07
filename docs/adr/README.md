@@ -46,3 +46,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0040](0040-admin-panels-in-deckles-brand.md) | The admin panels wear Deckle's brand, from the same tokens |
 | [0041](0041-a-demo-trade-through-the-real-checkout.md) | A demo trade, placed through the real checkout |
 | [0042](0042-the-store-renders-from-tagged-reads.md) | The store renders on the server, from tagged reads of the gateway |
+| [0043](0043-the-store-browses-from-one-cached-catalogue.md) | The store browses from one cached catalogue |
