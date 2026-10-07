@@ -1,4 +1,13 @@
-import { type GraphQLSchema, parse } from 'graphql';
+import { readdir, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import {
+  type DocumentNode,
+  type GraphQLSchema,
+  Kind,
+  type OperationDefinitionNode,
+  parse,
+} from 'graphql';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { MAX_QUERY_COMPLEXITY } from './complexity.js';
 import { queryComplexity } from './query-complexity.js';
@@ -46,11 +55,61 @@ const fanOuts = {
   storiesInAListing: `{ artworks(first: 48) { edges { node { story { blocks { ... on ParagraphBlock { text { text } } } } } } } }`,
 };
 
+/**
+ * The store's own operations, read from its source: a page the store adds is
+ * priced here before it can meet the limit in production.
+ */
+const STORE_OPERATIONS = fileURLToPath(
+  new URL('../../../../apps/store/src/gateway/operations/', import.meta.url),
+);
+
+async function storeOperations() {
+  const files = (await readdir(STORE_OPERATIONS)).filter((file) => file.endsWith('.graphql'));
+  const sources = await Promise.all(
+    files.map((file) => readFile(join(STORE_OPERATIONS, file), 'utf8')),
+  );
+  // One document, so every operation finds the fragments it spreads.
+  const document = parse(sources.join('\n'));
+  return document.definitions
+    .filter(
+      (definition): definition is OperationDefinitionNode =>
+        definition.kind === Kind.OPERATION_DEFINITION,
+    )
+    .map((operation) => ({
+      name: operation.name?.value ?? 'anonymous',
+      document,
+      // Every variable the store's operations take is a slug or a string.
+      variables: Object.fromEntries(
+        (operation.variableDefinitions ?? []).map((variable) => [
+          variable.variable.name.value,
+          'a-slug',
+        ]),
+      ),
+    }));
+}
+
 describe('query complexity', () => {
   let schema: GraphQLSchema;
+  let operations: { name: string; document: DocumentNode; variables: Record<string, string> }[];
 
   beforeAll(async () => {
     schema = await buildGatewaySchema();
+    operations = await storeOperations();
+  });
+
+  it('lets every operation the store sends through, with room to spare', () => {
+    expect(operations.map(({ name }) => name).sort()).toEqual(
+      expect.arrayContaining(['Catalogue', 'Home', 'Work']),
+    );
+    const costs = Object.fromEntries(
+      operations.map(({ name, document, variables }) => [
+        name,
+        queryComplexity(schema, document, variables, name),
+      ]),
+    );
+    for (const [name, cost] of Object.entries(costs)) {
+      expect(cost, name).toBeLessThan(MAX_QUERY_COMPLEXITY * 0.75);
+    }
   });
 
   it.each(Object.entries(storePages))('lets the %s page through', (_name, query) => {
