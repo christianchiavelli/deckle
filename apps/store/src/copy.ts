@@ -22,15 +22,11 @@ export const copy = {
     home: 'Deckle, home',
     nav: 'Shop',
     prints: 'Prints',
-    drops: 'Drops',
     collections: 'Collections',
     journal: 'Journal',
     search: 'Search',
     searchPlaceholder: 'Search prints, artists and techniques',
     theme: 'Theme',
-    account: 'Sign in with a passkey',
-    cart: (count: number) =>
-      count === 0 ? 'Cart, empty' : count === 1 ? 'Cart, 1 print' : `Cart, ${String(count)} prints`,
     menuOpen: 'Menu',
     menuClose: 'Close the menu',
     footer: 'Footer',
@@ -38,7 +34,6 @@ export const copy = {
     shop: 'Shop',
     aboutColumn: 'About',
     howWeSize: 'How we size prints',
-    howDropsWork: 'How drops work',
     small:
       'Images: The Metropolitan Museum of Art, Open Access (CC0). Deckle is a portfolio project: checkout is simulated and nothing ships.',
   },

@@ -23,11 +23,10 @@ const Skip = styled.a`
 const { chrome } = copy;
 
 /** The parts of the shop the menu names. */
-export type Section = 'prints' | 'drops' | 'collections' | 'journal';
+export type Section = 'prints' | 'collections' | 'journal';
 
 const sections = [
   { key: 'prints', label: chrome.prints, href: '/prints' },
-  { key: 'drops', label: chrome.drops, href: '/drops' },
   { key: 'collections', label: chrome.collections, href: '/collections' },
   { key: 'journal', label: chrome.journal, href: '/journal' },
 ] as const satisfies readonly { key: Section; label: string; href: string }[];
@@ -41,8 +40,9 @@ export interface ChromeProps {
 /**
  * What every page shares: the skip link, the header, the footer. Each section's
  * layout names itself, so the menu is marked in the static shell, before a
- * work's slug is known. Drops and the cart are not open yet, so there is no
- * announcement bar and the cart is empty.
+ * work's slug is known. Drops, accounts and the cart are not open yet, and a
+ * link must lead to a page, so neither the header nor the footer offers them,
+ * and there is no announcement bar.
  */
 export function Chrome({ current, children }: ChromeProps) {
   return (
@@ -65,8 +65,6 @@ export function Chrome({ current, children }: ChromeProps) {
           shortcut: '/',
         }}
         themeLabel={chrome.theme}
-        account={{ label: chrome.account, href: '/sign-in' }}
-        cart={{ label: chrome.cart(0), href: '/cart', count: 0 }}
         menu={{ open: chrome.menuOpen, close: chrome.menuClose }}
       />
       <main id="main">{children}</main>
@@ -79,7 +77,6 @@ export function Chrome({ current, children }: ChromeProps) {
             title: chrome.shop,
             links: [
               { label: chrome.prints, href: '/prints' },
-              { label: chrome.drops, href: '/drops' },
               { label: chrome.collections, href: '/collections' },
             ],
           },
@@ -87,7 +84,6 @@ export function Chrome({ current, children }: ChromeProps) {
             title: chrome.aboutColumn,
             links: [
               { label: chrome.howWeSize, href: '/about/sizes' },
-              { label: chrome.howDropsWork, href: '/about/drops' },
               { label: chrome.journal, href: '/journal' },
             ],
           },
