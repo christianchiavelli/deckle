@@ -173,8 +173,13 @@ test.describe('how prints are sized', () => {
 test.describe('the search', () => {
   test('takes the key its hint shows, from anywhere on the page', async ({ page }) => {
     await page.goto(`${store}/prints`);
-    await page.keyboard.press('/');
-    await expect(page.getByRole('banner').getByRole('searchbox')).toBeFocused();
+    const field = page.getByRole('banner').getByRole('searchbox');
+    // The key is heard once the header has hydrated; until then it is the page's.
+    await expect(async () => {
+      await page.keyboard.press('/');
+      await expect(field).toBeFocused({ timeout: 250 });
+    }).toPass();
+    await expect(field).toHaveValue('');
   });
 
   test('forgives a typo, and finds a word by its start', async ({ page }) => {
