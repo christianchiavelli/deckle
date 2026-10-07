@@ -6,6 +6,8 @@ import {
   MAX_QUERY,
   queryFrom,
   searchWorks,
+  SUGGESTED,
+  suggestionsOf,
   typosAllowed,
   withinEdits,
   wordsOf,
@@ -44,8 +46,8 @@ const anonymous = work('a-wave', 1500, {
 });
 
 const catalogue = [listedFrom(greatWave, 1830), listedFrom(melencolia, 1514)];
-const found = (query: string, works = catalogue, typing = false) =>
-  searchWorks(works, query, 'en-US', { typing }).map(({ slug }) => slug);
+const found = (query: string, works = catalogue) =>
+  searchWorks(works, query, 'en-US').map(({ slug }) => slug);
 
 describe('queryFrom', () => {
   it('reads q, trimmed and cut to its longest', () => {
@@ -145,13 +147,12 @@ describe('searchWorks', () => {
     expect(found('witch', [witches, shield])).toEqual(['the-witches']);
   });
 
-  it('reads the last word of a search being typed as a start, a typo in it included', () => {
-    expect(found('melanc')).toEqual([]);
-    expect(found('melanc', catalogue, true)).toEqual(['melencolia-i']);
+  it('reads the last word as one still being typed: a start, a typo in it included', () => {
+    expect(found('melanc')).toEqual(['melencolia-i']);
     // Five letters are too few to tell a slip from another word.
-    expect(found('melan', catalogue, true)).toEqual([]);
-    // Only the last word is still being typed.
-    expect(found('melanc engraving', catalogue, true)).toEqual([]);
+    expect(found('melan')).toEqual([]);
+    // Only the last word may be unfinished.
+    expect(found('melanc engraving')).toEqual([]);
   });
 
   it('puts the closest first: a title before a medium, then the oldest', () => {
@@ -180,5 +181,71 @@ describe('searchWorks', () => {
   it('finds nothing for nothing searched', () => {
     expect(found('   ')).toEqual([]);
     expect(found('?!')).toEqual([]);
+  });
+});
+
+describe('suggestionsOf', () => {
+  const rhinoceros = work('the-rhinoceros', 1515, {
+    title: 'The Rhinoceros',
+    fullTitle: 'The Rhinoceros',
+    technique: 'Woodcuts',
+    medium: 'Woodcut',
+  });
+  const shop = [
+    listedFrom(melencolia, 1514),
+    knight,
+    rhinoceros,
+    witches,
+    shield,
+    anonymous,
+    listedFrom(greatWave, 1830),
+  ];
+  const suggest = (query: string, works = shop) => suggestionsOf(works, query, 'en-US');
+
+  it('suggests the makers whose name holds what was typed, with how many works each has', () => {
+    const { artists, works, total } = suggest('dür');
+    expect(artists).toEqual([{ name: 'Albrecht Dürer', count: 3 }]);
+    expect(works.map(({ slug }) => slug)).toEqual([
+      'knight-death-and-the-devil',
+      'melencolia-i',
+      'the-rhinoceros',
+    ]);
+    expect(total).toBe(3);
+  });
+
+  it('suggests a technique by its start, the ones with the most works first', () => {
+    expect(suggest('wood').techniques).toEqual([
+      { name: 'Woodcuts', count: 2 },
+      { name: 'Woodblock prints', count: 1 },
+    ]);
+    expect(suggest('engr').techniques).toEqual([{ name: 'Engravings', count: 3 }]);
+  });
+
+  it('puts a whole name before a start, and ties in alphabetical order', () => {
+    const twin = work('twin', 1600, { artist: { name: 'Hans Wechtlin' } });
+    expect(suggest('hans', [twin, witches]).artists.map(({ name }) => name)).toEqual([
+      'Hans Baldung (called Hans Baldung Grien)',
+      'Hans Wechtlin',
+    ]);
+  });
+
+  it('lists at most five works, three makers and two techniques, and counts every work', () => {
+    const many = Array.from({ length: 8 }, (_, index) =>
+      work(`etching-${String(index)}`, 1600 + index, {
+        artist: { name: `Etcher ${String(index)}` },
+        technique:
+          index % 3 === 0 ? 'Etchings' : index % 3 === 1 ? 'Etched plates' : 'Etched glass',
+      }),
+    );
+    const { works, artists, techniques, total } = suggest('etch', many);
+    expect(works).toHaveLength(SUGGESTED.works);
+    expect(artists).toHaveLength(SUGGESTED.artists);
+    expect(techniques).toHaveLength(SUGGESTED.techniques);
+    expect(total).toBe(8);
+  });
+
+  it('suggests nothing for nothing typed, or for what no record holds', () => {
+    expect(suggest('  ')).toEqual({ works: [], artists: [], techniques: [], total: 0 });
+    expect(suggest('monet')).toEqual({ works: [], artists: [], techniques: [], total: 0 });
   });
 });

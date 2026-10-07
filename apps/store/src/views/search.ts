@@ -80,11 +80,11 @@ const SHORTEST_START_WITH_TYPO = 6;
 interface Reading {
   /** No record holds the word, not even as a start, so it may be a typo. */
   readonly typo: boolean;
-  /** The word is the last of a search still being typed, so it may be only a start. */
-  readonly typing: boolean;
+  /** The word is the search's last, which may still be being typed: only a start. */
+  readonly last: boolean;
 }
 
-function matchOf(searched: string, word: string, { typo, typing }: Reading): number {
+function matchOf(searched: string, word: string, { typo, last }: Reading): number {
   if (word === searched) {
     return WHOLE;
   }
@@ -103,7 +103,7 @@ function matchOf(searched: string, word: string, { typo, typing }: Reading): num
   // A word still being typed is the start of one: "melanc" is on its way to
   // "melencolia", one letter off, give or take a letter dropped or doubled.
   const { length } = searched;
-  return typing &&
+  return last &&
     length >= SHORTEST_START_WITH_TYPO &&
     [length - 1, length, length + 1].some(
       (cut) => cut < word.length && withinEdits(searched, word.slice(0, cut), 1),
@@ -151,28 +151,16 @@ function scoreOf(fields: readonly Field[], searched: readonly Searched[]): numbe
   return score;
 }
 
-export interface SearchOptions {
-  /** The search is being typed, so its last word may be only the start of one. */
-  readonly typing?: boolean;
+/** A search read against a catalogue: each work's fields, and how each searched word may match. */
+interface Search {
+  readonly records: readonly { readonly work: ListedWork; readonly fields: readonly Field[] }[];
+  readonly searched: readonly Searched[];
 }
 
-/**
- * The works whose title, maker, technique, medium or culture hold every word
- * searched for, as a whole word, as a word's start, or, for a word no record
- * holds, with a typo in it: "rembr" and "melancolia" both find what they
- * meant, and "witch" finds the witches, not every "with". The closest come
- * first: a whole word before a start, a start before a typo, a title or a
- * maker before a medium; then the oldest. Nothing searched for finds nothing.
- */
-export function searchWorks(
-  works: readonly ListedWork[],
-  query: string,
-  locale: string,
-  { typing = false }: SearchOptions = {},
-): ListedWork[] {
+function searchOf(works: readonly ListedWork[], query: string, locale: string): Search | null {
   const words = wordsOf(query);
   if (words.length === 0) {
-    return [];
+    return null;
   }
   const records = inOrder(works, locale).map((work) => ({ work, fields: fieldsOf(work) }));
   const vocabulary = [
@@ -182,9 +170,13 @@ export function searchWorks(
     word,
     reading: {
       typo: !vocabulary.some((known) => known.startsWith(word)),
-      typing: typing && index === words.length - 1,
+      last: index === words.length - 1,
     },
   }));
+  return { records, searched };
+}
+
+function ranked({ records, searched }: Search): ListedWork[] {
   return (
     records
       .map(({ work, fields }) => ({ work, score: scoreOf(fields, searched) }))
@@ -193,4 +185,93 @@ export function searchWorks(
       .sort((a, b) => b.score - a.score)
       .map(({ work }) => work)
   );
+}
+
+/**
+ * The works whose title, maker, technique, medium or culture hold every word
+ * searched for, as a whole word, as a word's start, or, for a word no record
+ * holds, with a typo in it: "rembr" and "melancolia" both find what they
+ * meant, and "witch" finds the witches, not every "with". The last word may
+ * still be being typed, so from six letters it may be a start with a typo in
+ * it: "melanc" finds Melencolia. The closest come first: a whole word before a
+ * start, a start before a typo, a title or a maker before a medium; then the
+ * oldest. Nothing searched for finds nothing.
+ */
+export function searchWorks(
+  works: readonly ListedWork[],
+  query: string,
+  locale: string,
+): ListedWork[] {
+  const search = searchOf(works, query, locale);
+  return search ? ranked(search) : [];
+}
+
+/** A maker or a technique, and how many works the shop has of it. */
+export interface Named {
+  readonly name: string;
+  readonly count: number;
+}
+
+/** The names whose words hold every searched word, closest first, then the most works. */
+function namesOf(
+  { records, searched }: Search,
+  nameOf: (work: ListedWork) => string | null,
+  locale: string,
+): Named[] {
+  const counts = new Map<string, number>();
+  for (const { work } of records) {
+    const name = nameOf(work);
+    if (name) {
+      counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+  }
+  return [...counts]
+    .map(([name, count]) => ({
+      name,
+      count,
+      score: scoreOf([{ words: wordsOf(name), weight: 1 }], searched),
+    }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || b.count - a.count || a.name.localeCompare(b.name, locale))
+    .map(({ name, count }) => ({ name, count }));
+}
+
+/** How many of each the field lists: a glance, with the search page a key away. */
+export const SUGGESTED = { works: 5, artists: 3, techniques: 2 } as const;
+
+export interface Suggestions {
+  /** The closest works. */
+  readonly works: readonly ListedWork[];
+  /** The makers whose name holds what was typed. */
+  readonly artists: readonly Named[];
+  /** The technique families whose name holds it. */
+  readonly techniques: readonly Named[];
+  /** Every work the search page finds for it. */
+  readonly total: number;
+}
+
+/**
+ * What the search field suggests for what has been typed so far: the makers
+ * and techniques whose names hold it, and the closest works, read as the
+ * search page reads them, so the count it gives is the page's.
+ */
+export function suggestionsOf(
+  works: readonly ListedWork[],
+  query: string,
+  locale: string,
+): Suggestions {
+  const search = searchOf(works, query, locale);
+  if (!search) {
+    return { works: [], artists: [], techniques: [], total: 0 };
+  }
+  const found = ranked(search);
+  return {
+    works: found.slice(0, SUGGESTED.works),
+    artists: namesOf(search, (work) => work.artist?.name ?? null, locale).slice(
+      0,
+      SUGGESTED.artists,
+    ),
+    techniques: namesOf(search, (work) => work.technique, locale).slice(0, SUGGESTED.techniques),
+    total: found.length,
+  };
 }

@@ -15,6 +15,9 @@ export interface SizingText {
   readonly required: string | null;
 }
 
+/** Joins "1 artist" and "4 prints" the way English does. */
+const LIST = new Intl.ListFormat('en-US', { type: 'conjunction' });
+
 export const copy = {
   locale: 'en-US',
   chrome: {
@@ -145,6 +148,26 @@ export const copy = {
     ask: 'Search the shop for a maker, a title or a technique:',
     suggestions: ['Hokusai', 'Melencolia', 'etching', 'Rembrandt'],
     browse: 'Browse the prints',
+    suggest: {
+      label: 'Suggestions',
+      artists: 'Artists',
+      techniques: 'Techniques',
+      prints: 'Prints',
+      all: (count: number, query: string) =>
+        count === 1 ? `1 print for “${query}”` : `All ${String(count)} prints for “${query}”`,
+      none: (query: string) => `No prints, artists or techniques match “${query}”`,
+      /** "1 artist and 4 prints": what a screen reader hears as the list changes. */
+      status: (artists: number, techniques: number, prints: number) =>
+        LIST.format(
+          [
+            [artists, 'artist', 'artists'] as const,
+            [techniques, 'technique', 'techniques'] as const,
+            [prints, 'print', 'prints'] as const,
+          ]
+            .filter(([count]) => count > 0)
+            .map(([count, one, many]) => `${String(count)} ${count === 1 ? one : many}`),
+        ),
+    },
   },
   tile: {
     from: (amount: string) => `From ${amount}`,
