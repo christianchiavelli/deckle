@@ -46,7 +46,8 @@ export interface StoryCardProps {
   kicker: string;
   /** The work the story tells about, which names the card. */
   title: string;
-  lede: string;
+  /** The story's opening lines; a story may have none. */
+  lede: string | null;
   image: { src: string; width: number; height: number; detail: Detail };
 }
 
@@ -57,7 +58,7 @@ export function StoryCard({ href, kicker, title, lede, image }: StoryCardProps) 
       <DetailImage {...image} alt="" aspect={4 / 3} />
       <Kicker>{kicker}</Kicker>
       <h3>{title}</h3>
-      <p>{lede}</p>
+      {lede && <p>{lede}</p>}
     </Card>
   );
 }
@@ -134,7 +135,7 @@ export function StoryLead({ href, kicker, title, lede, image, more }: StoryLeadP
       <LeadCopy>
         <Kicker>{kicker}</Kicker>
         <h2>{title}</h2>
-        <p>{lede}</p>
+        {lede && <p>{lede}</p>}
         <More>
           {more}
           <Icon name="arrow" size="small" />
