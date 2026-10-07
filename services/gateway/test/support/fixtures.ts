@@ -18,6 +18,7 @@ export interface ShopProductDocument {
   name: string;
   featuredAsset: { source: string; width: number; height: number } | null;
   variants: ShopVariantDocument[];
+  facetValues: { name: string; facet: { code: string } }[];
   customFields: Record<string, unknown>;
 }
 
@@ -38,6 +39,10 @@ interface Work {
     endYear: number;
   } | null;
   date: string | null;
+  /** The year the work was begun, as The Met records it. */
+  year: number | null;
+  /** The technique family the commerce seed files the work under. */
+  technique: string | null;
   medium: string | null;
   dimensions: string[] | string | null;
   classification: string | null;
@@ -72,6 +77,11 @@ export function shopProduct(work: Work): ShopProductDocument {
       currencyCode: 'USD',
       customFields: { paperSize: size },
     })),
+    facetValues: [
+      ...(work.artist === null ? [] : [{ name: work.artist.name, facet: { code: 'artist' } }]),
+      ...(work.technique === null ? [] : [{ name: work.technique, facet: { code: 'technique' } }]),
+      { name: 'Open edition', facet: { code: 'edition' } },
+    ],
     customFields: {
       metObjectId: work.objectId,
       fullTitle: work.fullTitle,
@@ -81,6 +91,7 @@ export function shopProduct(work: Work): ShopProductDocument {
       artistBeginYear: work.artist?.beginYear ?? null,
       artistEndYear: work.artist?.endYear ?? null,
       objectDate: work.date,
+      objectBeginYear: work.year,
       medium: work.medium,
       dimensions: work.dimensions,
       classification: work.classification,
@@ -113,6 +124,8 @@ export const melencolia = shopProduct({
   fullTitle: 'Melencolia I',
   artist: durer,
   date: '1514',
+  year: 1514,
+  technique: 'Engravings',
   medium: 'Engraving',
   dimensions: ['Plate: 9 7/16 × 7 5/16 in. (24 × 18.5 cm)'],
   classification: 'Prints',
@@ -135,6 +148,8 @@ export const rhinoceros = shopProduct({
   fullTitle: 'The Rhinoceros',
   artist: durer,
   date: '1515',
+  year: 1515,
+  technique: 'Woodcuts',
   medium: 'Woodcut',
   // Commerce may keep the lines in one text field; they read the same.
   dimensions:
@@ -165,6 +180,8 @@ export const greatWave = shopProduct({
     endYear: 1849,
   },
   date: 'ca. 1830–32',
+  year: 1830,
+  technique: 'Woodblock prints',
   medium: 'Woodblock print; ink and color on paper',
   dimensions: ['10 1/8 x 14 15/16 in. (25.7 x 37.9 cm)'],
   classification: 'Prints',
@@ -187,6 +204,8 @@ export const anonymousSampler = shopProduct({
   fullTitle: 'Alphabet Sampler',
   artist: null,
   date: null,
+  year: null,
+  technique: null,
   medium: null,
   dimensions: null,
   classification: null,
@@ -260,6 +279,7 @@ export const stories = [
     artworkSlug: 'melencolia-i',
     title: 'The angel who cannot act',
     lede: 'Why a winged figure sits idle among tools.',
+    detail: { x: 74, y: 22, zoom: 3 },
     body: melencoliaBody,
     sources: [
       {
@@ -283,6 +303,8 @@ export const stories = [
     artworkSlug: 'under-the-wave-off-kanagawa',
     title: 'A wave seen from the boats',
     lede: null,
+    // An editor who left the detail empty: Payload still sends the group.
+    detail: { x: null, y: null, zoom: null },
     body: { root: { type: 'root', children: [] } },
     sources: [],
     _status: 'published',

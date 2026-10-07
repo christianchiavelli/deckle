@@ -62,6 +62,20 @@ export class Artwork {
   @Field(() => String, { nullable: true, description: 'As The Met dates it, e.g. "ca. 1830–32".' })
   date!: string | null;
 
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      'The year the work was begun, to order and group by; null when The Met gives none.',
+  })
+  year!: number | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'The family of process commerce files the work under, e.g. "Etchings"; null when none.',
+  })
+  technique!: string | null;
+
   @Field(() => String, { nullable: true })
   medium!: string | null;
 

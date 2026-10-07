@@ -15,12 +15,39 @@ const publicationStatus = z
   .nullish()
   .transform((status) => status ?? null);
 
+/** A number the editor may leave empty, as null whether Payload sends null or nothing. */
+const optionalNumber = (min: number, max: number) =>
+  z
+    .number()
+    .min(min)
+    .max(max)
+    .nullish()
+    .transform((value) => value ?? null);
+
+/**
+ * What the story's card shows up close. Payload sends the group with every
+ * field null when the editor left it empty; a detail missing a part is no detail.
+ */
+const storyDetail = z
+  .object({
+    x: optionalNumber(0, 100),
+    y: optionalNumber(0, 100),
+    zoom: optionalNumber(1, 8),
+  })
+  .nullish()
+  .transform((detail) => {
+    if (!detail) return null;
+    const { x, y, zoom } = detail;
+    return x === null || y === null || zoom === null ? null : { x, y, zoom };
+  });
+
 export const cmsStorySchema = z.object({
   id: documentId,
   // Unique in the CMS: a work has one story at most, and a story has no address of its own.
   artworkSlug: z.string().min(1),
   title: requiredText,
   lede: optionalText,
+  detail: storyDetail,
   body: z.unknown(),
   sources: z
     .array(z.object({ label: requiredText, url: optionalText }))

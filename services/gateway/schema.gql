@@ -48,8 +48,18 @@ type Artwork {
   """Null when the CMS has no story for this work."""
   story: Story
 
+  """
+  The family of process commerce files the work under, e.g. "Etchings"; null when none.
+  """
+  technique: String
+
   """The title as the shop shows it."""
   title: String!
+
+  """
+  The year the work was begun, to order and group by; null when The Met gives none.
+  """
+  year: Int
 }
 
 """
@@ -281,6 +291,9 @@ type Source {
 """What the CMS tells about a work."""
 type Story {
   blocks: [StoryBlock!]!
+
+  """Null when the editor chose none: the card then shows the whole print."""
+  detail: StoryDetail
   lede: String
   sources: [Source!]!
   title: String!
@@ -289,6 +302,20 @@ type Story {
 
 """One block of a story, in reading order."""
 union StoryBlock = HeadingBlock | ParagraphBlock | QuoteBlock
+
+"""
+A point of the print and how close to look at it, as the story's card shows it.
+"""
+type StoryDetail {
+  """Across, in percent of the print's width."""
+  x: Float!
+
+  """Down, in percent of the print's height."""
+  y: Float!
+
+  """1 fills the frame with the whole print; 3 is three times closer."""
+  zoom: Float!
+}
 
 type Subscription {
   """

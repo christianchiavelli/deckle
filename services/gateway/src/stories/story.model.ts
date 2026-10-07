@@ -1,4 +1,11 @@
-import { createUnionType, Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
+import {
+  createUnionType,
+  Field,
+  Float,
+  GraphQLISODateTime,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import type { StoryBlockRecord } from '../cms/lexical/lexical-to-blocks.js';
 import { listOf } from '../graphql/complexity.js';
 
@@ -68,6 +75,22 @@ export class Source {
   url!: string | null;
 }
 
+@ObjectType({
+  description: "A point of the print and how close to look at it, as the story's card shows it.",
+})
+export class StoryDetail {
+  @Field(() => Float, { description: "Across, in percent of the print's width." })
+  x!: number;
+
+  @Field(() => Float, { description: "Down, in percent of the print's height." })
+  y!: number;
+
+  @Field(() => Float, {
+    description: '1 fills the frame with the whole print; 3 is three times closer.',
+  })
+  zoom!: number;
+}
+
 @ObjectType({ description: 'What the CMS tells about a work.' })
 export class Story {
   @Field(() => String)
@@ -75,6 +98,12 @@ export class Story {
 
   @Field(() => String, { nullable: true })
   lede!: string | null;
+
+  @Field(() => StoryDetail, {
+    nullable: true,
+    description: 'Null when the editor chose none: the card then shows the whole print.',
+  })
+  detail!: StoryDetail | null;
 
   @Field(() => [StoryBlock], { complexity: listOf(20) })
   blocks!: StoryBlockRecord[];

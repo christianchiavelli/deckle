@@ -20,6 +20,8 @@ const ARTWORK = /* GraphQL */ `
         endYear
       }
       date
+      year
+      technique
       medium
       dimensions
       classification
@@ -168,6 +170,17 @@ describe('the catalogue over GraphQL', () => {
     });
   });
 
+  it('gives the year a work was begun and the technique commerce files it under', async () => {
+    const melencoliaPage = await graphql(gateway, ARTWORK, { slug: 'melencolia-i' });
+    expect(melencoliaPage.data).toMatchObject({
+      artwork: { date: '1514', year: 1514, technique: 'Engravings' },
+    });
+    const wave = await graphql(gateway, ARTWORK, { slug: 'under-the-wave-off-kanagawa' });
+    expect(wave.data).toMatchObject({
+      artwork: { date: 'ca. 1830–32', year: 1830, technique: 'Woodblock prints' },
+    });
+  });
+
   it('answers null, never "" or 0, for what The Met leaves out', async () => {
     const melencoliaPage = await graphql(gateway, ARTWORK, { slug: 'melencolia-i' });
     expect(melencoliaPage.data).toMatchObject({ artwork: { culture: null, period: null } });
@@ -190,6 +203,8 @@ describe('the catalogue over GraphQL', () => {
       artwork: {
         artist: null,
         date: null,
+        year: null,
+        technique: null,
         medium: null,
         dimensions: [],
         image: null,

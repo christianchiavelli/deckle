@@ -36,6 +36,7 @@ export class StoriesService {
     return {
       title: story.title,
       lede: story.lede,
+      detail: story.detail,
       blocks: [...body.blocks],
       sources,
       updatedAt: story.updatedAt,

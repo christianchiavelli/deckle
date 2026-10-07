@@ -23,6 +23,12 @@ const ARTWORK_PRODUCT = /* GraphQL */ `
         paperSize
       }
     }
+    facetValues {
+      name
+      facet {
+        code
+      }
+    }
     customFields {
       metObjectId
       fullTitle
@@ -32,6 +38,7 @@ const ARTWORK_PRODUCT = /* GraphQL */ `
       artistBeginYear
       artistEndYear
       objectDate
+      objectBeginYear
       medium
       dimensions
       classification

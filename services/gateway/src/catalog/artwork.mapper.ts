@@ -2,6 +2,9 @@ import type { ShopProduct } from '../commerce/shop-api.responses.js';
 import type { Artwork } from './models/artwork.model.js';
 import { priceFrom, printSizesFor } from './print-sizes.js';
 
+/** The facet the commerce seed files each work's technique family under. */
+const TECHNIQUE_FACET = 'technique';
+
 /** A commerce product, with The Met's record in its custom fields, as the shop's artwork. */
 export function toArtwork(product: ShopProduct): Artwork {
   const fields = product.customFields;
@@ -25,6 +28,9 @@ export function toArtwork(product: ShopProduct): Artwork {
             endYear: fields.artistEndYear,
           },
     date: fields.objectDate,
+    year: fields.objectBeginYear,
+    technique:
+      product.facetValues.find((value) => value.facet.code === TECHNIQUE_FACET)?.name ?? null,
     medium: fields.medium,
     dimensions: fields.dimensions,
     classification: fields.classification,

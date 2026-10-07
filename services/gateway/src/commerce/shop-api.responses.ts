@@ -34,6 +34,8 @@ export const shopProductSchema = z.object({
     .object({ source: z.url(), width: z.int().positive(), height: z.int().positive() })
     .nullable(),
   variants: z.array(shopVariantSchema),
+  // How commerce files the product: artist, technique, century and the like.
+  facetValues: z.array(z.object({ name: requiredText, facet: z.object({ code: z.string() }) })),
   customFields: z.object({
     metObjectId: z.int().positive(),
     fullTitle: requiredText,
@@ -43,6 +45,7 @@ export const shopProductSchema = z.object({
     artistBeginYear: optionalInt,
     artistEndYear: optionalInt,
     objectDate: optionalText,
+    objectBeginYear: optionalInt,
     medium: optionalText,
     dimensions: dimensionLines,
     classification: optionalText,

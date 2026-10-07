@@ -89,6 +89,40 @@ describe('stories over GraphQL', () => {
     });
   });
 
+  it("gives the detail the editor chose for the story's card, and none for an empty one", async () => {
+    const response = await graphql(
+      gateway,
+      `
+        {
+          durer: artwork(slug: "melencolia-i") {
+            story {
+              detail {
+                x
+                y
+                zoom
+              }
+            }
+          }
+          wave: artwork(slug: "under-the-wave-off-kanagawa") {
+            story {
+              detail {
+                x
+                y
+                zoom
+              }
+            }
+          }
+        }
+      `,
+    );
+
+    expect(response.errors).toBeUndefined();
+    expect(response.data).toEqual({
+      durer: { story: { detail: { x: 74, y: 22, zoom: 3 } } },
+      wave: { story: { detail: null } },
+    });
+  });
+
   it('answers null for a work the CMS has no story about', async () => {
     const response = await graphql(
       gateway,
