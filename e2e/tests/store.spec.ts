@@ -1,18 +1,10 @@
-import { AxeBuilder } from '@axe-core/playwright';
-import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
+import { expect, test, type APIRequestContext } from '@playwright/test';
+import { expectAccessible } from '../support/accessibility.js';
 
 const store = process.env['STORE_URL'] ?? 'http://localhost:8080';
 const adminApi = process.env['ADMIN_API_URL'] ?? 'http://localhost:8082/admin-api';
 const username = process.env['COMMERCE_SUPERADMIN_USERNAME'] ?? 'superadmin';
 const password = process.env['COMMERCE_SUPERADMIN_PASSWORD'] ?? 'deckle-superadmin';
-
-/** Fails on any WCAG A or AA violation axe finds on the page as it stands. */
-async function expectAccessible(page: Page): Promise<void> {
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
-    .analyze();
-  expect(results.violations.map((violation) => `${violation.id}: ${violation.help}`)).toEqual([]);
-}
 
 test.describe('the front page', () => {
   test('says what Deckle is, with the prints the editor chose and their prices', async ({
