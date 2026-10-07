@@ -33,6 +33,7 @@ const work: Work = {
     height: 1613,
     originalWidth: 3859,
     originalHeight: 2594,
+    crop: null,
     sha256: 'b'.repeat(64),
     sourceUrl: 'https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg',
   },

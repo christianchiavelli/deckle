@@ -36,6 +36,7 @@
         "height": 320,
         "originalWidth": 2820,
         "originalHeight": 3561,
+        "crop": null,
         "sha256": "e34c2e5f0f1299347a5cee0e5e7261142763a3ab7f0d16bf8e13181cf9a23442",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820348.jpg"
       }
@@ -73,6 +74,7 @@
         "height": 215,
         "originalWidth": 3859,
         "originalHeight": 2594,
+        "crop": null,
         "sha256": "81cefd9cfe448852b40fd5a332a3f78f78760dbe132102fb433da4252f0fa0bb",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg"
       }

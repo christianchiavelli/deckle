@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import type { Crop } from '../curation.js';
 
 export interface MasterSettings {
   readonly format: 'webp' | 'jpg';
@@ -21,17 +22,20 @@ export interface Master {
 }
 
 /**
- * Turns an original into the master: upright, no larger than `longEdge`, in
- * sRGB and with every piece of metadata dropped (sharp keeps none unless asked).
- * The same original and settings give the same bytes, which the importer relies
- * on to rewrite nothing when nothing changed.
+ * Turns an original into the master: upright, cut to `crop` when there is one,
+ * no larger than `longEdge`, in sRGB and with every piece of metadata dropped
+ * (sharp keeps none unless asked). The same original and settings give the
+ * same bytes, which the importer relies on to rewrite nothing when nothing changed.
  */
 export async function encodeMaster(
   input: string | Buffer,
   { format, longEdge, quality }: MasterSettings,
+  crop: Crop | null = null,
 ): Promise<Master> {
-  const resized = sharp(input, { failOn: 'error' })
-    .autoOrient()
+  // Order matters to sharp: upright first, so the crop is measured as the image is seen.
+  const upright = sharp(input, { failOn: 'error' }).autoOrient();
+  const cut = crop === null ? upright : upright.extract(crop);
+  const resized = cut
     .resize({ width: longEdge, height: longEdge, fit: 'inside', withoutEnlargement: true })
     .toColourspace('srgb');
   const encoded =

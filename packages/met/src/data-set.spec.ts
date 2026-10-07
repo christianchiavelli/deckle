@@ -24,8 +24,23 @@ describe('data/met', () => {
 
   it('passes readCatalog, the check every seed runs first, with every curated work in order', () => {
     expect(
-      catalog.works.map(({ objectId, slug, shortTitle }) => ({ objectId, slug, shortTitle })),
+      catalog.works.map(({ objectId, slug, shortTitle, image }) => ({
+        objectId,
+        slug,
+        shortTitle,
+        ...(image.crop && { crop: image.crop }),
+      })),
     ).toEqual(curation);
+  });
+
+  it('sizes a cropped work from the crop, not from the whole original', () => {
+    for (const { slug, image } of catalog.works) {
+      if (image.crop === null) continue;
+      expect([image.originalWidth, image.originalHeight], slug).toEqual([
+        image.crop.width,
+        image.crop.height,
+      ]);
+    }
   });
 
   it('has no two impressions of one print', () => {

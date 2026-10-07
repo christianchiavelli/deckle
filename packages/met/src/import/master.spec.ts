@@ -48,6 +48,35 @@ describe('encodeMaster', () => {
     expect(pixel[1]).toBeLessThan(15);
   });
 
+  it('keeps only the crop, measured on the upright image, before scaling it', async () => {
+    // A sheet on the left and a grey scale on the right: only the sheet is kept.
+    const sheet = { r: 230, g: 220, b: 200 };
+    const original = await sharp({
+      create: { width: 120, height: 100, channels: 3, background: { r: 40, g: 40, b: 40 } },
+    })
+      .composite([
+        {
+          input: { create: { width: 90, height: 100, channels: 3, background: sheet } },
+          left: 0,
+          top: 0,
+        },
+      ])
+      .png()
+      .toBuffer();
+
+    const master = await encodeMaster(original, settings, {
+      left: 10,
+      top: 0,
+      width: 80,
+      height: 100,
+    });
+
+    expect([master.width, master.height]).toEqual([51, 64]);
+    const { data, info } = await sharp(master.data).raw().toBuffer({ resolveWithObject: true });
+    const columns = Array.from({ length: info.width }, (_, x) => data[x * info.channels] ?? 0);
+    expect(Math.min(...columns)).toBeGreaterThan(200);
+  });
+
   it('gives the same bytes for the same original and settings', async () => {
     const original = Buffer.from(await makeJpeg(300, 200, { noise: true }));
     const [first, second] = await Promise.all([

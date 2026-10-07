@@ -11,7 +11,7 @@ import { readJpegHeader } from '../image/jpeg-header.js';
 import { readPreviousCatalog, serialiseCatalog, stampCatalog } from './catalog-file.js';
 import { encodeMaster, type MasterSettings } from './master.js';
 import { ensureOriginal } from './original-cache.js';
-import { assertSellable } from './sellable.js';
+import { assertSellable, CurationError } from './sellable.js';
 
 export interface ImportOptions {
   readonly client: Pick<CollectionClient, 'object' | 'download'>;
@@ -65,10 +65,21 @@ export async function runImport(options: ImportOptions): Promise<ImportResult> {
     const original = await ensureOriginal(client, cacheDir, entry.objectId, raw.primaryImage);
     if (original.downloaded) downloaded++;
     const header = await withFileSource(original.path, readJpegHeader);
-    const encoded = await encodeMaster(original.path, master);
-    // The master is the original turned upright and scaled, so it keeps its
-    // shape; if it does not, the header was misread and every size with it.
-    if (encoded.width > encoded.height !== header.width > header.height) {
+    const crop = entry.crop ?? null;
+    if (
+      crop !== null &&
+      (crop.left + crop.width > header.width || crop.top + crop.height > header.height)
+    ) {
+      throw new CurationError(
+        `${label}: the crop runs past the ${header.width}x${header.height} original`,
+      );
+    }
+    // What the print is made from: the whole original, or the part the crop keeps.
+    const scan = crop ?? header;
+    const encoded = await encodeMaster(original.path, master, crop);
+    // The master is the scan turned upright and scaled, so it keeps its shape;
+    // if it does not, the header was misread and every size with it.
+    if (encoded.width > encoded.height !== scan.width > scan.height) {
       throw new Error(`${label}: the header and the decoded image disagree on orientation`);
     }
 
@@ -96,16 +107,18 @@ export async function runImport(options: ImportOptions): Promise<ImportResult> {
         file,
         width: encoded.width,
         height: encoded.height,
-        originalWidth: header.width,
-        originalHeight: header.height,
+        originalWidth: scan.width,
+        originalHeight: scan.height,
+        crop,
         sha256: createHash('sha256').update(encoded.data).digest('hex'),
         sourceUrl: raw.primaryImage,
       },
     });
 
-    const largest = availableSizes(header).at(-1)?.size ?? 'no size';
+    const largest = availableSizes(scan).at(-1)?.size ?? 'no size';
     log(
-      `${index + 1}/${curation.length} ${label}: ${header.width}x${header.height}` +
+      `${index + 1}/${curation.length} ${label}: ${scan.width}x${scan.height}` +
+        `${crop === null ? '' : ` of ${header.width}x${header.height}`}` +
         `${original.downloaded ? ' (downloaded)' : ''}, prints up to ${largest}; ` +
         `master ${encoded.width}x${encoded.height}, ${Math.round(encoded.data.length / 1024)} KiB`,
     );

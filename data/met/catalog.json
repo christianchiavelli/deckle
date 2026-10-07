@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T18:58:16.365Z",
+  "generatedAt": "2026-10-07T02:29:41.631Z",
   "source": "https://collectionapi.metmuseum.org/public/collection/v1",
   "works": [
     {
@@ -43,6 +43,7 @@
         "height": 2400,
         "originalWidth": 2820,
         "originalHeight": 3561,
+        "crop": null,
         "sha256": "55b7db9ce5bb4b7510f4e64db2ca8580493eda067830069afd860ff20177e95b",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820348.jpg"
       }
@@ -85,6 +86,7 @@
         "height": 1920,
         "originalWidth": 3811,
         "originalHeight": 3049,
+        "crop": null,
         "sha256": "1b27c72ab8f64fc7c03fbce554c6825b9dae6db26410cfbb10f004e2a04fa86f",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DT241450.jpg"
       }
@@ -132,6 +134,7 @@
         "height": 2006,
         "originalWidth": 1566,
         "originalHeight": 2006,
+        "crop": null,
         "sha256": "5f26c66801c8edac7c23102f2fda6b1786aa38cec801e64025de040b461b1997",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP102226.jpg"
       }
@@ -177,6 +180,7 @@
         "height": 2400,
         "originalWidth": 2689,
         "originalHeight": 3665,
+        "crop": null,
         "sha256": "4c45199cd51d08af3041211e408efd5c8c30434306288d35a2dfde384484c498",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP816992.jpg"
       }
@@ -219,6 +223,7 @@
         "height": 1613,
         "originalWidth": 3859,
         "originalHeight": 2594,
+        "crop": null,
         "sha256": "9f973d8650ce7f2aeb1793bd2e32e217cdead7fcf7300b36fe598759bc75a76e",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg"
       }
@@ -262,6 +267,7 @@
         "height": 2400,
         "originalWidth": 2736,
         "originalHeight": 3591,
+        "crop": null,
         "sha256": "bf3fb0b9fd976ff1e52e24b98e8e837c0a56680832d2bbcbc0a62b024bbc5b99",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP819996.jpg"
       }
@@ -305,6 +311,7 @@
         "height": 2283,
         "originalWidth": 4000,
         "originalHeight": 3805,
+        "crop": null,
         "sha256": "a1390a69329d1e3898bba2b6f1a32ac73a2e35a9c508daff566fd626a4630da3",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-29035-001.jpg"
       }
@@ -346,6 +353,7 @@
         "height": 1751,
         "originalWidth": 2290,
         "originalHeight": 1751,
+        "crop": null,
         "sha256": "7949b187b62f2466ae93c203eb5b01041bc60f51a7e9f324aa62ef168adab77c",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820024.jpg"
       }
@@ -390,6 +398,7 @@
         "height": 2400,
         "originalWidth": 2821,
         "originalHeight": 3669,
+        "crop": null,
         "sha256": "3ff4258a752606f0ae6a23b6ca5a201a73bc03f49da8a556ec0cc42cd25282fa",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP815747.jpg"
       }
@@ -433,6 +442,7 @@
         "height": 1789,
         "originalWidth": 2703,
         "originalHeight": 2015,
+        "crop": null,
         "sha256": "d118fca0a023a72fdff7f960368091f3135ca8c20090c2c4ba99672d636ee2d8",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP819084.jpg"
       }
@@ -476,6 +486,7 @@
         "height": 2400,
         "originalWidth": 2579,
         "originalHeight": 3685,
+        "crop": null,
         "sha256": "6fb7c44d9764de0ac484f4346f2269d92e54cfb0026154296b86eb21eebc8476",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP826750.jpg"
       }
@@ -520,6 +531,7 @@
         "height": 2400,
         "originalWidth": 2739,
         "originalHeight": 3722,
+        "crop": null,
         "sha256": "ec80ea815ef1d00518c23a5d0279b0010efaf3e1f30169d10f3480ebbf3d2eed",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DT5032.jpg"
       }
@@ -559,6 +571,7 @@
         "height": 1972,
         "originalWidth": 4000,
         "originalHeight": 3287,
+        "crop": null,
         "sha256": "972289a09f98c4873130e99ceaff13d58c98040494bbf9511ea258a5b203a49a",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-41692-001.jpg"
       }
@@ -603,6 +616,7 @@
         "height": 2096,
         "originalWidth": 4000,
         "originalHeight": 3493,
+        "crop": null,
         "sha256": "b5b9ce62b9e1449b096809b9ff46a4d0831899f5148f6f0c64ae061360409527",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP168655.jpg"
       }
@@ -648,6 +662,7 @@
         "height": 2012,
         "originalWidth": 4000,
         "originalHeight": 3353,
+        "crop": null,
         "sha256": "bfb27f87e6ae750f023107f66c6fef25680abc475165412ba554c4bfbefc0848",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/MM64989.jpg"
       }
@@ -691,6 +706,7 @@
         "height": 1232,
         "originalWidth": 4000,
         "originalHeight": 2054,
+        "crop": null,
         "sha256": "af95c37a1382d02128db307154ed4d2c1d549a20a56befe66e284976182a7211",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP102206.jpg"
       }
@@ -736,6 +752,7 @@
         "height": 2400,
         "originalWidth": 2967,
         "originalHeight": 4000,
+        "crop": null,
         "sha256": "859dedb379c84ef0d9c9dea5c103a207516fa506a2ef3b8f3ab78ca1b671734c",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-12295-001.jpg"
       }
@@ -779,6 +796,7 @@
         "height": 2400,
         "originalWidth": 2676,
         "originalHeight": 3383,
+        "crop": null,
         "sha256": "e06c643a20d5202703f2c2dd99775c80a0788af4cb84e6f45f728219cfd15139",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP147767.jpg"
       }
@@ -823,6 +841,7 @@
         "height": 1842,
         "originalWidth": 3730,
         "originalHeight": 2863,
+        "crop": null,
         "sha256": "3f7b7d940201ff38518da05fb8360858b80b609d11a0c99aed59bc6cdaae6416",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP814596.jpg"
       }
@@ -867,6 +886,7 @@
         "height": 2400,
         "originalWidth": 3048,
         "originalHeight": 3408,
+        "crop": null,
         "sha256": "5b23bee8dae81226bfef3c9b059b2c2c1f466562b6214b038399f0b1705e9580",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP824977.jpg"
       }
@@ -911,6 +931,7 @@
         "height": 1816,
         "originalWidth": 3911,
         "originalHeight": 2959,
+        "crop": null,
         "sha256": "782569ab70a9b4f41b6e05bd69a2d16aec1ca6b4343b393be95d8d54676ee7d4",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP232847.jpg"
       }
@@ -955,6 +976,7 @@
         "height": 2400,
         "originalWidth": 2847,
         "originalHeight": 3762,
+        "crop": null,
         "sha256": "1ea370a6105210b2c358a24c4d135268a7c8cbf23cd90d7cf1f72f02dd726105",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP828200.jpg"
       }
@@ -997,6 +1019,7 @@
         "height": 2024,
         "originalWidth": 3765,
         "originalHeight": 3175,
+        "crop": null,
         "sha256": "3dffae1e255e5e1df13b7330a344e4b8f11d33ff17c0d4e84c5ea02c764d2cbf",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820211.jpg"
       }
@@ -1043,6 +1066,7 @@
         "height": 2400,
         "originalWidth": 3004,
         "originalHeight": 3770,
+        "crop": null,
         "sha256": "02affd42e9f943a137ff03ee2aca6c6f4c11980f9cc1d8ae3c5948caeb229de0",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP861134.jpg"
       }
@@ -1085,6 +1109,7 @@
         "height": 1735,
         "originalWidth": 2640,
         "originalHeight": 1909,
+        "crop": null,
         "sha256": "165a596bea2174eb7cdf59d48c55954545ea4c1c6cc211dd178a5f79e4e9cabd",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP821477.jpg"
       }
@@ -1128,6 +1153,7 @@
         "height": 2400,
         "originalWidth": 2534,
         "originalHeight": 3616,
+        "crop": null,
         "sha256": "7a6388df8a3e02296452eaf67a090025e6d008ae3eb865e5b831302fc76c4abb",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP819677.jpg"
       }
@@ -1169,6 +1195,7 @@
         "height": 1820,
         "originalWidth": 4000,
         "originalHeight": 3033,
+        "crop": null,
         "sha256": "e2d26726d239f2a01c07907a589a047483887cca0c7ea4eef87f7b6df329d7fd",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP322045.jpg"
       }
@@ -1212,6 +1239,7 @@
         "height": 2400,
         "originalWidth": 3335,
         "originalHeight": 3859,
+        "crop": null,
         "sha256": "e970726747a31eeb74589da2ed19578f242b67b13939b56b36558d5cd1f50751",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP-39489-001.jpg"
       }
@@ -1256,6 +1284,7 @@
         "height": 1622,
         "originalWidth": 3802,
         "originalHeight": 2569,
+        "crop": null,
         "sha256": "375a306dd66070342946a6fe81e1563e11f63913c7907e9f022ea19c00293130",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP813304.jpg"
       }
@@ -1297,6 +1326,7 @@
         "height": 1532,
         "originalWidth": 1810,
         "originalHeight": 1532,
+        "crop": null,
         "sha256": "a233a90e0413183569fed3caa8931f02212b54409de542f607573fb230ed6d73",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DR349.jpg"
       }
@@ -1340,6 +1370,7 @@
         "height": 2400,
         "originalWidth": 2877,
         "originalHeight": 3621,
+        "crop": null,
         "sha256": "5f6ffb0edad3a346cc064a3fb2cccbc5f98a6a812759daff033824ef745f89c9",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP884481.jpg"
       }
@@ -1383,6 +1414,7 @@
         "height": 2400,
         "originalWidth": 2830,
         "originalHeight": 3457,
+        "crop": null,
         "sha256": "55d348a847cd2b6d1e6f3a8667793cf4231cdb2126752fc79d67ff7a7ed03960",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP824897.jpg"
       }
@@ -1428,6 +1460,7 @@
         "height": 1712,
         "originalWidth": 3913,
         "originalHeight": 2791,
+        "crop": null,
         "sha256": "e939c752853d067113c84f19693be869732a52042672c59ed9fb2d5ec382edec",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP337818.jpg"
       }
@@ -1470,6 +1503,7 @@
         "height": 2400,
         "originalWidth": 2637,
         "originalHeight": 3753,
+        "crop": null,
         "sha256": "531366f59e3ae39b12e99da504ad61ad62931160983b671e455e901200942414",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP835936.jpg"
       }
@@ -1508,11 +1542,17 @@
       ],
       "image": {
         "file": "36633.webp",
-        "width": 2103,
+        "width": 1770,
         "height": 2400,
-        "originalWidth": 3505,
+        "originalWidth": 2950,
         "originalHeight": 4000,
-        "sha256": "e50f67c6d3fff367a2c4388137421e22e3a59bb90a5b8118618ff27e04ffd071",
+        "crop": {
+          "left": 70,
+          "top": 0,
+          "width": 2950,
+          "height": 4000
+        },
+        "sha256": "be03726d2ebc393c5412af3be44e71c6a83744547c8b209b88face749fbfe0f0",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP114902.jpg"
       }
     },
@@ -1553,6 +1593,7 @@
         "height": 2400,
         "originalWidth": 814,
         "originalHeight": 4000,
+        "crop": null,
         "sha256": "66b77f17941a0ec64e6851056e8c921610ba31eb12b0ad61bf5157fcf0a1e601",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP144637.jpg"
       }
@@ -1598,6 +1639,7 @@
         "height": 1785,
         "originalWidth": 3916,
         "originalHeight": 2913,
+        "crop": null,
         "sha256": "9bae7f8b70670163320aa744a519d5f47cd2ec23d5341619ea35566abd789eb5",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP144654.jpg"
       }
@@ -1641,6 +1683,7 @@
         "height": 2400,
         "originalWidth": 2590,
         "originalHeight": 3852,
+        "crop": null,
         "sha256": "638e7ce7c2c91e48211f7d1124955832321555aa1a8185027bf29a6034c1091a",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130177.jpg"
       }
@@ -1683,6 +1726,7 @@
         "height": 2400,
         "originalWidth": 2796,
         "originalHeight": 3848,
+        "crop": null,
         "sha256": "442a8be84790f8a8d1ea7edb90eab54035e9efc2c1fc2c1fe5533ab654f6e883",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP135639.jpg"
       }
@@ -1724,6 +1768,7 @@
         "height": 1654,
         "originalWidth": 3979,
         "originalHeight": 2743,
+        "crop": null,
         "sha256": "2553a3b2fa4cac89f9e9c89fac1a4f62c0869d3151c1b281507716b8df78b2ec",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP140971.jpg"
       }
@@ -1765,6 +1810,7 @@
         "height": 1639,
         "originalWidth": 3859,
         "originalHeight": 2636,
+        "crop": null,
         "sha256": "c605fd153e1a907f963bda5b106e0b20ababa97fc706fdc47a6c028ab331586c",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP141054.jpg"
       }
@@ -1808,6 +1854,7 @@
         "height": 1675,
         "originalWidth": 4000,
         "originalHeight": 2791,
+        "crop": null,
         "sha256": "fbdfd2fa8ac73acae24f0a8450cbe116dd49076b83d8b08661131f2927847084",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP140977.jpg"
       }
@@ -1852,6 +1899,7 @@
         "height": 2400,
         "originalWidth": 2716,
         "originalHeight": 3844,
+        "crop": null,
         "sha256": "2d417ef6dc3e6de06b991eb5b6bb39ae925e4fd20284d95048c2d6608763be61",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP141256.jpg"
       }
@@ -1895,6 +1943,7 @@
         "height": 1596,
         "originalWidth": 3926,
         "originalHeight": 2610,
+        "crop": null,
         "sha256": "89ae9562a2a408ce8901f44bd0c7dd2c9b62fb4a89571fe04cf05e0b9ddc5478",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP109333.jpg"
       }
@@ -1939,6 +1988,7 @@
         "height": 2400,
         "originalWidth": 2562,
         "originalHeight": 3806,
+        "crop": null,
         "sha256": "863fb806a606a60ea60d117aa38cf0daa90ed10431383fa9625723f2850a3205",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP121526.jpg"
       }
@@ -1982,6 +2032,7 @@
         "height": 2400,
         "originalWidth": 2617,
         "originalHeight": 3921,
+        "crop": null,
         "sha256": "710615560b9751842dfad67ba971b2660e42c80ef0cefae02156a38de75196dc",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP121524.jpg"
       }
@@ -2024,6 +2075,7 @@
         "height": 2400,
         "originalWidth": 2773,
         "originalHeight": 4000,
+        "crop": null,
         "sha256": "a4e51f5f3e45a6f9e88a0fc25bd3e576016badbee2feb7b308baae243d936114",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP148126.jpg"
       }
@@ -2067,6 +2119,7 @@
         "height": 1679,
         "originalWidth": 3999,
         "originalHeight": 2797,
+        "crop": null,
         "sha256": "668d005f5c3c3364011f23e19fd1f3e5cfba5d128fd87a1a60743251f68388ab",
         "sourceUrl": "https://images.metmuseum.org/CRDImages/as/original/DP-603-001.jpg"
       }

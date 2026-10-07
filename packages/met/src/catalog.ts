@@ -18,15 +18,27 @@ export const artistSchema = z.object({
   endYear: year.nullable(),
 });
 
+const cropSchema = z.object({
+  left: z.int().nonnegative(),
+  top: z.int().nonnegative(),
+  width: z.int().positive(),
+  height: z.int().positive(),
+});
+
 export const imageSchema = z.object({
   /** The reduced master, relative to `data/met/images`. */
   file: z.string().regex(/^[\w.-]+\.(jpg|webp)$/),
   /** The reduced master's own size. */
   width: z.int().positive(),
   height: z.int().positive(),
-  /** The original's size, read from its header: what print sizes are worked out from. */
+  /**
+   * The pixels the print is made from, read from the original's header: all of
+   * it, or the crop's size where there is one. Print sizes are worked out from these.
+   */
   originalWidth: z.int().positive(),
   originalHeight: z.int().positive(),
+  /** The part of the original kept, where the curation cuts a grey scale away; null for all of it. */
+  crop: cropSchema.nullable(),
   sha256: z.string().regex(/^[0-9a-f]{64}$/),
   sourceUrl: z.url(),
 });

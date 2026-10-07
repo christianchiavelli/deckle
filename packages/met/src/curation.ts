@@ -1,10 +1,24 @@
-/** A work Deckle sells: The Met's object, and the two things the shop adds to it. */
+/** A rectangle of an original, in its pixels, measured with the image upright. */
+export interface Crop {
+  readonly left: number;
+  readonly top: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+/** A work Deckle sells: The Met's object, and what the shop adds to it. */
 export interface CuratedWork {
   readonly objectId: number;
   /** Short and readable, unique, and stable once published: URLs and seeds key on it. */
   readonly slug: string;
   /** The Met's title, shortened by hand only where it runs to a sentence or carries its series. */
   readonly shortTitle: string;
+  /**
+   * The part of the original that is the print, where The Met photographed it
+   * beside a grey scale: the shop sells the print, not the museum's target.
+   * The master and the print sizes come from this part alone.
+   */
+  readonly crop?: Crop;
 }
 
 /**
@@ -136,6 +150,9 @@ export const curation: readonly CuratedWork[] = [
     objectId: 36633,
     slug: 'two-young-women-on-a-verandah',
     shortTitle: 'Two Young Women on a Verandah',
+    // The scan runs on past the sheet's right edge (x 2,966) to a grey scale
+    // from x 3,028. The cut leaves as much backdrop on the right as on the left.
+    crop: { left: 70, top: 0, width: 2950, height: 4000 },
   },
   { objectId: 36636, slug: 'a-girl-as-a-komuso', shortTitle: 'A Girl as a Komuso' },
   {

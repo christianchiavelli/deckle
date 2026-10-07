@@ -34,6 +34,7 @@ const work: Work = {
     height: 1600,
     originalWidth: 2820,
     originalHeight: 3561,
+    crop: null,
     sha256: 'a'.repeat(64),
     sourceUrl: 'https://images.metmuseum.org/CRDImages/dp/original/DP820348.jpg',
   },

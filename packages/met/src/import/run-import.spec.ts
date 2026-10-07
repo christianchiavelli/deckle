@@ -144,6 +144,39 @@ describe('runImport', () => {
     ]);
   });
 
+  it('sizes and masters only the crop where the curation cuts one, and records it', async () => {
+    const crop = { left: 20, top: 0, width: 240, height: 380 };
+    const works = [{ ...curation[0]!, crop }, curation[1]!];
+    const lines: string[] = [];
+    const result = await runImport({
+      client: fakeMet(records, originals).client,
+      curation: works,
+      dataDir,
+      cacheDir: join(dataDir, '.cache'),
+      master,
+      now: () => first,
+      log: (line) => lines.push(line),
+    });
+
+    const [durer, rhino] = result.catalog.works;
+    expect(durer!.image).toMatchObject({
+      width: 81,
+      height: 128,
+      originalWidth: 240,
+      originalHeight: 380,
+      crop,
+    });
+    expect(rhino!.image.crop).toBeNull();
+    expect(lines[0]).toContain('melencolia-i (336228): 240x380 of 300x380');
+  });
+
+  it('stops at a crop that runs past the original', async () => {
+    const works = [{ ...curation[0]!, crop: { left: 100, top: 0, width: 240, height: 380 } }];
+    await expect(run(fakeMet(records, originals), first, works)).rejects.toThrow(
+      'the crop runs past the 300x380 original',
+    );
+  });
+
   it('stops at a curated work that is not in the public domain, before downloading it', async () => {
     const letter = metObjectSchema.parse(theLetter);
     const met = fakeMet([...records, letter], originals);
