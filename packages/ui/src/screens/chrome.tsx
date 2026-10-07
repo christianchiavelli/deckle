@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Announcement } from '../sections/announcement.tsx';
 import { SiteFooter } from '../sections/site-footer.tsx';
 import { SiteHeader } from '../sections/site-header.tsx';
+import { suggestFromDataSet } from './suggest.ts';
 
 const Skip = styled.a`
   position: absolute;
@@ -58,6 +59,7 @@ export function Chrome({ current, announcement = true, cartCount = 1, children }
           label: 'Search',
           placeholder: 'Search prints, artists and techniques',
           shortcut: '/',
+          suggest: { source: suggestFromDataSet, label: 'Suggestions' },
         }}
         theme={{ label: 'Theme' }}
         account={{ label: 'Sign in with a passkey', href: '/sign-in' }}

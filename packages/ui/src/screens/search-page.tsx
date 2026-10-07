@@ -9,6 +9,7 @@ import { PageHead } from '../sections/page-head.tsx';
 import { PrintGrid, PrintTile } from '../sections/print-tile.tsx';
 import { Chrome } from './chrome.tsx';
 import { allWorks, imageOf, metaOf, priceLine, techniqueOf } from './fixtures.ts';
+import { suggestFromDataSet } from './suggest.ts';
 
 const Field = styled.div`
   inline-size: 100%;
@@ -85,6 +86,7 @@ export function SearchPage({ query }: SearchPageProps) {
               landmark="Search again"
               placeholder="Search prints, artists and techniques"
               defaultValue={query}
+              suggest={{ source: suggestFromDataSet, label: 'Suggestions' }}
             />
           </Field>
         </PageHead>

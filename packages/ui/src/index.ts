@@ -24,7 +24,14 @@ export { Logo, type LogoProps } from './components/logo/logo.tsx';
 export { Missing } from './components/missing/missing.tsx';
 export { Note, type NoteProps } from './components/note/note.tsx';
 export { Price, type PriceProps } from './components/price/price.tsx';
-export { SearchField, type SearchFieldProps } from './components/search-field/search-field.tsx';
+export {
+  SearchField,
+  type SearchFieldProps,
+  type SearchSuggestion,
+  type SearchSuggestionGroup,
+  type SearchSuggestions,
+  type SuggestionSource,
+} from './components/search-field/search-field.tsx';
 export {
   SizeOptions,
   type SizeOption,

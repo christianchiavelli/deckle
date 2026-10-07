@@ -36,3 +36,24 @@ export const NoResultsPhoneDark = meta.story({
   args: { query: 'Monet' },
   globals: { theme: 'dark', viewport: { value: 'phone' } },
 });
+
+/** On a phone the header's search icon leads here, and this field suggests as one types. */
+export const PhoneSuggesting = meta.story({
+  globals: { theme: 'light', viewport: { value: 'phone' } },
+  play: async ({ canvas, userEvent }) => {
+    const field = canvas.getByRole('combobox', { name: 'Search' });
+    await userEvent.clear(field);
+    await userEvent.type(field, 'hok');
+    await canvas.findByRole('option', { name: /^Katsushika Hokusai \d+ prints$/ });
+  },
+});
+
+export const PhoneSuggestingDark = meta.story({
+  globals: { theme: 'dark', viewport: { value: 'phone' } },
+  play: async ({ canvas, userEvent }) => {
+    const field = canvas.getByRole('combobox', { name: 'Search' });
+    await userEvent.clear(field);
+    await userEvent.type(field, 'wave');
+    await canvas.findByRole('option', { name: /^Under the Wave off Kanagawa/ });
+  },
+});
