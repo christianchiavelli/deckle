@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "include": ["src", "*.config.ts"]
+}

@@ -16,12 +16,13 @@ COPY package.json ./
 RUN corepack enable pnpm && corepack install
 
 # Dependencies first, from the manifests alone, so a source change reuses this layer.
-# Scripts wait for the sources: print-sizes and cache-tags compile in `prepare`.
+# Scripts wait for the sources: print-sizes, cache-tags and drops compile in `prepare`.
 COPY pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY patches/ patches/
 COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/print-sizes/package.json packages/print-sizes/
 COPY packages/cache-tags/package.json packages/cache-tags/
+COPY packages/drops/package.json packages/drops/
 COPY services/gateway/package.json services/gateway/
 RUN --mount=type=cache,id=deckle-pnpm-store,target=/pnpm/store \
     pnpm install --frozen-lockfile --ignore-scripts --store-dir /pnpm/store --filter "@deckle/gateway..."
@@ -29,6 +30,7 @@ RUN --mount=type=cache,id=deckle-pnpm-store,target=/pnpm/store \
 COPY packages/eslint-config/ packages/eslint-config/
 COPY packages/print-sizes/ packages/print-sizes/
 COPY packages/cache-tags/ packages/cache-tags/
+COPY packages/drops/ packages/drops/
 COPY services/gateway/ services/gateway/
 RUN pnpm --filter "@deckle/gateway..." run build
 

@@ -23,6 +23,7 @@
     "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
+    "@deckle/drops": "workspace:*",
     "@deckle/met": "workspace:*",
     "@deckle/print-sizes": "workspace:*",
     "@nestjs/common": "catalog:vendure",

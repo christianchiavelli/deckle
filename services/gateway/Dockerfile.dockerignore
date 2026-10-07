@@ -9,6 +9,7 @@
 !packages/eslint-config
 !packages/print-sizes
 !packages/cache-tags
+!packages/drops
 !services/gateway
 
 **/node_modules
