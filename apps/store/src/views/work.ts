@@ -70,9 +70,14 @@ export function limitedAcross(size: Pick<PaperOptionFragment, 'paper' | 'image'>
 /**
  * Why the next size up is missing, when the scan is what stops it: "A2 would
  * need 3,213 px across the image. The Met's scan has 2,820". Null when every
- * size is printed, or when the next one is missing for another reason.
+ * size is printed, or when the next one is missing for another reason. A page
+ * that has already given the scan's size says it shorter, in its own words.
  */
-export function tooSmallNote(work: Pick<Work, 'sizes' | 'image'>, copy: Copy): string | null {
+export function tooSmallNote(
+  work: Pick<Work, 'sizes' | 'image'>,
+  copy: Copy,
+  say: Copy['work']['tooSmall'] = copy.work.tooSmall,
+): string | null {
   const first = smallestFirst(work.sizes).find((size) => !size.available);
   if (
     !first ||
@@ -84,7 +89,7 @@ export function tooSmallNote(work: Pick<Work, 'sizes' | 'image'>, copy: Copy): s
   }
   const across = limitedAcross(first);
   const pixels = new Intl.NumberFormat(copy.locale);
-  return copy.work.tooSmall(
+  return say(
     first.size,
     pixels.format(first.requiredPixels),
     across ? 'across' : 'down',

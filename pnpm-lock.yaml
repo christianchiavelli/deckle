@@ -560,6 +560,9 @@ importers:
       '@deckle/cache-tags':
         specifier: workspace:*
         version: link:../../packages/cache-tags
+      '@deckle/print-sizes':
+        specifier: workspace:*
+        version: link:../../packages/print-sizes
       '@deckle/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -585,9 +588,6 @@ importers:
       '@deckle/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@deckle/print-sizes':
-        specifier: workspace:*
-        version: link:../../packages/print-sizes
       '@graphql-codegen/cli':
         specifier: 'catalog:'
         version: 7.4.4(@types/node@24.19.1)(graphql@16.14.2)(supports-color@7.2.0)(typescript@6.0.3)

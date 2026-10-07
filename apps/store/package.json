@@ -17,6 +17,7 @@
   "dependencies": {
     "@deckle/brand": "workspace:*",
     "@deckle/cache-tags": "workspace:*",
+    "@deckle/print-sizes": "workspace:*",
     "@deckle/tokens": "workspace:*",
     "@deckle/ui": "workspace:*",
     "next": "catalog:",
@@ -27,7 +28,6 @@
   },
   "devDependencies": {
     "@deckle/eslint-config": "workspace:*",
-    "@deckle/print-sizes": "workspace:*",
     "@graphql-codegen/cli": "catalog:",
     "@graphql-codegen/typed-document-node": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",

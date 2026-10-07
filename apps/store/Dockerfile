@@ -20,8 +20,8 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm fetch --store-dir /pnpm/store
 COPY tsconfig.base.json ./
 COPY packages/eslint-config packages/eslint-config
-# The design system, its tokens, the brand and the cache-tag vocabulary; the
-# sizing rule only for the store's own tests, which pnpm installs with it.
+# The design system, its tokens, the brand, the cache-tag vocabulary and the
+# sizing rule, which the page on how prints are sized reads.
 COPY packages/tokens packages/tokens
 COPY packages/brand packages/brand
 COPY packages/ui packages/ui

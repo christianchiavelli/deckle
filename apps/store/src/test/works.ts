@@ -1,5 +1,9 @@
 import { printOptions, type Pixels } from '@deckle/print-sizes';
-import type { PaperOptionFragment, PrintTileFragment } from '../gateway/generated';
+import type {
+  ListedWorkFragment,
+  PaperOptionFragment,
+  PrintTileFragment,
+} from '../gateway/generated';
 import type { Work } from '../views/work';
 
 /**
@@ -30,6 +34,7 @@ export const melencolia: Work = {
   title: 'Melencolia I',
   fullTitle: 'Melencolia I',
   date: '1514',
+  technique: 'Engravings',
   medium: 'Engraving',
   dimensions: ['Plate: 9 7/16 × 7 5/16 in. (24 × 18.5 cm)'],
   classification: 'Prints',
@@ -62,6 +67,7 @@ export const greatWave: Work = {
   slug: 'under-the-wave-off-kanagawa',
   title: 'Under the Wave off Kanagawa',
   date: 'ca. 1830–32',
+  technique: 'Woodblock prints',
   medium: 'Woodblock print; ink and color on paper',
   dimensions: ['10 1/8 x 14 15/16 in. (25.7 x 37.9 cm)'],
   department: 'Asian Art',
@@ -100,5 +106,17 @@ export function tileFrom(work: Work): PrintTileFragment {
     },
     priceFrom: sold[0]?.price ?? null,
     sizes: work.sizes.map(({ size, available }) => ({ size, available })),
+  };
+}
+
+/** A work as the catalogue lists it, from a work and the year it was begun. */
+export function listedFrom(work: Work, year: number | null): ListedWorkFragment {
+  return {
+    ...tileFrom(work),
+    year,
+    technique: work.technique,
+    fullTitle: work.fullTitle,
+    medium: work.medium,
+    culture: work.culture,
   };
 }

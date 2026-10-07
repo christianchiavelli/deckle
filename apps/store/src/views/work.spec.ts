@@ -88,6 +88,12 @@ describe('the sizes', () => {
     );
   });
 
+  it('says it shorter where the scan’s size has just been given', () => {
+    expect(tooSmallNote(melencolia, copy, copy.sizes.limit)).toBe(
+      'A2 would need 3,213 px across the image; the scan has 2,820.',
+    );
+  });
+
   it('says nothing when every size prints, or when the scan is not what stops one', () => {
     const everySize = melencolia.sizes.map((size) => ({
       ...size,
