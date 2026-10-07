@@ -67,6 +67,11 @@
 }
 
 @layer base {
+  /* The header is sticky: an anchor, or a link reached with Tab, lands below it, not under it. */
+  html {
+    scroll-padding-block-start: 4.5rem;
+  }
+
   body {
     background: var(--surface-page);
     color: var(--text-primary);
