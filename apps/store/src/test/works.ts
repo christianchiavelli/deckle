@@ -66,6 +66,8 @@ export const greatWave: Work = {
   ...melencolia,
   slug: 'under-the-wave-off-kanagawa',
   title: 'Under the Wave off Kanagawa',
+  fullTitle:
+    'Under the Wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave, from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)',
   date: 'ca. 1830–32',
   technique: 'Woodblock prints',
   medium: 'Woodblock print; ink and color on paper',
