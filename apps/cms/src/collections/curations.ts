@@ -68,12 +68,14 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
         type: 'text',
         hasMany: true,
         required: true,
+        // The gateway prices a curation's works at this many (CURATION_MAX_WORKS).
+        maxRows: 24,
         validate: validateSlugList,
         label: { en: 'Artworks', pt: 'Obras' },
         admin: {
           description: {
-            en: 'Artwork slugs, in the order the store shows them. Drag to reorder.',
-            pt: 'Slugs das obras, na ordem em que a loja as mostra. Arraste para reordenar.',
+            en: 'Artwork slugs, in the order the store shows them, 24 at most. Drag to reorder.',
+            pt: 'Slugs das obras, na ordem em que a loja as mostra, 24 no máximo. Arraste para reordenar.',
           },
         },
       },

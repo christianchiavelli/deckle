@@ -234,7 +234,7 @@ export interface Curation {
    */
   intro?: string | null;
   /**
-   * Artwork slugs, in the order the store shows them. Drag to reorder.
+   * Artwork slugs, in the order the store shows them, 24 at most. Drag to reorder.
    */
   artworks: string[];
   updatedAt: string;
