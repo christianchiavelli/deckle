@@ -17,7 +17,7 @@ Substrings also matched inside words, so "graph" found every lithograph, while a
 - **The edits a word may carry grow with it**: none up to three letters, where one changed letter makes another word ("wve" is not "wave"), one up to seven, two from eight. None in the first letter, where a typo is rare and allowing one matches words that only rhyme.
 - **Only a word no record holds may be a typo.** "witch" is the start of "witches", so it is taken as meant, and does not also find every "with" one letter away. "melancolia" is in no record, so it finds "melencolia".
 - **The closest come first**: a whole word before a start, a start before a typo, a title or a maker before a technique, and a technique before a medium or a culture; then, as before, the oldest.
-- **A search being typed reads its last word as a start that may carry one typo**, from six letters: "melanc" is on its way to "melencolia". Five letters are too few to tell a slip from another word: "monet" would find "monsters". The search page reads a submitted search, so this waits for suggestions as you type.
+- **The last word may still be being typed**, so from six letters it may be a start with one typo in it: "melanc" is on its way to "melencolia". Five letters are too few to tell a slip from another word: "monet" would find "monsters". At first only the suggestions read it so; ADR 0045 gives the search page the same reading, so their counts agree.
 
 ## Consequences
 

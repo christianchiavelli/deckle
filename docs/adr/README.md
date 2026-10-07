@@ -48,3 +48,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0042](0042-the-store-renders-from-tagged-reads.md) | The store renders on the server, from tagged reads of the gateway |
 | [0043](0043-the-store-browses-from-one-cached-catalogue.md) | The store browses from one cached catalogue |
 | [0044](0044-the-search-forgives-a-typo.md) | The search forgives a typo |
+| [0045](0045-the-search-suggests-as-one-types.md) | The search suggests as one types |

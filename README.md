@@ -6,7 +6,7 @@ Every work is offered only in the paper sizes its scan can hold at 240 ppi, so a
 
 Next.js 16 and React 19.3 in front, a NestJS 12 GraphQL gateway in the middle, Vendure 3.7 and Payload 3 behind it, all on Postgres 18.
 
-> The store is being built page by page, each from a design approved first. Today it serves the front page, every work's page, the prints with their filters, the collections, the journal, the search and the page on how prints are sized; the cart and the drops come next.
+> The store is being built page by page, each from a design approved first. Today it serves the front page, every work's page, the prints with their filters, the collections, the journal, a search that forgives a typo and suggests as you type, and the page on how prints are sized; the cart and the drops come next.
 
 ---
 
