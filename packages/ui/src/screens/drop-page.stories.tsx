@@ -51,3 +51,26 @@ export const HeldForYouPhone = meta.story({
   args: { state: 'held' },
   globals: { theme: 'dark', viewport: { value: 'phone' } },
 });
+
+/** "Claim a copy" while signed out: a passkey first, made here or used again. */
+export const SignIn = meta.story({
+  args: { signIn: 'ask' },
+  globals: { theme: 'light', viewport: { value: 'desktop' } },
+  play: async ({ canvas }) => {
+    const dialog = await canvas.findByRole('dialog', { name: 'Claim with a passkey' });
+    await expect(dialog).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Use my passkey' })).toHaveFocus();
+  },
+});
+
+/** The device's own prompt is up: both ways wait, and the dialog says so. */
+export const SignInWaitingPhoneDark = meta.story({
+  args: { signIn: 'waiting' },
+  globals: { theme: 'dark', viewport: { value: 'phone' } },
+});
+
+/** The device gave up, or there was no passkey for Deckle on it. */
+export const SignInFailed = meta.story({
+  args: { signIn: 'failed' },
+  globals: { theme: 'light', viewport: { value: 'phone' } },
+});

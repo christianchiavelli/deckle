@@ -35,11 +35,19 @@ export interface ChromeProps {
   /** The bar above the header, about the next drop. Not on the drop's own page. */
   announcement?: boolean;
   cartCount?: number;
+  /** A sheet under the header, such as what was just added to the cart. */
+  notice?: ReactNode;
   children: ReactNode;
 }
 
 /** What every page of the store shares: the skip link, the bars at the top, the footer. */
-export function Chrome({ current, announcement = true, cartCount = 1, children }: ChromeProps) {
+export function Chrome({
+  current,
+  announcement = true,
+  cartCount = 1,
+  notice,
+  children,
+}: ChromeProps) {
   return (
     <>
       <Skip href="#main">Skip to content</Skip>
@@ -69,6 +77,7 @@ export function Chrome({ current, announcement = true, cartCount = 1, children }
           count: cartCount,
         }}
         menu={{ open: 'Menu', close: 'Close the menu' }}
+        notice={notice}
       />
       <main id="main">{children}</main>
       <SiteFooter

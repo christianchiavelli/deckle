@@ -7,6 +7,7 @@ import { Note } from '../components/note/note.tsx';
 import { Price } from '../components/price/price.tsx';
 import { SizeOptions } from '../components/size-options/size-options.tsx';
 import { TextLink } from '../components/text-link/text-link.tsx';
+import { AddedToCart } from '../sections/added-to-cart.tsx';
 import { Band, SectionHead } from '../sections/band.tsx';
 import {
   Assurances,
@@ -65,13 +66,38 @@ const more = [
 ];
 
 /** A work's page, Melencolia I: the print and how to buy it, its edition, its story and record. */
-export function WorkPage() {
+export interface WorkPageProps {
+  /** Just after "Add to cart": the print, beside the cart it went into. */
+  added?: boolean;
+}
+
+export function WorkPage({ added = false }: WorkPageProps) {
   const melencolia = work('melencolia-i');
   const image = imageOf(melencolia);
   const scan = scanOf(melencolia);
 
   return (
-    <Chrome current="prints">
+    <Chrome
+      current="prints"
+      cartCount={added ? 2 : 1}
+      notice={
+        added && (
+          <AddedToCart
+            id="added-title"
+            title="Added to your cart"
+            print={{
+              image: imageOf(melencolia),
+              title: melencolia.shortTitle,
+              detail: 'A3, unframed · $90',
+            }}
+            summary="2 prints in your cart · $180"
+            cart={{ href: '/cart', label: 'View cart' }}
+            checkout={{ href: '/checkout', label: 'Check out' }}
+            close={{ label: 'Close' }}
+          />
+        )
+      }
+    >
       <Product aria-labelledby="work-title">
         <Breadcrumbs
           label="Breadcrumb"

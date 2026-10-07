@@ -1,6 +1,6 @@
 import { tokens as t } from '@deckle/tokens';
 import preview from '#storybook/preview';
-import { TextLink } from './text-link.tsx';
+import { TextButton, TextLink } from './text-link.tsx';
 
 const meta = preview.meta({
   title: 'Components/Text link',
@@ -40,4 +40,9 @@ export const OnFeature = meta.story({
       </div>
     ),
   ],
+});
+
+/** An action that reads as a link, beside the one a page leads to: a cart line's "Remove". */
+export const AsButton = meta.story({
+  render: () => <TextButton>Remove</TextButton>,
 });

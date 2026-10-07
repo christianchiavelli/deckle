@@ -81,6 +81,9 @@ export const icons = {
   /** Two rules, not three: the menu on a phone. */
   menu: <path d="M4 9h16M4 15h16" />,
   close: <path d="m6.5 6.5 11 11M17.5 6.5l-11 11" />,
+  /** One fewer and one more, on a cart line. */
+  minus: <path d="M6 12h12" />,
+  plus: <path d="M12 6v12M6 12h12" />,
 };
 
 export type IconName = keyof typeof icons;

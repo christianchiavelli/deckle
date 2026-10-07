@@ -1,5 +1,5 @@
 import { media, tokens as t } from '@deckle/tokens';
-import { useId } from 'react';
+import { type ReactNode, useId } from 'react';
 import styled from 'styled-components';
 import { Icon } from '../components/icon/icon.tsx';
 import { IconButton, IconLink } from '../components/icon-button/icon-button.tsx';
@@ -193,13 +193,24 @@ export interface SiteHeaderProps {
   /** Left out while a shop has no cart. */
   cart?: { label: string; href: string; count: number };
   menu: { open: string; close: string };
+  /** A sheet laid under the bar, such as what was just added to the cart: it follows the bar as it sticks. */
+  notice?: ReactNode;
 }
 
 /**
  * The bar at the top of every page, sticky. On a laptop it shows everything;
  * on a phone the logo, search and cart stay, and the rest opens as a sheet.
  */
-export function SiteHeader({ home, nav, search, theme, account, cart, menu }: SiteHeaderProps) {
+export function SiteHeader({
+  home,
+  nav,
+  search,
+  theme,
+  account,
+  cart,
+  menu,
+  notice,
+}: SiteHeaderProps) {
   const menuId = useId();
   const links = (inSheet: boolean) =>
     nav.items.map((item) => (
@@ -267,6 +278,7 @@ export function SiteHeader({ home, nav, search, theme, account, cart, menu }: Si
           </SheetLinks>
         </SheetBody>
       </Sheet>
+      {notice}
     </Bar>
   );
 }

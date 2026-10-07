@@ -12,6 +12,13 @@ export {
   type ButtonVariant,
 } from './components/button/button.tsx';
 export { Chip, type ChipProps, type ChipTone } from './components/chip/chip.tsx';
+export {
+  SelectField,
+  type SelectFieldProps,
+  type SelectOption,
+  TextField,
+  type TextFieldProps,
+} from './components/field/field.tsx';
 export { Icon, type IconProps, type IconSize } from './components/icon/icon.tsx';
 export { iconNames, type IconName } from './components/icon/icons.tsx';
 export {
@@ -24,6 +31,7 @@ export { Logo, type LogoProps } from './components/logo/logo.tsx';
 export { Missing } from './components/missing/missing.tsx';
 export { Note, type NoteProps } from './components/note/note.tsx';
 export { Price, type PriceProps } from './components/price/price.tsx';
+export { Quantity, type QuantityProps } from './components/quantity/quantity.tsx';
 export {
   SearchField,
   type SearchFieldProps,
@@ -38,6 +46,8 @@ export {
   type SizeOptionsProps,
 } from './components/size-options/size-options.tsx';
 export {
+  TextButton,
+  type TextButtonProps,
   TextLink,
   type TextLinkProps,
   type TextLinkTone,
@@ -46,6 +56,7 @@ export { VisuallyHidden, visuallyHidden } from './components/visually-hidden/vis
 
 // Sections: the bands a page is built from. The screens under src/screens
 // compose them with fixture data for review, and are not exported.
+export { AddedToCart, type AddedToCartProps } from './sections/added-to-cart.tsx';
 export { Announcement, type AnnouncementProps } from './sections/announcement.tsx';
 export {
   Band,
@@ -65,9 +76,28 @@ export {
   WorkHeading,
   type WorkHeadingProps,
 } from './sections/buy-box.tsx';
+export {
+  CartLine,
+  type CartLineProps,
+  CartLines,
+  OrderSummary,
+  type OrderSummaryProps,
+  type SummaryRow,
+} from './sections/cart.tsx';
+export {
+  CheckoutForm,
+  ChoiceCard,
+  type ChoiceCardProps,
+  FieldPair,
+  FormSection,
+  type FormSectionProps,
+  PanelNote,
+  type PanelNoteProps,
+} from './sections/checkout.tsx';
 export { CollectionRow, type CollectionRowProps } from './sections/collection-row.tsx';
 export { type Detail, placement } from './sections/detail.ts';
 export { DetailImage, type DetailImageProps } from './sections/detail-image.tsx';
+export { DropRow, type DropRowProps } from './sections/drop-row.tsx';
 export {
   Copies,
   CopiesKey,
@@ -88,6 +118,11 @@ export {
   type FiltersProps,
 } from './sections/filters.tsx';
 export { PageHead, type PageHeadProps } from './sections/page-head.tsx';
+export {
+  PasskeyDialog,
+  type PasskeyDialogProps,
+  type PasskeyStep,
+} from './sections/passkey-dialog.tsx';
 export { PrintGrid, PrintTile, type PrintTileProps } from './sections/print-tile.tsx';
 export { Record, type RecordEntry, type RecordProps } from './sections/record.tsx';
 export { type FooterColumn, SiteFooter, type SiteFooterProps } from './sections/site-footer.tsx';

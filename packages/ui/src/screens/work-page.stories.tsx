@@ -36,3 +36,14 @@ export const PhoneMenu = meta.story({
     await expect(canvas.getAllByRole('link', { name: /^Drops/ }).at(-1)).toBeVisible();
   },
 });
+
+/** Just after "Add to cart": the print, beside the cart it went into, and the two ways on. */
+export const DesktopAdded = meta.story({
+  args: { added: true },
+  globals: { theme: 'light', viewport: { value: 'desktop' } },
+});
+
+export const PhoneAddedDark = meta.story({
+  args: { added: true },
+  globals: { theme: 'dark', viewport: { value: 'phone' } },
+});

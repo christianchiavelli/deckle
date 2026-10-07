@@ -16,6 +16,7 @@ import { Record } from '../sections/record.tsx';
 import { Stage } from '../sections/stage.tsx';
 import { Steps } from '../sections/steps.tsx';
 import { typeRole } from '../theme/type.ts';
+import { type PasskeyStep, PasskeyDialog } from '../sections/passkey-dialog.tsx';
 import { Chrome } from './chrome.tsx';
 import { copyWords } from './edition-band.tsx';
 import { imageOf, pixels, scanOf, work } from './fixtures.ts';
@@ -131,7 +132,13 @@ for (const copy of [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 21])
 }
 
 /** A drop's page: the numbered edition of Melencolia I, before it opens, open, or held for you. */
-export function DropPage({ state }: { state: DropState }) {
+export interface DropPageProps {
+  state: DropState;
+  /** "Claim a copy" pressed while signed out: the way in, at one of its steps. */
+  signIn?: PasskeyStep;
+}
+
+export function DropPage({ state, signIn }: DropPageProps) {
   const melencolia = work('melencolia-i');
   const image = imageOf(melencolia);
   const scan = scanOf(melencolia);
@@ -147,6 +154,21 @@ export function DropPage({ state }: { state: DropState }) {
 
   return (
     <Chrome current="drops" announcement={false}>
+      {signIn && (
+        <PasskeyDialog
+          id="passkey-title"
+          open
+          step={signIn}
+          title="Claim with a passkey"
+          text="A copy is one per person, so a drop asks who you are: with a passkey your device keeps, made once here or used again."
+          use="Use my passkey"
+          make="Make a passkey"
+          waiting="Waiting for your device…"
+          failed="Your device did not answer. Try again, or make a passkey if this device has none for Deckle."
+          small="Deckle keeps only the passkey’s public half. Your face, finger or PIN stay on your device."
+          close="Close"
+        />
+      )}
       <Band tone="feature" aria-labelledby="drop-title">
         <Grid>
           <Copy>
