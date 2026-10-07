@@ -1,0 +1,31 @@
+# The three scans the sizing page explains sizes with.
+query Sizing($first: String!, $second: String!, $third: String!) {
+  first: artwork(slug: $first) {
+    ...SizedWork
+  }
+  second: artwork(slug: $second) {
+    ...SizedWork
+  }
+  third: artwork(slug: $third) {
+    ...SizedWork
+  }
+}
+
+fragment SizedWork on Artwork {
+  slug
+  title
+  date
+  artist {
+    name
+  }
+  image {
+    url
+    width
+    height
+    scanWidth
+    scanHeight
+  }
+  sizes {
+    ...PaperOption
+  }
+}

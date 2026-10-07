@@ -5,6 +5,7 @@ query Work($slug: String!) {
     title
     fullTitle
     date
+    technique
     medium
     dimensions
     classification

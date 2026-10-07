@@ -1,0 +1,28 @@
+# The editor's collections, with what a list of them shows: each work's picture.
+query Curations {
+  curations {
+    slug
+    title
+    intro
+    artworks {
+      slug
+      image {
+        url
+        width
+        height
+      }
+    }
+  }
+}
+
+# One collection's works, as tiles.
+query Curation($slug: String!) {
+  curation(slug: $slug) {
+    slug
+    title
+    intro
+    artworks {
+      ...PrintTile
+    }
+  }
+}

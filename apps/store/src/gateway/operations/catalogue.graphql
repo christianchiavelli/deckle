@@ -1,10 +1,11 @@
-# The whole catalogue as tiles, for the lists a page draws from it.
+# The whole catalogue, for the lists a page draws from it: the prints page
+# filters and orders it, and the search looks through it.
 query Catalogue {
   artworks(first: 48) {
     totalCount
     edges {
       node {
-        ...PrintTile
+        ...ListedWork
       }
     }
   }

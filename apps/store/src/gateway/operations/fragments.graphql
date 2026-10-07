@@ -50,3 +50,13 @@ fragment Run on TextRun {
   italic
   href
 }
+
+# A work as a list keeps it: its tile, and what the list filters, orders and searches by.
+fragment ListedWork on Artwork {
+  ...PrintTile
+  year
+  technique
+  fullTitle
+  medium
+  culture
+}

@@ -1,9 +1,13 @@
-import { CATALOG, curationTag, workTags } from '@deckle/cache-tags';
+import { CATALOG, CURATIONS, curationTag, STORIES, workTags } from '@deckle/cache-tags';
 import { cacheLife, cacheTag } from 'next/cache';
 import { serverEnv } from '../server-env';
 import {
   CatalogueDocument,
+  CurationDocument,
+  CurationsDocument,
   HomeDocument,
+  JournalDocument,
+  SizingDocument,
   type TypedDocumentString,
   WorkDocument,
 } from './generated';
@@ -19,6 +23,16 @@ import { requestGateway } from './request';
  * route parameter to wait for calls `connection()` first, so it renders at
  * request time and its reads come from this cache.
  */
+
+/**
+ * The three scans the sizing page explains sizes with: one that stops at A4,
+ * one at A3 and one that reaches A2.
+ */
+export const SIZING_EXAMPLES = {
+  first: 'knight-death-and-the-devil',
+  second: 'melencolia-i',
+  third: 'mill-river-scenery',
+} as const;
 
 /** The works the front page is drawn around: the approved design's choices. */
 export const FRONT_PAGE = {
@@ -61,4 +75,31 @@ export async function readWork(slug: string) {
   'use cache';
   cacheTag(...workTags(slug));
   return ask(WorkDocument, { slug });
+}
+
+/** Every work and its story: a story added, changed or removed anywhere drops it. */
+export async function readJournal() {
+  'use cache';
+  cacheTag(CATALOG, STORIES);
+  return ask(JournalDocument, {});
+}
+
+/** The editor's collections, each work as its picture. */
+export async function readCurations() {
+  'use cache';
+  cacheTag(CATALOG, CURATIONS);
+  return ask(CurationsDocument, {});
+}
+
+/** One collection, its works as tiles. */
+export async function readCuration(slug: string) {
+  'use cache';
+  cacheTag(CATALOG, curationTag(slug));
+  return ask(CurationDocument, { slug });
+}
+
+export async function readSizing() {
+  'use cache';
+  cacheTag(CATALOG);
+  return ask(SizingDocument, SIZING_EXAMPLES);
 }

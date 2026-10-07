@@ -20,13 +20,27 @@ export type PrintSizeUnavailableReason =
 export type CatalogueQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CatalogueQuery = { artworks: { totalCount: number, edges: Array<{ node: { slug: string, title: string, date: string | null, department: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number } | null, priceFrom: { amount: number, currencyCode: string } | null, sizes: Array<{ size: PaperSize, available: boolean }> } }> } };
+export type CatalogueQuery = { artworks: { totalCount: number, edges: Array<{ node: { year: number | null, technique: string | null, fullTitle: string, medium: string | null, culture: string | null, slug: string, title: string, date: string | null, department: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number } | null, priceFrom: { amount: number, currencyCode: string } | null, sizes: Array<{ size: PaperSize, available: boolean }> } }> } };
+
+export type CurationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurationsQuery = { curations: Array<{ slug: string, title: string, intro: string | null, artworks: Array<{ slug: string, image: { url: string, width: number, height: number } | null }> }> };
+
+export type CurationQueryVariables = Exact<{
+  slug: string;
+}>;
+
+
+export type CurationQuery = { curation: { slug: string, title: string, intro: string | null, artworks: Array<{ slug: string, title: string, date: string | null, department: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number } | null, priceFrom: { amount: number, currencyCode: string } | null, sizes: Array<{ size: PaperSize, available: boolean }> }> } | null };
 
 export type PrintTileFragment = { slug: string, title: string, date: string | null, department: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number } | null, priceFrom: { amount: number, currencyCode: string } | null, sizes: Array<{ size: PaperSize, available: boolean }> };
 
 export type PaperOptionFragment = { size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null };
 
 export type RunFragment = { text: string, bold: boolean, italic: boolean, href: string | null };
+
+export type ListedWorkFragment = { year: number | null, technique: string | null, fullTitle: string, medium: string | null, culture: string | null, slug: string, title: string, date: string | null, department: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number } | null, priceFrom: { amount: number, currencyCode: string } | null, sizes: Array<{ size: PaperSize, available: boolean }> };
 
 export type HomeQueryVariables = Exact<{
   curation: string;
@@ -37,12 +51,28 @@ export type HomeQueryVariables = Exact<{
 
 export type HomeQuery = { curation: { slug: string, title: string, artworks: Array<{ slug: string, title: string, date: string | null, department: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number } | null, priceFrom: { amount: number, currencyCode: string } | null, sizes: Array<{ size: PaperSize, available: boolean }> }> } | null, hero: { slug: string, title: string, date: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number } | null } | null, sizing: { slug: string, title: string, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }> } | null };
 
+export type JournalQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JournalQuery = { artworks: { edges: Array<{ node: { slug: string, title: string, image: { url: string, width: number, height: number } | null, story: { title: string, lede: string | null, updatedAt: string, detail: { x: number, y: number, zoom: number } | null } | null } }> } };
+
+export type SizingQueryVariables = Exact<{
+  first: string;
+  second: string;
+  third: string;
+}>;
+
+
+export type SizingQuery = { first: { slug: string, title: string, date: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }> } | null, second: { slug: string, title: string, date: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }> } | null, third: { slug: string, title: string, date: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }> } | null };
+
+export type SizedWorkFragment = { slug: string, title: string, date: string | null, artist: { name: string } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }> };
+
 export type WorkQueryVariables = Exact<{
   slug: string;
 }>;
 
 
-export type WorkQuery = { artwork: { slug: string, title: string, fullTitle: string, date: string | null, medium: string | null, dimensions: Array<string>, classification: string | null, department: string | null, culture: string | null, period: string | null, creditLine: string | null, accessionNumber: string | null, museumUrl: string, artist: { name: string, bio: string | null, nationality: string | null, beginYear: number | null, endYear: number | null } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }>, story: { title: string, lede: string | null, blocks: Array<
+export type WorkQuery = { artwork: { slug: string, title: string, fullTitle: string, date: string | null, technique: string | null, medium: string | null, dimensions: Array<string>, classification: string | null, department: string | null, culture: string | null, period: string | null, creditLine: string | null, accessionNumber: string | null, museumUrl: string, artist: { name: string, bio: string | null, nationality: string | null, beginYear: number | null, endYear: number | null } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }>, story: { title: string, lede: string | null, blocks: Array<
         | { __typename: 'HeadingBlock', level: number, text: Array<{ text: string, bold: boolean, italic: boolean, href: string | null }> }
         | { __typename: 'ParagraphBlock', text: Array<{ text: string, bold: boolean, italic: boolean, href: string | null }> }
         | { __typename: 'QuoteBlock', text: Array<{ text: string, bold: boolean, italic: boolean, href: string | null }> }
@@ -66,6 +96,14 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
+export const RunFragmentDoc = new TypedDocumentString(`
+    fragment Run on TextRun {
+  text
+  bold
+  italic
+  href
+}
+    `, {"fragmentName":"Run"}) as unknown as TypedDocumentString<RunFragment, unknown>;
 export const PrintTileFragmentDoc = new TypedDocumentString(`
     fragment PrintTile on Artwork {
   slug
@@ -90,6 +128,37 @@ export const PrintTileFragmentDoc = new TypedDocumentString(`
   }
 }
     `, {"fragmentName":"PrintTile"}) as unknown as TypedDocumentString<PrintTileFragment, unknown>;
+export const ListedWorkFragmentDoc = new TypedDocumentString(`
+    fragment ListedWork on Artwork {
+  ...PrintTile
+  year
+  technique
+  fullTitle
+  medium
+  culture
+}
+    fragment PrintTile on Artwork {
+  slug
+  title
+  date
+  department
+  artist {
+    name
+  }
+  image {
+    url
+    width
+    height
+  }
+  priceFrom {
+    amount
+    currencyCode
+  }
+  sizes {
+    size
+    available
+  }
+}`, {"fragmentName":"ListedWork"}) as unknown as TypedDocumentString<ListedWorkFragment, unknown>;
 export const PaperOptionFragmentDoc = new TypedDocumentString(`
     fragment PaperOption on PrintSize {
   size
@@ -112,21 +181,52 @@ export const PaperOptionFragmentDoc = new TypedDocumentString(`
   }
 }
     `, {"fragmentName":"PaperOption"}) as unknown as TypedDocumentString<PaperOptionFragment, unknown>;
-export const RunFragmentDoc = new TypedDocumentString(`
-    fragment Run on TextRun {
-  text
-  bold
-  italic
-  href
+export const SizedWorkFragmentDoc = new TypedDocumentString(`
+    fragment SizedWork on Artwork {
+  slug
+  title
+  date
+  artist {
+    name
+  }
+  image {
+    url
+    width
+    height
+    scanWidth
+    scanHeight
+  }
+  sizes {
+    ...PaperOption
+  }
 }
-    `, {"fragmentName":"Run"}) as unknown as TypedDocumentString<RunFragment, unknown>;
+    fragment PaperOption on PrintSize {
+  size
+  available
+  ppi
+  requiredPixels
+  unavailableReason
+  variantId
+  paper {
+    width
+    height
+  }
+  image {
+    width
+    height
+  }
+  price {
+    amount
+    currencyCode
+  }
+}`, {"fragmentName":"SizedWork"}) as unknown as TypedDocumentString<SizedWorkFragment, unknown>;
 export const CatalogueDocument = new TypedDocumentString(`
     query Catalogue {
   artworks(first: 48) {
     totalCount
     edges {
       node {
-        ...PrintTile
+        ...ListedWork
       }
     }
   }
@@ -152,7 +252,65 @@ export const CatalogueDocument = new TypedDocumentString(`
     size
     available
   }
+}
+fragment ListedWork on Artwork {
+  ...PrintTile
+  year
+  technique
+  fullTitle
+  medium
+  culture
 }`) as unknown as TypedDocumentString<CatalogueQuery, CatalogueQueryVariables>;
+export const CurationsDocument = new TypedDocumentString(`
+    query Curations {
+  curations {
+    slug
+    title
+    intro
+    artworks {
+      slug
+      image {
+        url
+        width
+        height
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<CurationsQuery, CurationsQueryVariables>;
+export const CurationDocument = new TypedDocumentString(`
+    query Curation($slug: String!) {
+  curation(slug: $slug) {
+    slug
+    title
+    intro
+    artworks {
+      ...PrintTile
+    }
+  }
+}
+    fragment PrintTile on Artwork {
+  slug
+  title
+  date
+  department
+  artist {
+    name
+  }
+  image {
+    url
+    width
+    height
+  }
+  priceFrom {
+    amount
+    currencyCode
+  }
+  sizes {
+    size
+    available
+  }
+}`) as unknown as TypedDocumentString<CurationQuery, CurationQueryVariables>;
 export const HomeDocument = new TypedDocumentString(`
     query Home($curation: String!, $hero: String!, $sizing: String!) {
   curation(slug: $curation) {
@@ -232,6 +390,83 @@ fragment PaperOption on PrintSize {
     currencyCode
   }
 }`) as unknown as TypedDocumentString<HomeQuery, HomeQueryVariables>;
+export const JournalDocument = new TypedDocumentString(`
+    query Journal {
+  artworks(first: 48) {
+    edges {
+      node {
+        slug
+        title
+        image {
+          url
+          width
+          height
+        }
+        story {
+          title
+          lede
+          updatedAt
+          detail {
+            x
+            y
+            zoom
+          }
+        }
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<JournalQuery, JournalQueryVariables>;
+export const SizingDocument = new TypedDocumentString(`
+    query Sizing($first: String!, $second: String!, $third: String!) {
+  first: artwork(slug: $first) {
+    ...SizedWork
+  }
+  second: artwork(slug: $second) {
+    ...SizedWork
+  }
+  third: artwork(slug: $third) {
+    ...SizedWork
+  }
+}
+    fragment PaperOption on PrintSize {
+  size
+  available
+  ppi
+  requiredPixels
+  unavailableReason
+  variantId
+  paper {
+    width
+    height
+  }
+  image {
+    width
+    height
+  }
+  price {
+    amount
+    currencyCode
+  }
+}
+fragment SizedWork on Artwork {
+  slug
+  title
+  date
+  artist {
+    name
+  }
+  image {
+    url
+    width
+    height
+    scanWidth
+    scanHeight
+  }
+  sizes {
+    ...PaperOption
+  }
+}`) as unknown as TypedDocumentString<SizingQuery, SizingQueryVariables>;
 export const WorkDocument = new TypedDocumentString(`
     query Work($slug: String!) {
   artwork(slug: $slug) {
@@ -239,6 +474,7 @@ export const WorkDocument = new TypedDocumentString(`
     title
     fullTitle
     date
+    technique
     medium
     dimensions
     classification

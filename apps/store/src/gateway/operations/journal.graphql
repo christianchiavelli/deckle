@@ -1,0 +1,26 @@
+# Every work with its story, for the journal and the front page's band of stories.
+query Journal {
+  artworks(first: 48) {
+    edges {
+      node {
+        slug
+        title
+        image {
+          url
+          width
+          height
+        }
+        story {
+          title
+          lede
+          updatedAt
+          detail {
+            x
+            y
+            zoom
+          }
+        }
+      }
+    }
+  }
+}
