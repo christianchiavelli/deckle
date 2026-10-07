@@ -128,6 +128,8 @@ export function Filters({ id, label, groups, unit }: FiltersProps) {
                   <li key={option.href}>
                     <Option href={option.href} aria-current={option.current ? 'true' : undefined}>
                       {option.label}
+                      {/* A space for the accessible name, "Etchings 8 prints"; the gap lays it out. */}
+                      {option.count !== undefined && ' '}
                       {option.count !== undefined && (
                         <Count>
                           {option.count}
