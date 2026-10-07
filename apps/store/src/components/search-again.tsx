@@ -1,9 +1,7 @@
-'use client';
-
 import { SearchField } from '@deckle/ui';
 import { copy } from '../copy';
 
-/** The search page's own field, holding what was searched for. A client component: it needs `useId`. */
+/** The search page's own field, holding what was searched for. */
 export function SearchAgain({ query }: { query: string }) {
   return (
     <SearchField
