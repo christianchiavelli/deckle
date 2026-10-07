@@ -65,6 +65,7 @@ export function Chrome({ current, children }: ChromeProps) {
           shortcut: '/',
         }}
         themeLabel={chrome.theme}
+        suggestionsLabel={copy.search.suggest.label}
         menu={{ open: chrome.menuOpen, close: chrome.menuClose }}
       />
       <main id="main">{children}</main>

@@ -81,7 +81,13 @@ async function Search({ searchParams }: Pick<PageProps<'/search'>, 'searchParams
     <Band aria-labelledby="search-title">
       <PageHead id="search-title" title={title}>
         <Field>
-          <SearchAgain query={query} />
+          <SearchAgain
+            query={query}
+            label={copy.chrome.search}
+            landmark={text.again}
+            placeholder={copy.chrome.searchPlaceholder}
+            suggestions={text.suggest.label}
+          />
         </Field>
       </PageHead>
 
