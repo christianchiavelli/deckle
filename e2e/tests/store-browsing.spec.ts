@@ -173,13 +173,55 @@ test.describe('how prints are sized', () => {
 test.describe('the search', () => {
   test('takes the key its hint shows, from anywhere on the page', async ({ page }) => {
     await page.goto(`${store}/prints`);
-    const field = page.getByRole('banner').getByRole('searchbox');
+    const field = page.getByRole('banner').getByRole('combobox', { name: 'Search' });
     // The key is heard once the header has hydrated; until then it is the page's.
     await expect(async () => {
       await page.keyboard.press('/');
       await expect(field).toBeFocused({ timeout: 250 });
     }).toPass();
     await expect(field).toHaveValue('');
+  });
+
+  test('suggests as one types, and opens the one the arrow keys reach', async ({ page }) => {
+    await page.goto(`${store}/prints`);
+    const field = page.getByRole('banner').getByRole('combobox', { name: 'Search' });
+    const maker = page.getByRole('option', { name: 'Albrecht Dürer 4 prints' });
+    // Typed before the header hydrates, a search suggests nothing: type again until it does.
+    await expect(async () => {
+      await field.fill('');
+      await field.pressSequentially('dur');
+      await expect(maker).toBeVisible({ timeout: 1000 });
+    }).toPass();
+    await expect(page.getByRole('group', { name: 'Prints' }).getByRole('option')).toHaveCount(4);
+    await expect(page.getByRole('option', { name: 'All 4 prints for “dur”' })).toHaveAttribute(
+      'href',
+      '/search?q=dur',
+    );
+    await expectAccessible(page);
+
+    await field.press('ArrowDown');
+    await expect(maker).toHaveAttribute('aria-selected', 'true');
+    await expect(field).toHaveAttribute('aria-activedescendant', (await maker.getAttribute('id'))!);
+    await field.press('ArrowDown');
+    await field.press('Enter');
+    await expect(page).toHaveURL(/\/prints\/knight-death-and-the-devil$/);
+  });
+
+  test('suggests through a typo, and closes on Escape', async ({ page }) => {
+    await page.goto(`${store}/journal`);
+    const field = page.getByRole('banner').getByRole('combobox', { name: 'Search' });
+    const work = page.getByRole('option', { name: 'Melencolia I Albrecht Dürer, 1514' });
+    await expect(async () => {
+      await field.fill('');
+      await field.pressSequentially('melanc');
+      await expect(work).toBeVisible({ timeout: 1000 });
+    }).toPass();
+    await expect(work.locator('img')).toHaveAttribute('src', /preset=thumb/);
+
+    await field.press('Escape');
+    await expect(field).toHaveAttribute('aria-expanded', 'false');
+    await expect(work).toBeHidden();
+    await expect(field).toHaveValue('melanc');
   });
 
   test('forgives a typo, and finds a word by its start', async ({ page }) => {
@@ -191,12 +233,13 @@ test.describe('the search', () => {
 
   test('finds a maker without the accent, and says so when nothing matches', async ({ page }) => {
     await page.goto(`${store}/`);
-    await page.getByRole('searchbox').first().fill('durer');
-    await page.getByRole('searchbox').first().press('Enter');
+    const field = page.getByRole('banner').getByRole('combobox', { name: 'Search' });
+    await field.fill('durer');
+    await field.press('Enter');
     await expect(page).toHaveURL(/\/search\?q=durer$/);
     await expect(page.getByText('4 prints', { exact: true })).toBeVisible();
 
-    const again = page.getByRole('search', { name: 'Search again' }).getByRole('searchbox');
+    const again = page.getByRole('search', { name: 'Search again' }).getByRole('combobox');
     await expect(again).toHaveValue('durer');
     await again.fill('monet');
     await again.press('Enter');
