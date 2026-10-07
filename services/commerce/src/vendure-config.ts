@@ -167,8 +167,10 @@ export function createVendureConfig(env: CommerceEnv, options: ConfigOptions): V
         route: 'assets',
         assetUploadDir: options.assetsDir ?? paths.assets,
         assetUrlPrefix: env.ASSET_URL_PREFIX,
-        // The masters are 2,400 px on their long side; `zoom` serves them whole.
+        // The masters are 2,400 px on their long side; `zoom` serves them whole,
+        // and `thumb` is a search suggestion's, sharp at twice its 44 px.
         presets: [
+          { name: 'thumb', width: 160, height: 160, mode: 'resize' },
           { name: 'card', width: 640, height: 640, mode: 'resize' },
           { name: 'page', width: 1280, height: 1280, mode: 'resize' },
           { name: 'zoom', width: 2400, height: 2400, mode: 'resize' },
