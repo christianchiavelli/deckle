@@ -47,8 +47,6 @@ export function slugify(text: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-const sentenceCase = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
-
 /**
  * The technique families a buyer browses by, each with the pattern that finds
  * it in The Met's medium. The first match wins, and the medium is read from its

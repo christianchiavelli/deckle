@@ -118,7 +118,7 @@ export async function runImport(options: ImportOptions): Promise<ImportResult> {
     const largest = availableSizes(scan).at(-1)?.size ?? 'no size';
     log(
       `${index + 1}/${curation.length} ${label}: ${scan.width}x${scan.height}` +
-        `${crop === null ? '' : ` of ${header.width}x${header.height}`}` +
+        (crop === null ? '' : ` of ${header.width}x${header.height}`) +
         `${original.downloaded ? ' (downloaded)' : ''}, prints up to ${largest}; ` +
         `master ${encoded.width}x${encoded.height}, ${Math.round(encoded.data.length / 1024)} KiB`,
     );
