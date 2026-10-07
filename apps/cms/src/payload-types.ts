@@ -196,6 +196,17 @@ export interface Story {
     [k: string]: unknown;
   };
   /**
+   * The part of the print the story’s card shows up close: a point, in percent of the print’s width and height, and how close. Left empty, the card shows the whole print.
+   */
+  detail?: {
+    x?: number | null;
+    y?: number | null;
+    /**
+     * 1 fills the card with the whole print; 3 is three times closer.
+     */
+    zoom?: number | null;
+  };
+  /**
    * Every story cites where its facts come from.
    */
   sources: {
@@ -501,6 +512,13 @@ export interface StoriesSelect<T extends boolean = true> {
   title?: T;
   lede?: T;
   body?: T;
+  detail?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+        zoom?: T;
+      };
   sources?:
     | T
     | {

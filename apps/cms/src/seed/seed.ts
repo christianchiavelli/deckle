@@ -42,7 +42,9 @@ export async function seed(cms: CmsClient, input: SeedInput): Promise<SeedStep[]
     for (const curation of input.curations) {
       steps.push(await ensureCuration(cms, session, curation));
     }
-    for (const story of input.stories) {
+    // Last to first: the journal lists the newest first, so it opens with the
+    // first story given.
+    for (const story of [...input.stories].reverse()) {
       steps.push(await ensureStory(cms, session, story));
     }
     for (const page of input.dropPages) {
@@ -117,6 +119,7 @@ async function ensureStory(cms: CmsClient, session: Session, story: StorySeed): 
     artworkSlug: story.artworkSlug,
     title: story.title,
     lede: story.lede,
+    detail: story.detail,
     body: proseFromParagraphs(story.paragraphs),
     sources: story.sources,
     _status: 'published',

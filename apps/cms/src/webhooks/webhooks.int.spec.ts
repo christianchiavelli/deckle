@@ -6,6 +6,7 @@ import {
   type PayloadRequest,
 } from 'payload';
 import { aroundAll, describe, expect, it } from 'vitest';
+import { migrations } from '../migrations';
 import type { Story } from '../payload-types';
 import { proseFromParagraphs } from '../rich-text/prose';
 import { type HookReceiver, signatureIsValid, startHookReceiver } from '../test/hook-receiver';
@@ -73,8 +74,14 @@ describe('webhooks to the gateway', () => {
   let story: Story;
 
   it('applies the committed migrations as Payload starts', async () => {
-    const { docs } = await payload.find({ collection: 'payload-migrations', limit: 10 });
-    expect(docs.map((migration) => migration.name)).toEqual(['20261005_183308_initial']);
+    const { docs } = await payload.find({
+      collection: 'payload-migrations',
+      sort: 'name',
+      limit: 100,
+    });
+    expect(docs.map((migration) => migration.name)).toEqual(
+      migrations.map((migration) => migration.name),
+    );
   });
 
   it('sends one signed event when a story is published', async () => {

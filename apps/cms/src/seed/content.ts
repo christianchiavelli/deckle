@@ -8,6 +8,8 @@ export interface StorySeed {
   readonly artworkSlug: string;
   readonly title: string;
   readonly lede: string;
+  /** What the story's card shows up close, in percent of the print, and how close. */
+  readonly detail: { readonly x: number; readonly y: number; readonly zoom: number };
   readonly paragraphs: readonly string[];
   readonly sources: readonly { readonly label: string; readonly url: string }[];
 }
@@ -123,11 +125,13 @@ export const dropPageSeeds: readonly DropPageSeed[] = [
   },
 ];
 
+/** In the journal's order, newest first: the seed creates them last to first. */
 export const storySeeds: readonly StorySeed[] = [
   {
     artworkSlug: 'melencolia-i',
     title: 'About the engraving',
     lede: 'Dürer cut Melencolia I into copper in 1514, a year after Knight, Death, and the Devil. With Saint Jerome in His Study, the three are known as his master engravings.',
+    detail: { x: 74, y: 22, zoom: 3 },
     paragraphs: [
       'A winged figure sits idle among the tools of measuring and making, a compass slack in her hand. Above her hang an hourglass, a scale and a bell, beside a magic square in which every row, column and diagonal adds up to 34. Its bottom row gives the year: 15 14.',
     ],
@@ -137,6 +141,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'the-rhinoceros',
     title: 'About the woodcut',
     lede: 'Dürer never saw the animal he drew. An Indian rhinoceros reached Lisbon in 1515, the first living one seen in Europe since Roman times, and he worked from a written description and a sketch sent on to Nuremberg.',
+    detail: { x: 84, y: 52, zoom: 2.2 },
     paragraphs: [
       'He gave it armour plates, scales on its legs and a small twisted horn on its back, none of which the animal had. The block was printed again and again after his death, and for more than two hundred years the woodcut was how most Europeans pictured a rhinoceros.',
     ],
@@ -146,6 +151,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'under-the-wave-off-kanagawa',
     title: 'About the print',
     lede: 'Hokusai made the Great Wave around 1830–32 for his series Thirty-six Views of Mount Fuji. The mountain sits small in the distance, framed by the trough of the wave.',
+    detail: { x: 30, y: 30, zoom: 1.6 },
     paragraphs: [
       'Its deep blue is Prussian blue, a synthetic pigment then newly arrived in Japan. Thousands of impressions were printed from the carved blocks, and those that survive differ in colour and wear.',
     ],
@@ -155,6 +161,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'south-wind-clear-sky',
     title: 'About the print',
     lede: 'Hokusai designed South Wind, Clear Sky, also known as Red Fuji, around 1830–32 for his series Thirty-six Views of Mount Fuji.',
+    detail: { x: 55, y: 45, zoom: 1.8 },
     paragraphs: [
       'It is a woodblock print in ink and colour on paper, 25.4 by 38.1 centimetres. The Met’s impression came with the Howard Mansfield Collection, bought with the Rogers Fund in 1936.',
     ],
@@ -164,6 +171,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'storm-below-mount-fuji',
     title: 'About the print',
     lede: 'Storm below Mount Fuji is another of the views Hokusai designed around 1830–32 for Thirty-six Views of Mount Fuji.',
+    detail: { x: 45, y: 40, zoom: 1.8 },
     paragraphs: [
       'A woodblock print in ink and colour on paper, 25.4 by 37.5 centimetres. The Met’s impression came with the Henry L. Phillips Collection, a bequest of Henry L. Phillips in 1939.',
     ],
@@ -173,6 +181,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'ejiri-in-suruga-province',
     title: 'About the print',
     lede: 'Ejiri in Suruga Province belongs to the same series, Thirty-six Views of Mount Fuji, which Hokusai designed around 1830–32.',
+    detail: { x: 30, y: 35, zoom: 1.8 },
     paragraphs: [
       'The subjects The Met lists for it are a landscape and figures at work. It is a woodblock print in ink and colour on paper, 25.4 by 37.1 centimetres, bought with the Rogers Fund in 1914.',
     ],
@@ -182,6 +191,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'knight-death-and-the-devil',
     title: 'About the engraving',
     lede: 'Dürer engraved Knight, Death, and the Devil in 1513, the year before Melencolia I.',
+    detail: { x: 50, y: 40, zoom: 2.4 },
     paragraphs: [
       'The plate measures 24.3 by 18.8 centimetres. The subjects The Met lists for it include a knight, a horse, a dog, a skull and the Devil. It was bought with the Harris Brisbane Dick Fund in 1943.',
     ],
@@ -191,6 +201,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'saint-jerome-in-his-study',
     title: 'About the engraving',
     lede: 'Saint Jerome in His Study is dated 1514, the year of Melencolia I.',
+    detail: { x: 70, y: 45, zoom: 2.4 },
     paragraphs: [
       'An engraving on a sheet 34.5 by 18.8 centimetres. The subjects The Met lists for it include an interior, a lion and a skull. It came with the George Khuner Collection, a gift of Mrs. George Khuner in 1968.',
     ],
@@ -200,6 +211,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'evening-snow-at-kanbara',
     title: 'About the print',
     lede: 'Hiroshige made Evening Snow at Kanbara around 1833–34 for his series Fifty-three Stations of the Tōkaidō.',
+    detail: { x: 50, y: 60, zoom: 1.8 },
     paragraphs: [
       'A woodblock print in ink and colour on paper, 22.5 by 34.9 centimetres. The subjects The Met lists for it are snow, houses and mountains. It came with the Howard Mansfield Collection, bought with the Rogers Fund in 1936.',
     ],
@@ -209,6 +221,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'sudden-shower-over-shin-ohashi',
     title: 'About the print',
     lede: 'Sudden Shower over Shin-Ōhashi Bridge and Atake is dated 1857, one of Hiroshige’s One Hundred Famous Views of Edo.',
+    detail: { x: 50, y: 70, zoom: 2 },
     paragraphs: [
       'A woodblock print in ink and colour on paper, 36.5 by 24.3 centimetres. The subjects The Met lists for it are rain, a bridge, boats and figures. It was bought with the Joseph Pulitzer Bequest in 1918.',
     ],
@@ -218,6 +231,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'fireworks-at-ryogoku-bridge',
     title: 'About the print',
     lede: 'Hiroshige’s Fireworks at Ryōgoku Bridge is dated 1858, from the same series, One Hundred Famous Views of Edo.',
+    detail: { x: 50, y: 30, zoom: 1.8 },
     paragraphs: [
       'A woodblock print in ink and colour on paper, its image 33.7 by 22.2 centimetres. The subjects The Met lists for it are a bridge, fireworks and boats. It was bought with the Joseph Pulitzer Bequest in 1918.',
     ],
@@ -227,6 +241,7 @@ export const storySeeds: readonly StorySeed[] = [
     artworkSlug: 'fireworks-at-ikenohata',
     title: 'About the print',
     lede: 'Kobayashi Kiyochika, who lived from 1847 to 1915, made Fireworks at Ikenohata in 1881, the fourteenth year of the Meiji era.',
+    detail: { x: 50, y: 35, zoom: 1.8 },
     paragraphs: [
       'A woodblock print in ink and colour on paper, its image 20.3 by 31.4 centimetres. The subjects The Met lists for it are fireworks and lanterns. It was a gift of Sebastian and Miki Izzard in 2016.',
     ],

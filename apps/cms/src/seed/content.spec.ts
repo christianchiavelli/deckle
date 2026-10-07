@@ -37,4 +37,15 @@ describe('the starter content', () => {
       expect(unique(curation.artworks), curation.slug).toBe(true);
     }
   });
+
+  it('points each story card at a part of its print, within the bounds the CMS accepts', () => {
+    for (const { artworkSlug, detail } of storySeeds) {
+      expect(detail.x, artworkSlug).toBeGreaterThanOrEqual(0);
+      expect(detail.x, artworkSlug).toBeLessThanOrEqual(100);
+      expect(detail.y, artworkSlug).toBeGreaterThanOrEqual(0);
+      expect(detail.y, artworkSlug).toBeLessThanOrEqual(100);
+      expect(detail.zoom, artworkSlug).toBeGreaterThanOrEqual(1);
+      expect(detail.zoom, artworkSlug).toBeLessThanOrEqual(8);
+    }
+  });
 });

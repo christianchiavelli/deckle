@@ -54,7 +54,8 @@ describe('the seed', () => {
       { what: 'admin admin@deckle.local', outcome: 'created' },
       { what: `gateway user ${gatewayUserEmail}`, outcome: 'created' },
       ...curationSeeds.map(({ slug }) => ({ what: `curation ${slug}`, outcome: 'created' })),
-      ...storySeeds.map(({ artworkSlug }) => ({
+      // Created last to first, so the journal opens with the first.
+      ...[...storySeeds].reverse().map(({ artworkSlug }) => ({
         what: `story ${artworkSlug}`,
         outcome: 'created',
       })),
@@ -62,10 +63,10 @@ describe('the seed', () => {
     ]);
   });
 
-  it('publishes the stories with their texts exactly as given', async () => {
+  it('publishes the stories with their texts exactly as given, the first one newest', async () => {
     const { docs } = await payload.find({
       collection: 'stories',
-      sort: 'id',
+      sort: '-createdAt',
       depth: 0,
       pagination: false,
     });
@@ -74,6 +75,7 @@ describe('the seed', () => {
         artworkSlug: story.artworkSlug,
         title: story.title,
         lede: story.lede,
+        detail: story.detail,
         paragraphs: story.body.root.children.map((paragraph) =>
           (paragraph['children'] as { text: string }[]).map((text) => text.text).join(''),
         ),

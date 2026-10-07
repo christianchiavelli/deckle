@@ -75,6 +75,46 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
         validate: validateProse,
       },
       {
+        name: 'detail',
+        type: 'group',
+        label: { en: 'Detail', pt: 'Detalhe' },
+        admin: {
+          description: {
+            en: 'The part of the print the story’s card shows up close: a point, in percent of the print’s width and height, and how close. Left empty, the card shows the whole print.',
+            pt: 'A parte da gravura que o card da história mostra de perto: um ponto, em porcentagem da largura e da altura da gravura, e o quão perto. Vazio, o card mostra a gravura inteira.',
+          },
+        },
+        fields: [
+          {
+            name: 'x',
+            type: 'number',
+            min: 0,
+            max: 100,
+            label: { en: 'Across (%)', pt: 'Na largura (%)' },
+          },
+          {
+            name: 'y',
+            type: 'number',
+            min: 0,
+            max: 100,
+            label: { en: 'Down (%)', pt: 'Na altura (%)' },
+          },
+          {
+            name: 'zoom',
+            type: 'number',
+            min: 1,
+            max: 8,
+            label: { en: 'Zoom', pt: 'Zoom' },
+            admin: {
+              description: {
+                en: '1 fills the card with the whole print; 3 is three times closer.',
+                pt: '1 preenche o card com a gravura inteira; 3 é três vezes mais perto.',
+              },
+            },
+          },
+        ],
+      },
+      {
         name: 'sources',
         type: 'array',
         required: true,
