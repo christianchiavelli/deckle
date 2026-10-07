@@ -22,11 +22,29 @@ const Skip = styled.a`
 
 const { chrome } = copy;
 
+/** The parts of the shop the menu names. */
+export type Section = 'prints' | 'drops' | 'collections' | 'journal';
+
+const sections = [
+  { key: 'prints', label: chrome.prints, href: '/prints' },
+  { key: 'drops', label: chrome.drops, href: '/drops' },
+  { key: 'collections', label: chrome.collections, href: '/collections' },
+  { key: 'journal', label: chrome.journal, href: '/journal' },
+] as const satisfies readonly { key: Section; label: string; href: string }[];
+
+export interface ChromeProps {
+  /** The section the page is in, marked in the menu; none for the front page or a search. */
+  current?: Section;
+  children: ReactNode;
+}
+
 /**
- * What every page shares: the skip link, the header, the footer. Drops and the
- * cart are not open yet, so there is no announcement bar and the cart is empty.
+ * What every page shares: the skip link, the header, the footer. Each section's
+ * layout names itself, so the menu is marked in the static shell, before a
+ * work's slug is known. Drops and the cart are not open yet, so there is no
+ * announcement bar and the cart is empty.
  */
-export function Chrome({ children }: { children: ReactNode }) {
+export function Chrome({ current, children }: ChromeProps) {
   return (
     <>
       <Skip href="#main">{chrome.skip}</Skip>
@@ -34,12 +52,11 @@ export function Chrome({ children }: { children: ReactNode }) {
         home={{ href: '/', label: chrome.home }}
         nav={{
           label: chrome.nav,
-          items: [
-            { label: chrome.prints, href: '/prints' },
-            { label: chrome.drops, href: '/drops' },
-            { label: chrome.collections, href: '/collections' },
-            { label: chrome.journal, href: '/journal' },
-          ],
+          items: sections.map(({ key, label, href }) => ({
+            label,
+            href,
+            current: key === current,
+          })),
         }}
         search={{
           action: '/search',

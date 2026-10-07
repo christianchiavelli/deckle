@@ -1,5 +1,6 @@
 import {
   Band,
+  Breadcrumbs,
   BuyBox,
   PrintGrid,
   Record,
@@ -16,10 +17,12 @@ import { Suspense } from 'react';
 import styled from 'styled-components';
 import { BuyOptions } from '../../../components/buy-options';
 import { PrintTiles } from '../../../components/print-tiles';
+import { ScrollToFragment } from '../../../components/scroll-to-fragment';
 import { StoryBody } from '../../../components/story-body';
 import { copy } from '../../../copy';
 import { readCatalogue, readWork } from '../../../gateway/reads';
 import { imageAt } from '../../../views/images';
+import { hrefOf, NO_CHOICE } from '../../../views/listing';
 import { morePrints } from '../../../views/more';
 import { defaultSize, factsOf, lifeOf, recordOf, tooSmallNote } from '../../../views/work';
 
@@ -80,6 +83,20 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
   return (
     <>
       <Product aria-labelledby="work-title">
+        <Breadcrumbs
+          label={text.crumbs}
+          items={[
+            { label: text.prints, href: '/prints' },
+            ...(artwork.technique === null
+              ? []
+              : [
+                  {
+                    label: artwork.technique,
+                    href: hrefOf({ ...NO_CHOICE, technique: artwork.technique }),
+                  },
+                ]),
+          ]}
+        />
         <Grid>
           {artwork.image && (
             <Stage
@@ -100,6 +117,9 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
               id="work-title"
               artist={{
                 name: artwork.artist?.name ?? text.unknownArtist,
+                href: artwork.artist
+                  ? `/search?q=${encodeURIComponent(artwork.artist.name)}`
+                  : undefined,
                 bio: lifeOf(artwork.artist),
               }}
               title={artwork.title}
@@ -119,7 +139,7 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
       </Product>
 
       {story && (
-        <Band aria-labelledby="story-title">
+        <Band id="story" aria-labelledby="story-title">
           <Story
             id="story-title"
             title={story.title}
@@ -174,6 +194,9 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
           </PrintGrid>
         </Band>
       )}
+
+      {/* The journal links to #story, in this streamed part. */}
+      <ScrollToFragment />
     </>
   );
 }

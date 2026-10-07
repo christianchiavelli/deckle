@@ -3,9 +3,12 @@ import {
   ButtonLink,
   Icon,
   PrintGrid,
+  PrintTile,
   SectionHead,
   SizeDiagram,
   Stage,
+  StoryCard,
+  StoryGrid,
   TextLink,
   typeRole,
 } from '@deckle/ui';
@@ -14,12 +17,20 @@ import { media, tokens as t } from '@deckle/tokens';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { PrintTiles } from '../components/print-tiles';
-import { copy } from '../copy';
-import { readCatalogue, readHome } from '../gateway/reads';
-import { imageAt } from '../views/images';
-import { sizingOf } from '../views/sizing';
-import { smallestFirst } from '../views/work';
+import { PrintTiles } from '../../components/print-tiles';
+import { copy } from '../../copy';
+import {
+  FRONT_PAGE,
+  readCatalogue,
+  readCurations,
+  readHome,
+  readJournal,
+} from '../../gateway/reads';
+import { listedCurations, picturesOf } from '../../views/collections';
+import { imageAt } from '../../views/images';
+import { journalOf, storyHref } from '../../views/journal';
+import { sizingOf } from '../../views/sizing';
+import { smallestFirst } from '../../views/work';
 
 const Hero = styled.div`
   display: grid;
@@ -117,6 +128,12 @@ const Sizes = styled.ul`
   }
 `;
 
+const Three = styled(PrintGrid)`
+  @media ${media.md} {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+`;
+
 const { home, locale } = copy;
 
 /** The front page, as approved: what Deckle is, the prints, and how sizes are set. */
@@ -145,10 +162,14 @@ async function Home() {
   // The gateway is not there when the image is built: this page renders on
   // request, and its reads come from the cache the gateway keeps honest.
   await connection();
-  const [{ curation, hero, sizing }, { artworks }] = await Promise.all([
+  const [{ curation, hero, sizing }, { artworks }, { curations }, journal] = await Promise.all([
     readHome(),
     readCatalogue(),
+    readCurations(),
+    readJournal(),
   ]);
+  const collections = listedCurations(curations, FRONT_PAGE.curation).slice(0, 3);
+  const stories = journalOf(journal.artworks.edges.map((edge) => edge.node)).slice(0, 3);
   const total = new Intl.NumberFormat(locale).format(artworks.totalCount);
   // The editor's selection; the catalogue's first works if it was unpublished.
   const featured = curation?.artworks ?? artworks.edges.slice(0, 8).map((edge) => edge.node);
@@ -227,6 +248,66 @@ async function Home() {
               locale={locale}
             />
           </Sizing>
+        </Band>
+      )}
+
+      {collections.length > 0 && (
+        <Band aria-labelledby="collections-title">
+          <SectionHead
+            id="collections-title"
+            title={home.collections}
+            action={
+              <TextLink href="/collections" icon="arrow">
+                {home.everyCollection}
+              </TextLink>
+            }
+          />
+          <Three>
+            {collections.map((collection) => {
+              const [cover] = picturesOf(collection);
+              return cover ? (
+                <li key={collection.slug}>
+                  <PrintTile
+                    href={`/collections/${collection.slug}`}
+                    image={{
+                      src: imageAt(cover.url, 'card'),
+                      width: cover.width,
+                      height: cover.height,
+                    }}
+                    title={collection.title}
+                    meta={copy.collections.prints(collection.artworks.length)}
+                  />
+                </li>
+              ) : null;
+            })}
+          </Three>
+        </Band>
+      )}
+
+      {stories.length > 0 && (
+        <Band tone="band" aria-labelledby="journal-title">
+          <SectionHead
+            id="journal-title"
+            title={home.journal}
+            action={
+              <TextLink href="/journal" icon="arrow">
+                {home.everyStory}
+              </TextLink>
+            }
+          />
+          <StoryGrid>
+            {stories.map((story) => (
+              <li key={story.slug}>
+                <StoryCard
+                  href={storyHref(story.slug)}
+                  kicker={story.kicker}
+                  title={story.title}
+                  lede={story.lede}
+                  image={story.image}
+                />
+              </li>
+            ))}
+          </StoryGrid>
         </Band>
       )}
     </>
