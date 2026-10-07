@@ -298,7 +298,7 @@ describe('the Shop API', () => {
     expect(wave?.facetValues.map(({ facet, code }) => `${facet.code}:${code}`)).toEqual(
       expect.arrayContaining([
         'artist:katsushika-hokusai',
-        'technique:woodblock-print',
+        'technique:woodblock-prints',
         'edition:open',
       ]),
     );
@@ -341,7 +341,7 @@ describe('the Shop API', () => {
       .poll(() => slugsIn('all-prints'), { timeout: 30_000, interval: 250 })
       .toEqual(['melencolia-i', 'under-the-wave-off-kanagawa']);
     await expect
-      .poll(() => slugsIn('engraving'), { timeout: 30_000, interval: 250 })
+      .poll(() => slugsIn('engravings'), { timeout: 30_000, interval: 250 })
       .toEqual(['melencolia-i']);
     await expect
       .poll(() => slugsIn('19th-century'), { timeout: 30_000, interval: 250 })

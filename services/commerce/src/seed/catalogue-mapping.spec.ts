@@ -11,7 +11,7 @@ import {
   productCustomFieldsOf,
   skuOf,
   slugify,
-  techniquesOf,
+  techniqueOf,
   variantsOf,
 } from './catalogue-mapping.js';
 
@@ -79,20 +79,35 @@ describe('slugify', () => {
   });
 });
 
-describe('techniquesOf', () => {
+describe('techniqueOf', () => {
   it.each([
-    ['Engraving', ['Engraving']],
-    ['Etching, aquatint', ['Etching', 'Aquatint']],
-    ['Etching, aquatint, and drypoint', ['Etching', 'Aquatint', 'Drypoint']],
-    ['Etching and engraving', ['Etching', 'Engraving']],
-    ['Woodblock print; ink and color on paper', ['Woodblock print']],
-    ['Engraving, engraving', ['Engraving']],
-  ])('reads %j as %j', (medium, techniques) => {
-    expect(techniquesOf(medium)).toEqual(techniques);
+    ['Engraving', 'Engravings'],
+    ['Engraving printed from three plates; second state', 'Engravings'],
+    ['Etching, aquatint', 'Etchings'],
+    ['Etching, drypoint and burin; second state of two', 'Etchings'],
+    ['Woodblock print; ink and color on paper', 'Woodblock prints'],
+    ['Diptych of woodblock prints; ink and color on paper', 'Woodblock prints'],
+    ['Woodcut', 'Woodcuts'],
+    [
+      'Chiaroscuro woodcut in two blocks, printed in gray and black; second of two states',
+      'Woodcuts',
+    ],
+    ['Crayon, brush, and spatter lithograph printed in two colors; only state', 'Lithographs'],
+    ['Zincograph on chrome yellow wove paper; first edition', 'Lithographs'],
+    ['Mezzotint with etching; proof', 'Mezzotints'],
+    ['Drypoint on wove paper', 'Drypoints'],
+    [
+      'Burnished aquatint, scaper, roulette, lavis (along the top of the landscape and within the landscape)',
+      'Aquatints',
+    ],
+    ['Aquatint and stipple engraving printed in color with hand coloring', 'Aquatints'],
+  ])('files %j under %j', (medium, family) => {
+    expect(techniqueOf(medium)).toBe(family);
   });
 
-  it('has nothing to say about a missing medium', () => {
-    expect(techniquesOf(null)).toEqual([]);
+  it('files a medium that names no printing process nowhere, and so a missing one', () => {
+    expect(techniqueOf('Gelatin silver print')).toBeNull();
+    expect(techniqueOf(null)).toBeNull();
   });
 });
 
@@ -125,7 +140,7 @@ describe('facetValuesOf', () => {
   it('files a work under its artist, techniques, century, department and edition', () => {
     expect(facetValuesOf(work).map(({ facet, code }) => `${facet}:${code}`)).toEqual([
       'artist:katsushika-hokusai',
-      'technique:woodblock-print',
+      'technique:woodblock-prints',
       'century:19th-century',
       'department:asian-art',
       'edition:open',
@@ -232,6 +247,16 @@ describe('variantsOf', () => {
 
 describe('the data set in data/met', async () => {
   const catalog = await readCatalog(dataSet);
+
+  it('files every work under one of the eight technique families', () => {
+    const families = new Map<string, number>();
+    for (const each of catalog.works) {
+      const family = techniqueOf(each.medium);
+      expect(family, each.slug).not.toBeNull();
+      families.set(family ?? '', (families.get(family ?? '') ?? 0) + 1);
+    }
+    expect(families.size).toBe(8);
+  });
 
   it.each(catalog.works.map((each) => [each.slug, each] as const))(
     '%s maps to sellable variants with unique SKUs and the open-edition prices',

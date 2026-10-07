@@ -50,21 +50,34 @@ export function slugify(text: string): string {
 const sentenceCase = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 /**
- * The techniques named in The Met's medium. By The Met's convention the materials
- * follow a semicolon ("Woodblock print; ink and color on paper"), and techniques are
- * listed with commas and "and" ("Etching, engraving, and drypoint").
+ * The technique families a buyer browses by, each with the pattern that finds
+ * it in The Met's medium. The first match wins, and the medium is read from its
+ * start, so a work belongs to the process The Met names first: "Etching,
+ * aquatint" is an etching, "Mezzotint with etching" a mezzotint. Woodblock
+ * prints (the Japanese colour prints) and woodcuts stay apart, as The Met keeps
+ * them; a zincograph is drawn and printed as a lithograph is.
  */
-export function techniquesOf(medium: string | null): string[] {
+const TECHNIQUE_FAMILIES: readonly (readonly [name: string, pattern: RegExp])[] = [
+  ['Woodblock prints', /woodblock/i],
+  ['Woodcuts', /woodcut/i],
+  ['Lithographs', /lithograph|zincograph/i],
+  ['Engravings', /^engraving/i],
+  ['Etchings', /^etching/i],
+  ['Mezzotints', /^mezzotint/i],
+  ['Drypoints', /^drypoint/i],
+  ['Aquatints', /aquatint/i],
+];
+
+/**
+ * The family a work is filed under, or null when its medium names none. One per
+ * work: the medium's qualifiers ("printed in gray and black", "lavis (along the
+ * top of the landscape...)") are never read as techniques of their own.
+ */
+export function techniqueOf(medium: string | null): string | null {
   if (medium === null) {
-    return [];
+    return null;
   }
-  const [techniques = ''] = medium.split(';');
-  const names = techniques
-    .split(/\s*,\s*(?:and\s+)?|\s+and\s+/i)
-    .map((name) => name.trim())
-    .filter((name) => name.length > 0)
-    .map(sentenceCase);
-  return [...new Set(names)];
+  return TECHNIQUE_FAMILIES.find(([, pattern]) => pattern.test(medium))?.[0] ?? null;
 }
 
 const ordinal = (n: number) => {
@@ -105,7 +118,8 @@ export function facetValuesOf(work: Work): FacetValueRef[] {
   if (work.artist) {
     values.push({ facet: 'artist', code: slugify(work.artist.name), name: work.artist.name });
   }
-  for (const technique of techniquesOf(work.medium)) {
+  const technique = techniqueOf(work.medium);
+  if (technique !== null) {
     values.push({ facet: 'technique', code: slugify(technique), name: technique });
   }
   const century = centuryOf(work.date);
