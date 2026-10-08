@@ -21,6 +21,7 @@ The spec asks that `docker compose up` also serve the Storybook, so that whoever
 - The image holds a build, not the source: a change shows after `docker compose build storybook`, or once CI has published it. Working on a component stays with `storybook dev`, which reloads as files change.
 - The image weighs about 150 MB: Caddy's own 93, then the build and the Met's images, which the commerce image carries as well.
 - The built Storybook is not where the stories are tested: `test:stories` runs them in CI, from the source.
+- Vite minifies the build's CSS with Lightning CSS, which rewrites the tokens' `light-dark()` for browsers older than its target into variables that only a `color-scheme` in the CSS sets, here `:root`'s. The panes that show a story in both themes switch `color-scheme` inline, which those variables never follow, so the first image drew both panes light, and the Colour page showed each token's light value twice. The build now targets the browsers that read `light-dark()` themselves (`build.cssTarget`), and the e2e checks a pane of each theme; `test:stories` runs unminified, and could not have seen it.
 
 ## Rejected
 

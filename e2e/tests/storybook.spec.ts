@@ -15,6 +15,21 @@ test.describe('the Storybook the stack serves', () => {
     ).toBeVisible();
   });
 
+  test('draws a story in both themes side by side, whatever the browser’s own', async ({
+    page,
+  }) => {
+    await page.goto(`${storybook}/iframe.html?id=components-button--primary&viewMode=story`);
+    // The page's surface in each theme: paper, then bistre.
+    await expect(page.locator('[data-theme-pane="light"]')).toHaveCSS(
+      'background-color',
+      'rgb(252, 250, 246)',
+    );
+    await expect(page.locator('[data-theme-pane="dark"]')).toHaveCSS(
+      'background-color',
+      'rgb(23, 19, 15)',
+    );
+  });
+
   test('draws a screen with the data set’s images and the brand’s typeface', async ({ page }) => {
     await page.goto(`${storybook}/iframe.html?id=screens-work-page--desktop&viewMode=story`);
     await expect(page.getByRole('heading', { level: 1, name: 'Melencolia I' })).toBeVisible();

@@ -17,6 +17,11 @@ export default defineMain({
   viteFinal: (config) =>
     mergeConfig(config, {
       build: {
+        // The browsers that read light-dark() themselves. For older ones Lightning
+        // CSS rewrites the tokens into variables set on :root, and the panes that
+        // show a story in both themes switch `color-scheme` inline, which those
+        // variables never follow: both panes would draw light.
+        cssTarget: ['chrome123', 'edge123', 'firefox120', 'safari17.5', 'ios17.5'],
         // A static Storybook is fetched once per review, not per page view, so
         // its chunk sizes are not worth a warning on every build.
         chunkSizeWarningLimit: 4096,
