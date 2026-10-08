@@ -83,6 +83,15 @@ export function queuePollIntervalMs(queueName: string): number {
   }
 }
 
+/**
+ * The mail a process sends. The seed's demo trade is history, backdated as it
+ * is placed, so it sends none: its 150 or so receipts would also stand in the
+ * mail queue, sent one every two seconds, ahead of the first real shopper's.
+ */
+export function emailHandlers(process: CommerceProcess) {
+  return process === 'seed' ? [] : [orderReceiptHandler];
+}
+
 function createLogger(options: ConfigOptions): VendureLogger {
   return options.logFormat === 'json'
     ? new JsonLogger({ level: LogLevel.Info, process: options.process })
@@ -200,7 +209,7 @@ export function createVendureConfig(env: CommerceEnv, options: ConfigOptions): V
           ignoreTLS: true,
         },
         // The order confirmation, sent to the address given for the receipt.
-        handlers: [orderReceiptHandler],
+        handlers: emailHandlers(options.process),
         templateLoader: new FileBasedTemplateLoader(paths.emailTemplates),
         globalTemplateVars: { fromAddress: '"Deckle" <orders@deckle.invalid>' },
       }),

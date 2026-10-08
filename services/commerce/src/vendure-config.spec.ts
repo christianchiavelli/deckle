@@ -1,11 +1,12 @@
 import { RandomBytesApiKeyStrategy, type VendureConfig } from '@vendure/core';
 import { describe, expect, it } from 'vitest';
 import { ProvisionedApiKeyStrategy } from './auth/api-keys.js';
+import { orderReceiptHandler } from './checkout/receipt-email.js';
 import { parseCommerceEnv } from './env.js';
 import { JsonLogger } from './logging/json-logger.js';
 import { migrations } from './migrations/index.js';
 import { CATALOGUE_HOOKS_QUEUE } from './plugins/catalogue-hooks/options.js';
-import { createVendureConfig, queuePollIntervalMs } from './vendure-config.js';
+import { createVendureConfig, emailHandlers, queuePollIntervalMs } from './vendure-config.js';
 
 const env = parseCommerceEnv({
   DATABASE_URL: 'postgres://commerce:commerce@postgres:5432/commerce',
@@ -59,6 +60,11 @@ describe('createVendureConfig', () => {
     expect(config.authOptions.adminApiKeyStrategy).not.toBeInstanceOf(ProvisionedApiKeyStrategy);
     const seed = createVendureConfig(env, { process: 'seed', provisionGatewayApiKey: true });
     expect(seed.authOptions.adminApiKeyStrategy).toBeInstanceOf(ProvisionedApiKeyStrategy);
+  });
+
+  it('sends receipts for the orders shoppers place, never for the demo trade the seed places', () => {
+    expect(emailHandlers('server')).toEqual([orderReceiptHandler]);
+    expect(emailHandlers('seed')).toEqual([]);
   });
 
   it('writes JSON lines when asked to', () => {
