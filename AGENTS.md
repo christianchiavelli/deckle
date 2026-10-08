@@ -61,7 +61,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 | Service | Listens on | Reached at |
 | --- | --- | --- |
 | `caddy` | 80 | `http://localhost:8080`: the store, `/graphql` (HTTP and WebSocket) to the gateway, `/assets/*` to commerce |
-| `store` | 3000 | `http://store:3000`. The pages, `/api/health`, `/api/preview` (where the CMS's preview links land), and `/api/revalidate` (Caddy answers 404 there) |
+| `store` | 3000 | `http://store:3000`. The pages, `/api/health`, `/api/preview` (where the CMS's preview links land), `/api/edition` (the language switch, before a page knows its address), and `/api/revalidate` (Caddy answers 404 there) |
 | `gateway` | 4000 | `http://gateway:4000`. `/graphql`, `/health`, `/hooks/*` and `/internal/*` (the last two never routed by Caddy) |
 | `commerce` | 3000 | `http://commerce:3000`. `/shop-api`, `/admin-api`, `/assets`, `/dashboard`, `/health`; host port 8082 for the dashboard |
 | `cms` | 3000 | `http://cms:3000`. `/admin`, `/api`; host port 8081 for the admin |
