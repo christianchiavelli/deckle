@@ -19,7 +19,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them |
 | `packages/eslint-config` | The lint rules every package shares |
 | `data/met` | The imported data set: `catalog.json` and the reduced images, baked into the published images |
-| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes, a passkey made with a virtual authenticator, a page that holds still as it loads, and the admin panels in Portuguese |
+| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes, a passkey made with a virtual authenticator, a page that holds still as it loads, a draft opened from the CMS, and the admin panels in Portuguese |
 | `load` | The drop's load test in k6: a thousand people, each with a passkey made in software, claim its copies in the same second through two gateways (ADR 0052) |
 | `design/art-direction` | The art directions compared before the choice, in static HTML: the record of how the copper plate palette was picked |
 | `design/logo` | The logo options compared the same way, and the record of the chosen one: the studio seal, with the name set as an imprint |
@@ -60,7 +60,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 | Service | Listens on | Reached at |
 | --- | --- | --- |
 | `caddy` | 80 | `http://localhost:8080`: the store, `/graphql` (HTTP and WebSocket) to the gateway, `/assets/*` to commerce |
-| `store` | 3000 | `http://store:3000`. The pages, `/api/health`, and `/api/revalidate` (Caddy answers 404 there) |
+| `store` | 3000 | `http://store:3000`. The pages, `/api/health`, `/api/preview` (where the CMS's preview links land), and `/api/revalidate` (Caddy answers 404 there) |
 | `gateway` | 4000 | `http://gateway:4000`. `/graphql`, `/health`, `/hooks/*` and `/internal/*` (the last two never routed by Caddy) |
 | `commerce` | 3000 | `http://commerce:3000`. `/shop-api`, `/admin-api`, `/assets`, `/dashboard`, `/health`; host port 8082 for the dashboard |
 | `cms` | 3000 | `http://cms:3000`. `/admin`, `/api`; host port 8081 for the admin |
@@ -69,6 +69,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 
 - **Commerce and CMS changes reach the gateway as signed webhooks.** `POST /hooks/commerce` and `POST /hooks/cms`, JSON, with `Deckle-Signature: t=<unix seconds>,v1=<hex HMAC-SHA256 of "<t>.<raw body>">` and a five-minute tolerance. The gateway turns each event into cache tags for the store.
 - **The gateway asks the store to drop cache tags.** `POST http://store:3000/api/revalidate`, with `Authorization: Bearer <STORE_REVALIDATE_SECRET>` and `{ "tags": [...], "profile": "expire" | "max" }`. Tags come from `@deckle/cache-tags`, and the store refuses any other with a 400.
+- **Only the store reads drafts.** In draft mode, which the CMS's preview links turn on, the store sends `Deckle-Preview: <GATEWAY_PREVIEW_SECRET>` with its reads, and the gateway reads the CMS's newest drafts for that request alone. Caddy drops the header from every request from outside (ADR 0053).
 - **The gateway vouches for its users to commerce.** It signs a short-lived EdDSA JWT (`iss` `deckle-gateway`, `aud` `deckle-commerce`, `sub` the Deckle user id) and publishes its keys at `GET /internal/jwks.json`. Commerce verifies it in a Vendure `AuthenticationStrategy` named `deckle`, so it holds no secret that could mint a login.
 - **The gateway calls the Admin API with an API key, never a session.**
 - **The browser's session is the gateway's.** An `httpOnly` cookie, `deckle_session`, carries a random secret; the gateway keeps its SHA-256 in Postgres, with commerce's session tokens for the cart and for the signed-in customer, which never reach the browser.
