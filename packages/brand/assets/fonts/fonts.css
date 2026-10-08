@@ -22,10 +22,10 @@
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Arial resized to Host Grotesk's metrics: the fallback takes the same space, so nothing shifts on swap. */
+/* Arial, or Liberation Sans on Linux, resized to Host Grotesk's metrics: the fallback takes the same space, so nothing shifts on swap. */
 @font-face {
   font-family: 'Host Grotesk Fallback';
-  src: local('Arial'), local('ArialMT');
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans');
   ascent-override: 96.6854%;
   descent-override: 30.0058%;
   line-gap-override: 0%;

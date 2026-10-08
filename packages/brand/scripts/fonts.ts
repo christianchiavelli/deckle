@@ -16,9 +16,20 @@ const unicodeRange =
   'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD';
 
 const metrics = await fromFile(fileURLToPath(new URL('host-grotesk-normal.woff2', fontsDir)));
-const { fontFaces } = createFontStack([{ ...metrics, familyName: 'Host Grotesk' }, arial], {
-  fontFaceFormat: 'styleString',
-});
+const { fontFaces: arialFaces } = createFontStack(
+  [{ ...metrics, familyName: 'Host Grotesk' }, arial],
+  { fontFaceFormat: 'styleString' },
+);
+// Liberation Sans is drawn to Arial's metrics and stands in for it on Linux,
+// where Arial is seldom installed, so the same overrides fit it.
+const arialMT = /local\((['"])ArialMT\1\)/;
+if (!arialMT.test(arialFaces)) {
+  throw new Error('@deckle/brand: Capsize no longer names ArialMT in the fallback');
+}
+const fontFaces = arialFaces.replace(
+  arialMT,
+  "local('ArialMT'), local('Liberation Sans'), local('LiberationSans')",
+);
 
 const face = (style: 'normal' | 'italic') => `@font-face {
   font-family: 'Host Grotesk';
@@ -35,7 +46,7 @@ ${face('normal')}
 
 ${face('italic')}
 
-/* Arial resized to Host Grotesk's metrics: the fallback takes the same space, so nothing shifts on swap. */
+/* Arial, or Liberation Sans on Linux, resized to Host Grotesk's metrics: the fallback takes the same space, so nothing shifts on swap. */
 ${fontFaces}
 
 /* Host Grotesk's one contextual alternate draws an x between figures as ×, which garbles codes such as order numbers. A × that is meant is typed as one. */
