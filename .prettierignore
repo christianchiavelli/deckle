@@ -23,3 +23,4 @@ apps/cms/src/app/(payload)/admin/importMap.js
 services/commerce/schema/shop-api.graphql
 # Written by GraphQL Codegen from the gateway's schema, and checked against it in CI
 apps/store/src/gateway/generated.ts
+apps/store/src/live/generated.ts

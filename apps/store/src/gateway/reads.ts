@@ -1,10 +1,22 @@
-import { CATALOG, CURATIONS, curationTag, STORIES, workTags } from '@deckle/cache-tags';
+import {
+  CATALOG,
+  CURATIONS,
+  curationTag,
+  dropPageTag,
+  priceTag,
+  STORIES,
+  workTags,
+} from '@deckle/cache-tags';
 import { cacheLife, cacheTag } from 'next/cache';
 import { serverEnv } from '../server-env';
 import {
   CatalogueDocument,
+  CountriesDocument,
   CurationDocument,
   CurationsDocument,
+  DropDocument,
+  DropsDocument,
+  DropStocksDocument,
   HomeDocument,
   JournalDocument,
   SizingDocument,
@@ -102,4 +114,40 @@ export async function readSizing() {
   'use cache';
   cacheTag(CATALOG);
   return ask(SizingDocument, SIZING_EXAMPLES);
+}
+
+/** Every drop, with its words, its price and its print: never its stock. */
+export async function readDrops() {
+  'use cache';
+  const { drops } = await ask(DropsDocument, {});
+  cacheTag(CATALOG, ...drops.flatMap((drop) => [dropPageTag(drop.slug), priceTag(drop.slug)]));
+  return drops;
+}
+
+export async function readDrop(slug: string) {
+  'use cache';
+  cacheTag(dropPageTag(slug), priceTag(slug));
+  const { drop } = await ask(DropDocument, { slug });
+  if (drop) {
+    cacheTag(...workTags(drop.artworkSlug));
+  }
+  return drop;
+}
+
+/**
+ * Where each drop's copies stand, by slug. Kept for a second at most, so a
+ * thousand visitors cost the gateway one read a second; the drop's own page
+ * follows the copies live instead.
+ */
+export async function readDropStocks() {
+  'use cache';
+  cacheLife('seconds');
+  const answer = await requestGateway(serverEnv().GATEWAY_URL, DropStocksDocument, {});
+  return answer.data.drops;
+}
+
+/** Where the shop ships, for the checkout's country field. */
+export async function readCountries() {
+  'use cache';
+  return ask(CountriesDocument, {});
 }

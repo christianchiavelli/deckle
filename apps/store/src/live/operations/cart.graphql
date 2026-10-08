@@ -1,0 +1,80 @@
+fragment Amount on Money {
+  amount
+  currencyCode
+}
+
+# A work as a line of a cart or an order shows it.
+fragment LineArtwork on Artwork {
+  slug
+  title
+  date
+  artist {
+    name
+  }
+  image {
+    url
+    width
+    height
+  }
+}
+
+fragment CartLineView on OrderLine {
+  id
+  artworkSlug
+  size
+  quantity
+  unitPrice {
+    ...Amount
+  }
+  price {
+    ...Amount
+  }
+  artwork {
+    ...LineArtwork
+  }
+}
+
+fragment CartView on Cart {
+  quantity
+  lines {
+    ...CartLineView
+  }
+  subtotal {
+    ...Amount
+  }
+  shipping {
+    ...Amount
+  }
+  total {
+    ...Amount
+  }
+}
+
+# What the header shows of this browser: how many prints its cart holds, and
+# whether it is signed in.
+query HeaderState {
+  cart {
+    quantity
+  }
+  viewer {
+    id
+  }
+}
+
+query CartPage {
+  cart {
+    ...CartView
+  }
+}
+
+mutation AddToCart($artwork: String!, $size: PaperSize!, $quantity: Int!) {
+  addToCart(artwork: $artwork, size: $size, quantity: $quantity) {
+    ...CartView
+  }
+}
+
+mutation SetCartLineQuantity($line: ID!, $quantity: Int!) {
+  setCartLineQuantity(line: $line, quantity: $quantity) {
+    ...CartView
+  }
+}

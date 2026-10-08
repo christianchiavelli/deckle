@@ -17,16 +17,21 @@ import { media, tokens as t } from '@deckle/tokens';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 import styled from 'styled-components';
+import { EditionBand } from '../../components/edition-band';
 import { PrintTiles } from '../../components/print-tiles';
+import { requestTime } from '../../components/request-time';
 import { copy } from '../../copy';
 import {
   FRONT_PAGE,
   readCatalogue,
   readCurations,
+  readDrops,
+  readDropStocks,
   readHome,
   readJournal,
 } from '../../gateway/reads';
 import { listedCurations, picturesOf } from '../../views/collections';
+import { featuredDrop, stocksBySlug } from '../../views/drops';
 import { imageAt } from '../../views/images';
 import { journalOf, storyHref } from '../../views/journal';
 import { sizingOf } from '../../views/sizing';
@@ -136,7 +141,7 @@ const Three = styled(PrintGrid)`
 
 const { home, locale } = copy;
 
-/** The front page, as approved: what Deckle is, the prints, and how sizes are set. */
+/** The front page, as approved: what Deckle is, the next drop, the prints, and how sizes are set. */
 export default function HomePage() {
   return (
     <Suspense fallback={<Opening />}>
@@ -162,12 +167,19 @@ async function Home() {
   // The gateway is not there when the image is built: this page renders on
   // request, and its reads come from the cache the gateway keeps honest.
   await connection();
-  const [{ curation, hero, sizing }, { artworks }, { curations }, journal] = await Promise.all([
-    readHome(),
-    readCatalogue(),
-    readCurations(),
-    readJournal(),
-  ]);
+  const [{ curation, hero, sizing }, { artworks }, { curations }, journal, drops, stocks] =
+    await Promise.all([
+      readHome(),
+      readCatalogue(),
+      readCurations(),
+      readJournal(),
+      readDrops(),
+      // Without its counts the band still says when the drop opens.
+      readDropStocks().catch(() => []),
+    ]);
+  const now = await requestTime();
+  const counted = stocksBySlug(stocks);
+  const drop = featuredDrop(drops, counted, now);
   const collections = listedCurations(curations, FRONT_PAGE.curation).slice(0, 3);
   const stories = journalOf(journal.artworks.edges.map((edge) => edge.node)).slice(0, 3);
   const total = new Intl.NumberFormat(locale).format(artworks.totalCount);
@@ -202,6 +214,8 @@ async function Home() {
           )}
         </Hero>
       </Band>
+
+      {drop && <EditionBand drop={drop} stock={counted.get(drop.slug) ?? null} now={now} />}
 
       <Band aria-labelledby="prints-title">
         <SectionHead

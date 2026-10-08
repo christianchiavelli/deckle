@@ -16,11 +16,12 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import styled from 'styled-components';
 import { BuyOptions } from '../../../components/buy-options';
+import { CalloutSpace, DropBand, DropCallout } from '../../../components/drop-parts';
 import { PrintTiles } from '../../../components/print-tiles';
 import { ScrollToFragment } from '../../../components/scroll-to-fragment';
 import { StoryBody } from '../../../components/story-body';
 import { copy } from '../../../copy';
-import { readCatalogue, readWork } from '../../../gateway/reads';
+import { readCatalogue, readDrops, readWork } from '../../../gateway/reads';
 import { imageAt } from '../../../views/images';
 import { hrefOf, NO_CHOICE } from '../../../views/listing';
 import { morePrints } from '../../../views/more';
@@ -57,7 +58,10 @@ export async function generateMetadata({ params }: PageProps<'/prints/[slug]'>):
     : {};
 }
 
-/** A work's own page, as approved: the print and how to buy it, its story and its record. */
+/**
+ * A work's own page, as approved: the print and how to buy it, its numbered
+ * edition when a drop prints it, its story and its record.
+ */
 export default function WorkPage({ params }: PageProps<'/prints/[slug]'>) {
   return (
     <Suspense fallback={<Product aria-busy="true" />}>
@@ -68,10 +72,16 @@ export default function WorkPage({ params }: PageProps<'/prints/[slug]'>) {
 
 async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
   const { slug } = await params;
-  const [{ artwork }, { artworks }] = await Promise.all([readWork(slug), readCatalogue()]);
+  const [{ artwork }, { artworks }, drops] = await Promise.all([
+    readWork(slug),
+    readCatalogue(),
+    // A work sells without its drop: the page stands if drops cannot be read.
+    readDrops().catch(() => []),
+  ]);
   if (!artwork) {
     notFound();
   }
+  const drop = drops.find((each) => each.artworkSlug === artwork.slug) ?? null;
   const pixels = new Intl.NumberFormat(copy.locale);
   const initial = defaultSize(artwork.sizes);
   const more = morePrints(
@@ -130,6 +140,22 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
                 sizes={artwork.sizes}
                 initial={initial.size}
                 note={tooSmallNote(artwork, copy)}
+                artwork={{
+                  slug: artwork.slug,
+                  title: artwork.title,
+                  image: artwork.image && {
+                    src: imageAt(artwork.image.url, 'thumb'),
+                    width: artwork.image.width,
+                    height: artwork.image.height,
+                  },
+                }}
+                edition={
+                  drop && (
+                    <Suspense fallback={<CalloutSpace />}>
+                      <DropCallout drop={drop} />
+                    </Suspense>
+                  )
+                }
               />
             ) : (
               <p>{text.notForSale}</p>
@@ -137,6 +163,12 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
           </BuyBox>
         </Grid>
       </Product>
+
+      {drop && (
+        <Suspense fallback={null}>
+          <DropBand drop={drop} />
+        </Suspense>
+      )}
 
       {story && (
         <Band id="story" aria-labelledby="story-title">

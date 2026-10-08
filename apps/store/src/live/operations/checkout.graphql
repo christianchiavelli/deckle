@@ -1,0 +1,77 @@
+fragment Address on ShippingAddress {
+  fullName
+  streetLine1
+  streetLine2
+  city
+  postalCode
+  countryCode
+  country
+}
+
+fragment PlacedOrderView on PlacedOrder {
+  code
+  email
+  placedAt
+  shipTo {
+    ...Address
+  }
+  lines {
+    ...CartLineView
+    drop
+    copyNumber
+    editionSize
+  }
+  subtotal {
+    ...Amount
+  }
+  shipping {
+    ...Amount
+  }
+  total {
+    ...Amount
+  }
+}
+
+# The copy this browser's account holds in a drop, and what paying for it costs.
+fragment CopyToPay on Drop {
+  slug
+  editionSize
+  paperSize
+  price {
+    ...Amount
+  }
+  page {
+    headline
+  }
+  artwork {
+    ...LineArtwork
+  }
+  viewerCopy {
+    ...CopyView
+  }
+}
+
+query CopyCheckout($drop: String!) {
+  drop(slug: $drop) {
+    ...CopyToPay
+  }
+}
+
+mutation PlaceOrder($input: CheckoutInput!) {
+  placeOrder(input: $input) {
+    ...PlacedOrderView
+  }
+}
+
+mutation PayForCopy($drop: String!, $input: CheckoutInput!) {
+  payForCopy(drop: $drop, input: $input) {
+    ...PlacedOrderView
+  }
+}
+
+# An order this browser placed: null for any other.
+query PlacedOrder($code: String!) {
+  order(code: $code) {
+    ...PlacedOrderView
+  }
+}

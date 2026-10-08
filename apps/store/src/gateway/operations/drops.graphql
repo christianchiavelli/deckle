@@ -1,0 +1,70 @@
+# A drop as the server renders it: when it opens, how many copies, on what
+# paper and at what price, its words and its print. Never its stock, which is
+# read fresh: see DropStocks.
+fragment DropSummary on Drop {
+  slug
+  artworkSlug
+  opensAt
+  editionSize
+  paperSize
+  price {
+    amount
+    currencyCode
+  }
+  page {
+    headline
+    blocks {
+      __typename
+      ... on ParagraphBlock {
+        text {
+          ...Run
+        }
+      }
+    }
+  }
+  artwork {
+    slug
+    title
+    date
+    artist {
+      name
+    }
+    image {
+      url
+      width
+      height
+      scanWidth
+      scanHeight
+    }
+    sizes {
+      ...PaperOption
+    }
+  }
+}
+
+# Every drop, the soonest to open first.
+query Drops {
+  drops {
+    ...DropSummary
+  }
+}
+
+query Drop($slug: String!) {
+  drop(slug: $slug) {
+    ...DropSummary
+  }
+}
+
+# Where each drop's copies stand. Kept for a second at most: the drop's own
+# page follows them live.
+query DropStocks {
+  drops {
+    slug
+    stock {
+      open
+      held
+      sold
+      copies
+    }
+  }
+}

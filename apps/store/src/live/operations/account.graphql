@@ -1,0 +1,49 @@
+fragment ViewerView on Viewer {
+  id
+  since
+  copies {
+    ...CopyView
+  }
+}
+
+# The account and its copies, beside the drops they come from.
+query AccountPage {
+  viewer {
+    ...ViewerView
+  }
+  drops {
+    slug
+    editionSize
+    paperSize
+    price {
+      ...Amount
+    }
+    artwork {
+      ...LineArtwork
+    }
+  }
+}
+
+mutation StartPasskeyRegistration {
+  startPasskeyRegistration
+}
+
+mutation FinishPasskeyRegistration($response: String!) {
+  finishPasskeyRegistration(response: $response) {
+    ...ViewerView
+  }
+}
+
+mutation StartPasskeySignIn {
+  startPasskeySignIn
+}
+
+mutation FinishPasskeySignIn($response: String!) {
+  finishPasskeySignIn(response: $response) {
+    ...ViewerView
+  }
+}
+
+mutation SignOut {
+  signOut
+}

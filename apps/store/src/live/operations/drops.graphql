@@ -1,0 +1,47 @@
+fragment CopyView on DropCopy {
+  drop
+  number
+  state
+  heldUntil
+  secondsLeft
+  orderCode
+}
+
+fragment StockView on DropStock {
+  open
+  held
+  sold
+  copies
+}
+
+# A drop as it stands for this browser: its copies, and the one it holds.
+query DropLive($slug: String!) {
+  drop(slug: $slug) {
+    slug
+    stock {
+      ...StockView
+    }
+    viewerCopy {
+      ...CopyView
+    }
+  }
+  viewer {
+    id
+  }
+}
+
+subscription DropStockChanged($drop: String!) {
+  dropStockChanged(drop: $drop) {
+    ...StockView
+  }
+}
+
+mutation ClaimCopy($drop: String!) {
+  claimCopy(drop: $drop) {
+    ...CopyView
+  }
+}
+
+mutation ReleaseCopy($drop: String!) {
+  releaseCopy(drop: $drop)
+}

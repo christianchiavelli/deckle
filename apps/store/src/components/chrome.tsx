@@ -1,8 +1,9 @@
 import { SiteFooter } from '@deckle/ui';
 import { tokens as t } from '@deckle/tokens';
-import type { ReactNode } from 'react';
+import { type ReactNode, Suspense } from 'react';
 import styled from 'styled-components';
 import { copy } from '../copy';
+import { AnnouncementSpace, DropAnnouncement } from './drop-announcement';
 import { StoreHeader } from './store-header';
 
 const Skip = styled.a`
@@ -23,10 +24,11 @@ const Skip = styled.a`
 const { chrome } = copy;
 
 /** The parts of the shop the menu names. */
-export type Section = 'prints' | 'collections' | 'journal';
+export type Section = 'prints' | 'drops' | 'collections' | 'journal';
 
 const sections = [
   { key: 'prints', label: chrome.prints, href: '/prints' },
+  { key: 'drops', label: chrome.drops, href: '/drops' },
   { key: 'collections', label: chrome.collections, href: '/collections' },
   { key: 'journal', label: chrome.journal, href: '/journal' },
 ] as const satisfies readonly { key: Section; label: string; href: string }[];
@@ -34,20 +36,27 @@ const sections = [
 export interface ChromeProps {
   /** The section the page is in, marked in the menu; none for the front page or a search. */
   current?: Section;
+  /** The bar above the header about the drop worth knowing today. Not on a drop's own page. */
+  announcement?: boolean;
   children: ReactNode;
 }
 
 /**
- * What every page shares: the skip link, the header, the footer. Each section's
- * layout names itself, so the menu is marked in the static shell, before a
- * work's slug is known. Drops, accounts and the cart are not open yet, and a
- * link must lead to a page, so neither the header nor the footer offers them,
- * and there is no announcement bar.
+ * What every page shares: the skip link, the line about the next drop, the
+ * header, the footer. Each section's layout names itself, so the menu is marked
+ * in the static shell, before a work's slug is known. The drop's line depends
+ * on the hour and on its copies, so it arrives on request into a space kept
+ * for it.
  */
-export function Chrome({ current, children }: ChromeProps) {
+export function Chrome({ current, announcement = true, children }: ChromeProps) {
   return (
     <>
       <Skip href="#main">{chrome.skip}</Skip>
+      {announcement && (
+        <Suspense fallback={<AnnouncementSpace />}>
+          <DropAnnouncement />
+        </Suspense>
+      )}
       <StoreHeader
         home={{ href: '/', label: chrome.home }}
         nav={{
@@ -78,6 +87,7 @@ export function Chrome({ current, children }: ChromeProps) {
             title: chrome.shop,
             links: [
               { label: chrome.prints, href: '/prints' },
+              { label: chrome.drops, href: '/drops' },
               { label: chrome.collections, href: '/collections' },
             ],
           },
@@ -85,6 +95,7 @@ export function Chrome({ current, children }: ChromeProps) {
             title: chrome.aboutColumn,
             links: [
               { label: chrome.howWeSize, href: '/about/sizes' },
+              { label: chrome.howDropsWork, href: '/about/drops' },
               { label: chrome.journal, href: '/journal' },
             ],
           },

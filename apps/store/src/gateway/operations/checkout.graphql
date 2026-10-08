@@ -1,0 +1,7 @@
+# Where the checkout ships, for its country field.
+query Countries {
+  countries {
+    code
+    name
+  }
+}
