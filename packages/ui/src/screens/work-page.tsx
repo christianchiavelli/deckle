@@ -69,9 +69,11 @@ const more = [
 export interface WorkPageProps {
   /** Just after "Add to cart": the print, beside the cart it went into. */
   added?: boolean;
+  /** Opened from the CMS's preview, with its story's newest draft. */
+  proof?: boolean;
 }
 
-export function WorkPage({ added = false }: WorkPageProps) {
+export function WorkPage({ added = false, proof = false }: WorkPageProps) {
   const melencolia = work('melencolia-i');
   const image = imageOf(melencolia);
   const scan = scanOf(melencolia);
@@ -80,6 +82,7 @@ export function WorkPage({ added = false }: WorkPageProps) {
     <Chrome
       current="prints"
       cartCount={added ? 2 : 1}
+      proof={proof}
       notice={
         added && (
           <AddedToCart

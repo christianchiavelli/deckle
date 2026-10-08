@@ -47,3 +47,22 @@ export const PhoneAddedDark = meta.story({
   args: { added: true },
   globals: { theme: 'dark', viewport: { value: 'phone' } },
 });
+
+/** Opened from the CMS's preview: the page wears a trial proof's frame, at any scroll. */
+export const DesktopProof = meta.story({
+  args: { proof: true },
+  globals: { theme: 'light', viewport: { value: 'desktop' } },
+  play: async ({ canvas }) => {
+    const proof = canvas.getByRole('complementary', { name: 'Trial proof' });
+    await expect(proof).toBeVisible();
+    await expect(canvas.getByRole('link', { name: 'See the published page' })).toHaveAttribute(
+      'href',
+      '/api/preview/exit?path=%2Fprints%2Fmelencolia-i',
+    );
+  },
+});
+
+export const PhoneProofDark = meta.story({
+  args: { proof: true },
+  globals: { theme: 'dark', viewport: { value: 'phone' } },
+});

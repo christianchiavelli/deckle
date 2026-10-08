@@ -140,6 +140,7 @@ export {
   type StoryLeadProps,
 } from './sections/story-card.tsx';
 export { type Thumbnail, Thumbnails, type ThumbnailsProps } from './sections/thumbnails.tsx';
+export { TrialProof, type TrialProofProps } from './sections/trial-proof.tsx';
 
 export { formatCentimetres, formatMoney, formatPpi, MISSING, type Centimetres } from './format.ts';
 export { typeRole, type TypeRole } from './theme/type.ts';

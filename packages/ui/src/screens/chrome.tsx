@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Announcement } from '../sections/announcement.tsx';
 import { SiteFooter } from '../sections/site-footer.tsx';
 import { SiteHeader } from '../sections/site-header.tsx';
+import { TrialProof } from '../sections/trial-proof.tsx';
 import { suggestFromDataSet } from './suggest.ts';
 
 const Skip = styled.a`
@@ -37,6 +38,8 @@ export interface ChromeProps {
   cartCount?: number;
   /** A sheet under the header, such as what was just added to the cart. */
   notice?: ReactNode;
+  /** In the CMS's preview: the page shows drafts, and wears a trial proof's frame. */
+  proof?: boolean;
   children: ReactNode;
 }
 
@@ -46,6 +49,7 @@ export function Chrome({
   announcement = true,
   cartCount = 1,
   notice,
+  proof = false,
   children,
 }: ChromeProps) {
   return (
@@ -104,6 +108,15 @@ export function Chrome({
         ]}
         small="Images: The Metropolitan Museum of Art, Open Access (CC0). Deckle is a portfolio project: checkout is simulated and nothing ships."
       />
+      {proof && (
+        <TrialProof
+          label="Trial proof"
+          href="/api/preview/exit?path=%2Fprints%2Fmelencolia-i"
+          link="See the published page"
+        >
+          Drafts, not yet published
+        </TrialProof>
+      )}
     </>
   );
 }
