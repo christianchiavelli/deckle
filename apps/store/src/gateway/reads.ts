@@ -8,6 +8,7 @@ import {
   workTags,
 } from '@deckle/cache-tags';
 import { cacheLife, cacheTag } from 'next/cache';
+import { draftMode } from 'next/headers';
 import { serverEnv } from '../server-env';
 import {
   CatalogueDocument,
@@ -59,7 +60,13 @@ async function ask<TResult, TVariables>(
   document: TypedDocumentString<TResult, TVariables>,
   variables: TVariables,
 ): Promise<TResult> {
-  const answer = await requestGateway(serverEnv().GATEWAY_URL, document, variables);
+  // In draft mode Next runs every cached read afresh and keeps nothing, so the
+  // CMS's newest drafts reach this one visitor, and the cache never sees them.
+  const { isEnabled: previewing } = await draftMode();
+  const env = serverEnv();
+  const answer = await requestGateway(env.GATEWAY_URL, document, variables, {
+    ...(previewing ? { preview: env.GATEWAY_PREVIEW_SECRET } : {}),
+  });
   if (answer.complete) {
     cacheLife('gateway');
   } else {

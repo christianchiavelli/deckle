@@ -9,7 +9,14 @@ export default defineConfig({
     include: ['src/**/*.spec.ts'],
     coverage: {
       provider: 'v8',
-      include: ['src/env.ts', 'src/cache/**/*.ts', 'src/views/**/*.ts', 'src/gateway/request.ts'],
+      include: [
+        'src/env.ts',
+        'src/secret.ts',
+        'src/cache/**/*.ts',
+        'src/preview/**/*.ts',
+        'src/views/**/*.ts',
+        'src/gateway/request.ts',
+      ],
       exclude: ['src/**/*.spec.ts'],
       thresholds: { lines: 100, branches: 100, functions: 100, statements: 100 },
     },

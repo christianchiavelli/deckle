@@ -1,6 +1,6 @@
-import { timingSafeEqual } from 'node:crypto';
 import { isCacheTag, type RevalidationProfile } from '@deckle/cache-tags';
 import { z } from 'zod';
+import { sameSecret } from '../secret';
 
 /**
  * What the gateway sends when commerce or the CMS reports a change: the tags
@@ -21,12 +21,10 @@ export interface Revalidation {
 /** Whether `authorization` is `Bearer <secret>`, compared in constant time. */
 export function isAuthorized(authorization: string | null, secret: string): boolean {
   const prefix = 'Bearer ';
-  if (authorization?.startsWith(prefix) !== true) {
-    return false;
-  }
-  const given = Buffer.from(authorization.slice(prefix.length));
-  const expected = Buffer.from(secret);
-  return given.length === expected.length && timingSafeEqual(given, expected);
+  return (
+    authorization?.startsWith(prefix) === true &&
+    sameSecret(authorization.slice(prefix.length), secret)
+  );
 }
 
 /** The request's body as a revalidation, or null when it is not one. */

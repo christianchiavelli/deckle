@@ -4,6 +4,9 @@ import { InvalidEnvironmentError, parseStoreEnv } from './env';
 const valid = {
   GATEWAY_URL: 'http://gateway:4000/graphql',
   STORE_REVALIDATE_SECRET: 'a-local-secret-that-is-long-enough-1234',
+  PREVIEW_SECRET: 'a-local-preview-secret-long-enough-1234',
+  GATEWAY_PREVIEW_SECRET: 'a-local-gateway-preview-secret-long-1234',
+  CMS_PUBLIC_URL: 'http://localhost:8081',
 };
 
 describe('parseStoreEnv', () => {
@@ -11,9 +14,15 @@ describe('parseStoreEnv', () => {
     expect(parseStoreEnv(valid)).toEqual(valid);
   });
 
+  it("keeps only the CMS's origin, the part a message from its admin carries", () => {
+    expect(parseStoreEnv({ ...valid, CMS_PUBLIC_URL: 'http://localhost:8081/admin' })).toEqual(
+      valid,
+    );
+  });
+
   it('names every missing or bad variable, without echoing a value', () => {
     const attempt = () =>
-      parseStoreEnv({ GATEWAY_URL: 'ftp://gateway', STORE_REVALIDATE_SECRET: 'short' });
+      parseStoreEnv({ ...valid, GATEWAY_URL: 'ftp://gateway', STORE_REVALIDATE_SECRET: 'short' });
     expect(attempt).toThrow(InvalidEnvironmentError);
     try {
       attempt();
@@ -28,7 +37,7 @@ describe('parseStoreEnv', () => {
 
   it('says a variable is not set rather than that it is wrong', () => {
     expect(() => parseStoreEnv({})).toThrow(
-      /GATEWAY_URL is not set\n {2}- STORE_REVALIDATE_SECRET is not set/,
+      /GATEWAY_URL is not set\n {2}- STORE_REVALIDATE_SECRET is not set\n {2}- PREVIEW_SECRET is not set\n {2}- GATEWAY_PREVIEW_SECRET is not set\n {2}- CMS_PUBLIC_URL is not set/,
     );
   });
 });

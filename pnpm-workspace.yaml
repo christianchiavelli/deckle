@@ -79,6 +79,8 @@ catalog:
   '@payloadcms/richtext-lexical': 3.90.2
   '@payloadcms/ui': 3.90.2
   '@payloadcms/translations': 3.90.2
+  # The store's half of the CMS's live preview: a draft in the admin's frame refreshes on save.
+  '@payloadcms/live-preview-react': 3.90.2
   next: 16.3.8
   react: 19.3.0
   react-dom: 19.3.0

@@ -528,6 +528,12 @@ export const copy = {
     home: 'Go to the front page',
     mark: '404',
   },
+  preview: {
+    // The press's name for a print pulled to check the plate before the edition.
+    label: 'Trial proof',
+    message: 'Drafts, not yet published',
+    leave: 'See the published page',
+  },
 };
 
 export type Copy = typeof copy;

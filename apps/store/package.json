@@ -21,6 +21,7 @@
     "@deckle/print-sizes": "workspace:*",
     "@deckle/tokens": "workspace:*",
     "@deckle/ui": "workspace:*",
+    "@payloadcms/live-preview-react": "catalog:",
     "@simplewebauthn/browser": "catalog:",
     "graphql": "catalog:",
     "graphql-ws": "catalog:",

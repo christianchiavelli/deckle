@@ -3,6 +3,7 @@ import './store.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { StyleSheetManager, stylisPluginRSC } from 'styled-components';
+import { DraftPreview } from '../components/draft-preview';
 import { StyledRegistry } from '../components/styled-registry';
 import { AddedProvider } from '../live/added';
 import { StoreApollo } from '../live/apollo';
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <StoreApollo>
               <AddedProvider>{children}</AddedProvider>
             </StoreApollo>
+            <DraftPreview />
           </StyledRegistry>
         </StyleSheetManager>
       </body>

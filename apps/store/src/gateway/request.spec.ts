@@ -26,7 +26,9 @@ function answering(body: unknown, status = 200) {
 describe('requestGateway', () => {
   it('posts the operation and its variables, and returns the data', async () => {
     const { send, sent } = answering({ data: { artwork: { title: 'Melencolia I' } } });
-    await expect(requestGateway(URL_, Document, { slug: 'melencolia-i' }, send)).resolves.toEqual({
+    await expect(
+      requestGateway(URL_, Document, { slug: 'melencolia-i' }, { send }),
+    ).resolves.toEqual({
       data: { artwork: { title: 'Melencolia I' } },
       complete: true,
     });
@@ -41,7 +43,7 @@ describe('requestGateway', () => {
 
   it('keeps a null the gateway meant: a work it does not have', async () => {
     const { send } = answering({ data: { artwork: null } });
-    await expect(requestGateway(URL_, Document, { slug: 'nope' }, send)).resolves.toEqual({
+    await expect(requestGateway(URL_, Document, { slug: 'nope' }, { send })).resolves.toEqual({
       data: { artwork: null },
       complete: true,
     });
@@ -54,7 +56,7 @@ describe('requestGateway', () => {
         { message: 'The cms service could not answer', extensions: { code: 'UPSTREAM_ERROR' } },
       ],
     });
-    const answer = await requestGateway(URL_, Document, { slug: 'melencolia-i' }, send);
+    const answer = await requestGateway(URL_, Document, { slug: 'melencolia-i' }, { send });
     expect(answer.complete).toBe(false);
     expect(answer.data.artwork?.title).toBe('Melencolia I');
   });
@@ -71,11 +73,21 @@ describe('requestGateway', () => {
       },
       400,
     );
-    const attempt = requestGateway(URL_, Document, { slug: 'x' }, send);
+    const attempt = requestGateway(URL_, Document, { slug: 'x' }, { send });
     await expect(attempt).rejects.toThrow(
       'The gateway answered 400 with Cannot query field "nope"',
     );
     await expect(attempt).rejects.toMatchObject({ codes: ['GRAPHQL_VALIDATION_FAILED'] });
+  });
+
+  it('asks for drafts only when given the preview secret, as draft mode does', async () => {
+    const { send, sent } = answering({ data: { artwork: null } });
+    await requestGateway(URL_, Document, { slug: 'x' }, { send });
+    await requestGateway(URL_, Document, { slug: 'x' }, { send, preview: 'the-preview-secret' });
+
+    const header = (index: number) => new Headers(sent[index]?.init?.headers).get('deckle-preview');
+    expect(header(0)).toBeNull();
+    expect(header(1)).toBe('the-preview-secret');
   });
 
   it('names an error without a code as unknown, and an empty answer as no data', async () => {
@@ -84,11 +96,11 @@ describe('requestGateway', () => {
         URL_,
         Document,
         { slug: 'x' },
-        answering({ data: null, errors: [{ message: 'boom' }] }).send,
+        { send: answering({ data: null, errors: [{ message: 'boom' }] }).send },
       ),
     ).rejects.toMatchObject({ codes: ['UNKNOWN'] });
     await expect(
-      requestGateway(URL_, Document, { slug: 'x' }, answering({ data: null }).send),
+      requestGateway(URL_, Document, { slug: 'x' }, { send: answering({ data: null }).send }),
     ).rejects.toThrow('The gateway answered 200 with no data');
   });
 
@@ -98,11 +110,11 @@ describe('requestGateway', () => {
         URL_,
         Document,
         { slug: 'x' },
-        answering('<html>Bad gateway</html>', 502).send,
+        { send: answering('<html>Bad gateway</html>', 502).send },
       ),
     ).rejects.toThrow('The gateway answered 502, but not in GraphQL');
     const down: typeof fetch = () => Promise.reject(new TypeError('fetch failed'));
-    await expect(requestGateway(URL_, Document, { slug: 'x' }, down)).rejects.toThrow(
+    await expect(requestGateway(URL_, Document, { slug: 'x' }, { send: down })).rejects.toThrow(
       new GatewayError('The gateway did not answer: TypeError: fetch failed'),
     );
   });

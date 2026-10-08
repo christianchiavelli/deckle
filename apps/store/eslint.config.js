@@ -5,7 +5,14 @@ import reactHooks from 'eslint-plugin-react-hooks';
 const framework = ['next', 'next/**', 'react', 'react-dom', 'react/**', 'styled-components'];
 
 /** Modules that state a rule or a contract and nothing else: no framework, so they test alone. */
-const pure = ['src/env.ts', 'src/cache/**/*.ts', 'src/views/**/*.ts', 'src/gateway/request.ts'];
+const pure = [
+  'src/env.ts',
+  'src/secret.ts',
+  'src/cache/**/*.ts',
+  'src/preview/**/*.ts',
+  'src/views/**/*.ts',
+  'src/gateway/request.ts',
+];
 
 /** The browser's GraphQL client, its socket and the passkey ceremonies: the islands' alone. */
 const browserOnly = {

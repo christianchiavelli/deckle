@@ -12,13 +12,23 @@ const unlessMissing =
   (issue: { input?: unknown }): string =>
     issue.input === undefined ? 'is not set' : message;
 
+const secret = z
+  .string({ error: unlessMissing('must be text') })
+  .min(32, 'must be at least 32 characters');
+
 export const storeEnvSchema = z.object({
   /** The gateway's GraphQL endpoint, on Docker's network: the server reads it there. */
   GATEWAY_URL: z.url({ protocol: /^https?$/, error: unlessMissing('must be an http(s) URL') }),
   /** What the gateway sends as a bearer token when it asks for cache tags to be dropped. */
-  STORE_REVALIDATE_SECRET: z
-    .string({ error: unlessMissing('must be text') })
-    .min(32, 'must be at least 32 characters'),
+  STORE_REVALIDATE_SECRET: secret,
+  /** In the CMS's preview links: only a link that carries it turns on draft mode. */
+  PREVIEW_SECRET: secret,
+  /** What the server sends the gateway, in draft mode, to read the CMS's drafts. */
+  GATEWAY_PREVIEW_SECRET: secret,
+  /** The CMS's admin, whose live preview frames a draft and asks it to refresh on save. */
+  CMS_PUBLIC_URL: z
+    .url({ protocol: /^https?$/, error: unlessMissing('must be an http(s) URL') })
+    .transform((value) => new URL(value).origin),
 });
 
 export type StoreEnv = z.infer<typeof storeEnvSchema>;

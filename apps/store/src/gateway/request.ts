@@ -43,11 +43,20 @@ export interface GatewayAnswer<TResult> {
   readonly complete: boolean;
 }
 
+export interface GatewayRequestOptions {
+  readonly send?: typeof fetch;
+  /**
+   * The secret that has the gateway read the CMS's newest drafts, sent only in
+   * draft mode. The gateway honours it only from Docker's network.
+   */
+  readonly preview?: string;
+}
+
 export async function requestGateway<TResult, TVariables>(
   url: string,
   document: TypedDocumentString<TResult, TVariables>,
   variables: TVariables,
-  send: typeof fetch = fetch,
+  { send = fetch, preview }: GatewayRequestOptions = {},
 ): Promise<GatewayAnswer<TResult>> {
   let response: Response;
   try {
@@ -56,6 +65,7 @@ export async function requestGateway<TResult, TVariables>(
       headers: {
         'content-type': 'application/json',
         accept: 'application/graphql-response+json, application/json',
+        ...(preview === undefined ? {} : { 'deckle-preview': preview }),
       },
       body: JSON.stringify({ query: document.toString(), variables }),
     });
