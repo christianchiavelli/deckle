@@ -6,7 +6,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 
 | Path | What it is |
 | --- | --- |
-| `apps/store` | The store: Next.js 16 with Cache Components, rendering on the server from tagged reads of the gateway, built from the design system's sections |
+| `apps/store` | The store: Next.js 16 with Cache Components, rendering on the server from tagged reads of the gateway, built from the design system's sections. What is one visitor's (the cart, the account, a held copy, a drop's live count) is read in the browser by Apollo Client, under `src/live` |
 | `apps/cms` | Payload 3 in its own Next.js app: each work's story, curated collections, drop pages, draft preview |
 | `services/commerce` | Vendure 3.7.4, server and worker: catalogue, cart, checkout and orders. Only the gateway talks to it |
 | `services/gateway` | NestJS 12 GraphQL gateway: one schema over commerce, CMS and drops. Owns identity and drops |
@@ -19,7 +19,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them |
 | `packages/eslint-config` | The lint rules every package shares |
 | `data/met` | The imported data set: `catalog.json` and the reduced images, baked into the published images |
-| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes and the admin panels in Portuguese |
+| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes, a passkey made with a virtual authenticator, a page that holds still as it loads, and the admin panels in Portuguese |
 | `design/art-direction` | The art directions compared before the choice, in static HTML: the record of how the copper plate palette was picked |
 | `design/logo` | The logo options compared the same way, and the record of the chosen one: the studio seal, with the name set as an imprint |
 | `infra` | Caddy and Postgres configuration for `compose.yaml` |
@@ -44,8 +44,8 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm --filter @deckle/brand favicon`: rewrites `assets/favicon.svg` from the seal and the accent copper, after either changes. A unit test fails while it is stale.
 - `pnpm --filter @deckle/e2e test:e2e`: the browser checks, against the stack `docker compose up --wait` started. The first time, `pnpm --filter @deckle/e2e exec playwright install chromium` fetches the browser.
 - `pnpm --filter @deckle/gateway schema:generate`: after any change to a resolver or GraphQL type. `schema.gql` is the committed contract, and CI fails when it is stale or when a change breaks a client.
-- `pnpm --filter @deckle/store codegen`: after a change to an operation under `apps/store/src/gateway/operations` or to the gateway's schema. Commit `generated.ts`; CI fails when it is stale (`schema:check`).
-- `pnpm --filter @deckle/store dev`: the store on port 3000, reading the running stack's gateway with the values in `.env.example`, copied to `.env`. The stack's gateway drops tags in the store container, not in this one.
+- `pnpm --filter @deckle/store codegen`: after a change to an operation under `apps/store/src/gateway/operations` (the server's reads) or `apps/store/src/live/operations` (the browser's, through Apollo Client), or to the gateway's schema. Commit both `generated.ts`, as written: CI fails when either is stale (`schema:check`), and Prettier leaves them alone.
+- `pnpm --filter @deckle/store dev`: the store on port 3000, reading the running stack's gateway with the values in `.env.example`, copied to `.env`. The stack's gateway drops tags in the store container, not in this one. The cart, the account and the drops call `/graphql` on the page's own origin, and a passkey belongs to `localhost:8080`, so those only work through Caddy, in the stack.
 - `pnpm --filter @deckle/gateway db:generate --name <change>`: after editing a `*.table.ts`. Commit the new files under `drizzle/`; the gateway migrates itself as it starts.
 - `pnpm --filter @deckle/commerce schema`: prints the Shop API schema the gateway reads into `services/commerce/schema/`. CI fails when the committed file is stale (`schema:check`).
 - `pnpm --filter @deckle/commerce migration:generate <name>`: after a change to Vendure's config or a custom field, run against a database that has every migration applied. Commerce migrates itself as it starts, and refuses to start when the database and the config differ.
@@ -78,6 +78,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 - TypeScript 6.0 and ESM everywhere. Node packages compile with `module: nodenext`. Each package sets its own `types`, since TypeScript 6 defaults it to none.
 - Zod at every border: environment, upstream responses, webhooks, files read from disk. Code that ships to a browser imports `zod/mini`.
 - Layers are enforced by each package's `eslint.config.js` through `restrictImports()`. Do not weaken a rule to make an import pass.
+- A store page's placeholder, while its content streams in, is marked `aria-busy="true"`: the footer waits for it, so nothing moves when the content lands (ADR 0051).
 - Tests sit next to what they test as `*.spec.ts`. Anything that needs Postgres runs against a real one in Testcontainers, never a mock of the database.
 - Comments explain why, at the line that needs it. No comments that restate the code.
 - Everything written in the repository is in English: code, docs, commit messages.

@@ -53,3 +53,5 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0047](0047-a-passkey-is-the-whole-account.md) | A passkey is the whole account |
 | [0048](0048-the-cart-is-a-guests-the-numbered-copy-the-customers.md) | The cart is a guest's; a numbered copy is the customer's |
 | [0049](0049-a-drop-never-sells-a-fifty-first-copy.md) | A drop never sells a fifty-first copy |
+| [0050](0050-each-visitors-data-is-read-in-the-browser.md) | Each visitor's data is read in the browser |
+| [0051](0051-a-page-holds-still-as-it-streams-in.md) | A page holds still as it streams in |
