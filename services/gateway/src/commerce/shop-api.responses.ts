@@ -1,3 +1,4 @@
+import { PAPER_SIZE_ORDER } from '@deckle/print-sizes';
 import { z } from 'zod';
 import { optionalInt, optionalText, requiredText } from '../upstream/text.js';
 
@@ -94,7 +95,10 @@ export const editionsSchema = z.object({
             /** Minor units, taxes included. */
             priceWithTax: z.int().nonnegative(),
             currencyCode: z.string().regex(/^[A-Z]{3}$/),
-            customFields: z.object({ editionSize: z.int().positive().nullable() }),
+            customFields: z.object({
+              paperSize: z.enum(PAPER_SIZE_ORDER).nullable(),
+              editionSize: z.int().positive().nullable(),
+            }),
           }),
         ),
       }),

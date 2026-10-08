@@ -244,6 +244,11 @@ type Drop {
   page: DropPage
 
   """
+  The paper every copy is printed on, from the edition commerce sells; null when it sells none.
+  """
+  paperSize: PaperSize
+
+  """
   A copy's price, shipping included; null when commerce sells no edition of it.
   """
   price: Money

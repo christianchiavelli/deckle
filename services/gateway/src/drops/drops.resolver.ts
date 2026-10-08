@@ -11,6 +11,7 @@ import {
 import { slugSchema } from '../catalog/artworks.args.js';
 import { Artwork } from '../catalog/models/artwork.model.js';
 import { Money } from '../catalog/models/money.model.js';
+import { PaperSizeEnum } from '../catalog/models/print-size.model.js';
 import { CheckoutInput } from '../checkout/checkout.input.js';
 import { PlacedOrder } from '../checkout/order.model.js';
 import { ArgsSchemaPipe } from '../graphql/args-schema.pipe.js';
@@ -116,6 +117,16 @@ export class DropsResolver {
   async price(@Parent() drop: Drop, @Context() context: GatewayContext): Promise<Money | null> {
     const edition = await context.loaders.editionByDrop.load(drop.slug);
     return edition === null ? null : { amount: edition.price, currencyCode: edition.currencyCode };
+  }
+
+  @ResolveField(() => PaperSizeEnum, {
+    nullable: true,
+    description:
+      'The paper every copy is printed on, from the edition commerce sells; null when it sells none.',
+    complexity: crossService,
+  })
+  async paperSize(@Parent() drop: Drop, @Context() context: GatewayContext) {
+    return (await context.loaders.editionByDrop.load(drop.slug))?.paperSize ?? null;
   }
 
   @ResolveField(() => DropStock, {

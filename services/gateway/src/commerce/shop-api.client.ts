@@ -1,3 +1,4 @@
+import type { PaperSize } from '@deckle/print-sizes';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Env } from '../config/env.js';
@@ -32,6 +33,8 @@ export interface Edition {
   readonly price: number;
   readonly currencyCode: string;
   readonly editionSize: number;
+  /** The paper every copy is printed on; null when commerce does not say. */
+  readonly paperSize: PaperSize | null;
 }
 
 export interface ProductIdPage {
@@ -134,6 +137,7 @@ export class ShopApiClient {
                 price: variant.priceWithTax,
                 currencyCode: variant.currencyCode,
                 editionSize: variant.customFields.editionSize,
+                paperSize: variant.customFields.paperSize,
               },
             ],
       ),

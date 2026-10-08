@@ -115,6 +115,7 @@ export const EDITIONS = /* GraphQL */ `
           priceWithTax
           currencyCode
           customFields {
+            paperSize
             editionSize
           }
         }

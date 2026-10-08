@@ -36,6 +36,7 @@ const DROPS = /* GraphQL */ `
         amount
         currencyCode
       }
+      paperSize
       stock {
         open
         held
@@ -212,6 +213,7 @@ describe('drops over GraphQL', () => {
             blocks: [{ __typename: 'ParagraphBlock' }],
           },
           price: { amount: 18_000, currencyCode: 'USD' },
+          paperSize: 'A3',
           stock: { open: 50, held: 0, sold: 0 },
         },
         // Its page is still a draft in the CMS.

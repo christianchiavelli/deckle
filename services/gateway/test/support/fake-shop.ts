@@ -157,7 +157,7 @@ export class FakeShop {
                   id: edition.variantId,
                   priceWithTax: edition.price,
                   currencyCode: 'USD',
-                  customFields: { editionSize: edition.editionSize },
+                  customFields: { paperSize: 'A3', editionSize: edition.editionSize },
                 },
               ],
             })),
