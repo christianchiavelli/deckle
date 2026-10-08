@@ -14,11 +14,14 @@ Every page renders on request into a static shell (ADR 0042): the shell holds th
 - **The footer waits for the content.** A page's placeholder is marked `aria-busy="true"`, and while `main` has a busy child the footer is not displayed: `main:has(> [aria-busy='true']) + footer { display: none }`. An element that appears is not a shift; one that moves is. The islands that read in the browser (ADR 0050) mark their waiting state busy the same way, so the footer also waits for the cart or the account.
 - **Nothing static sits under a streamed part.** Where a page drew a static band after its streamed content (the note on sizes under the prints, the rules under the scans), the band moves into the same boundary and arrives with it.
 - **The drop line keeps its height.** Its placeholder is as tall as the bar: one line on a wide screen, two on a phone, where the words and the link wrap.
-- **The e2e suite checks it.** Each page, on a laptop and on a phone, adds up its layout shifts over its first two seconds and must stay under 0.02.
+- **The fallback font fits Linux too.** Text that paints before Host Grotesk arrives uses Arial resized to its metrics. Linux seldom has Arial, so Liberation Sans, drawn to Arial's metrics, is named after it and takes the same overrides.
+- **The e2e suite checks it.** Each page, on a laptop and on a phone, adds up its layout shifts over its first two seconds and must stay under 0.05, half of Google's line: what this record accepts below stays under it, and the footer that jumped, at 0.24 and up, does not.
 
 ## Consequences
 
-- Every page measures between 0 and 0.0004, at both widths. Against the store as item 3 left it, the check fails on every page it had.
+- On the stack, every page measures between 0 and 0.0004 at both widths. Against the store as item 3 left it, the check fails on every page it had.
+- A web font that arrives after the first paint can still wrap a paragraph one line differently, since the fallback matches its metrics on average, not word by word. Before Liberation Sans was named, the CI's Linux runner measured up to 0.04 on a phone.
+- Android has neither Arial nor Liberation Sans, so a phone there paints first in Roboto, unadjusted, and can move by a line when Host Grotesk lands.
 - For about 300 ms after the first paint, a page shows its header and its heading and nothing under them; the footer comes with the content.
 - The rule leans on a convention: a placeholder is busy. A page that forgets passes the build and fails the e2e check.
 - Without JavaScript, React never reveals streamed content, so such a page keeps its placeholder and now has no footer either. It had no content without JavaScript before.

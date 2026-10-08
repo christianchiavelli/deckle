@@ -5,9 +5,11 @@ const store = process.env['STORE_URL'] ?? 'http://localhost:8080';
 /**
  * Google counts a layout shift below 0.1 as good. A page here is a static shell
  * the rest streams into, so it should barely move at all: what is drawn first
- * stays where it is drawn.
+ * stays where it is drawn. Half of Google's line leaves room for what ADR 0051
+ * accepts, a line of text that wraps differently once the web font is in, and
+ * still fails the footer that jumped, at 0.24 and up.
  */
-const MOST = 0.02;
+const MOST = 0.05;
 
 const pages = [
   ['the front page', '/'],
