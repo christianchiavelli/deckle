@@ -6,7 +6,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 
 | Path | What it is |
 | --- | --- |
-| `apps/store` | The store: Next.js 16 with Cache Components, rendering on the server from tagged reads of the gateway, built from the design system's sections. What is one visitor's (the cart, the account, a held copy, a drop's live count) is read in the browser by Apollo Client, under `src/live` |
+| `apps/store` | The store: Next.js 16 with Cache Components, rendering on the server from tagged reads of the gateway, built from the design system's sections, in two editions: English at the root, Brazilian Portuguese under `/pt-br` (ADR 0054). What is one visitor's (the cart, the account, a held copy, a drop's live count) is read in the browser by Apollo Client, under `src/live` |
 | `apps/cms` | Payload 3 in its own Next.js app: each work's story, curated collections, drop pages, draft preview |
 | `services/commerce` | Vendure 3.7.4, server and worker: catalogue, cart, checkout and orders. Only the gateway talks to it |
 | `services/gateway` | NestJS 12 GraphQL gateway: one schema over commerce, CMS and drops. Owns identity and drops |
@@ -19,7 +19,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them |
 | `packages/eslint-config` | The lint rules every package shares |
 | `data/met` | The imported data set: `catalog.json` and the reduced images, baked into the published images |
-| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes, a passkey made with a virtual authenticator, a page that holds still as it loads, a draft opened from the CMS, and the admin panels in Portuguese |
+| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes and both editions, a passkey made with a virtual authenticator, a page that holds still as it loads, a draft opened from the CMS, and the admin panels in Portuguese |
 | `load` | The drop's load test in k6: a thousand people, each with a passkey made in software, claim its copies in the same second through two gateways (ADR 0052) |
 | `design/art-direction` | The art directions compared before the choice, in static HTML: the record of how the copper plate palette was picked |
 | `design/logo` | The logo options compared the same way, and the record of the chosen one: the studio seal, with the name set as an imprint |
@@ -30,6 +30,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 
 - `pnpm install`: Node 24.21.0 and pnpm 12.9.1 are pinned (`devEngines`, `packageManager`) and downloaded on the first install. Always run through `pnpm`, never a bare `node`, or the machine's own Node is used.
 - `pnpm run ci`: format check, lint, types and unit tests in every package. Must pass before any change is done.
+- `pnpm exec prettier --write <paths>`: from the repository root. From inside a package Prettier misses the root's `.prettierignore` and rewrites generated files and migrations.
 - `pnpm --filter <package> <script>`: one package's script, e.g. `pnpm --filter @deckle/gateway test`.
 - `docker compose up --wait`: the whole stack, production builds, healthchecked.
 - `pnpm --filter @deckle/met run import`: fetches the curated works from The Met again and rewrites `data/met`, only where bytes changed. `run` is needed because `import` is also a pnpm command. It calls the museum, so it never runs in CI.
@@ -69,6 +70,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 
 - **Commerce and CMS changes reach the gateway as signed webhooks.** `POST /hooks/commerce` and `POST /hooks/cms`, JSON, with `Deckle-Signature: t=<unix seconds>,v1=<hex HMAC-SHA256 of "<t>.<raw body>">` and a five-minute tolerance. The gateway turns each event into cache tags for the store.
 - **The gateway asks the store to drop cache tags.** `POST http://store:3000/api/revalidate`, with `Authorization: Bearer <STORE_REVALIDATE_SECRET>` and `{ "tags": [...], "profile": "expire" | "max" }`. Tags come from `@deckle/cache-tags`, and the store refuses any other with a 400.
+- **The CMS's words come in the request's language.** The gateway reads the CMS in Portuguese when `Accept-Language` ranks `pt` above `en`, with English for any field not translated, and in English otherwise. The store names its page's edition with every read, on the server and from the browser (ADR 0054).
 - **Only the store reads drafts.** In draft mode, which the CMS's preview links turn on, the store sends `Deckle-Preview: <GATEWAY_PREVIEW_SECRET>` with its reads, and the gateway reads the CMS's newest drafts for that request alone. Caddy drops the header from every request from outside (ADR 0053).
 - **The gateway vouches for its users to commerce.** It signs a short-lived EdDSA JWT (`iss` `deckle-gateway`, `aud` `deckle-commerce`, `sub` the Deckle user id) and publishes its keys at `GET /internal/jwks.json`. Commerce verifies it in a Vendure `AuthenticationStrategy` named `deckle`, so it holds no secret that could mint a login.
 - **The gateway calls the Admin API with an API key, never a session.**
@@ -82,6 +84,8 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 - Zod at every border: environment, upstream responses, webhooks, files read from disk. Code that ships to a browser imports `zod/mini`.
 - Layers are enforced by each package's `eslint.config.js` through `restrictImports()`. Do not weaken a rule to make an import pass.
 - A store page's placeholder, while its content streams in, is marked `aria-busy="true"`: the footer waits for it, so nothing moves when the content lands (ADR 0051).
+- The store's words live in `apps/store/src/copy`, one module per edition in the English one's shape: `getCopy()` in a Server Component, `useCopy()` in a Client Component. A link inside the store goes through `copy.path()`, so it stays in the page's edition. The museum's words are never translated, and a Portuguese page marks them `lang="en"`.
+- A rule that only works with `stylisPluginRSC` (a `+`, a `~`, `:first-child` and its kin) goes in plain CSS when a Server Component renders it after an `await`: in Server Components styled-components keeps its plugins in module state, a later render can write the rule without them, and React draws the page again as it hydrates (ADR 0054).
 - A `styled(Component)` that changes what the component already sets wraps those declarations in `&&`. A page rendered on the server streams each component's styles where it renders, so the component's own rules can arrive after the override and win; Storybook renders in the browser and never shows it.
 - Tests sit next to what they test as `*.spec.ts`. Anything that needs Postgres runs against a real one in Testcontainers, never a mock of the database.
 - Comments explain why, at the line that needs it. No comments that restate the code.

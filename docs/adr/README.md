@@ -57,3 +57,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0051](0051-a-page-holds-still-as-it-streams-in.md) | A page holds still as it streams in |
 | [0052](0052-a-thousand-claims-through-two-gateways.md) | A thousand claims through two gateways |
 | [0053](0053-a-draft-is-previewed-behind-a-trial-proof.md) | A draft is previewed behind a trial proof |
+| [0054](0054-a-portuguese-edition-of-the-store.md) | A Portuguese edition of the store |
