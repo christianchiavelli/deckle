@@ -1,12 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { sameSecret } from '../secret';
-import { leaveLink, previewPage, returnPath } from './link';
+import { editionOf, leaveLink, previewPage, returnPath } from './link';
 
 describe('previewPage', () => {
   it('opens the page each document of the CMS is read on', () => {
     expect(previewPage('story', 'melencolia-i')).toBe('/prints/melencolia-i#story');
     expect(previewPage('curation', 'first-impressions')).toBe('/collections/first-impressions');
     expect(previewPage('drop-page', 'melencolia-i-numbered')).toBe('/drops/melencolia-i-numbered');
+  });
+
+  it('opens the Portuguese edition for a document edited in Portuguese', () => {
+    expect(previewPage('story', 'melencolia-i', 'pt')).toBe('/pt-br/prints/melencolia-i#story');
+    expect(previewPage('curation', 'first-impressions', 'en')).toBe(
+      '/collections/first-impressions',
+    );
+    expect(editionOf('fr')).toBe('en');
+    expect(editionOf(null)).toBe('en');
   });
 
   it.each([

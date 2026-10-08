@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copy } from '../copy';
+import { en as copy } from '../copy/en';
 import { greatWave, melencolia } from '../test/works';
 import {
   defaultSize,
@@ -119,15 +119,19 @@ describe('the sizes', () => {
 });
 
 describe('recordOf', () => {
-  it("lists the museum's record in catalogue order", () => {
+  it("lists the museum's record in catalogue order, its own words marked as English", () => {
     expect(recordOf(melencolia, copy)).toEqual([
-      { term: 'Artist', detail: 'Albrecht Dürer, German, Nuremberg 1471–1528 Nuremberg' },
-      { term: 'Date', detail: '1514' },
-      { term: 'Medium', detail: 'Engraving' },
-      { term: 'Dimensions', detail: 'Plate: 9 7/16 × 7 5/16 in. (24 × 18.5 cm)' },
-      { term: 'Culture', detail: null },
-      { term: 'Period', detail: null },
-      { term: 'Credit line', detail: 'Harris Brisbane Dick Fund, 1943' },
+      {
+        term: 'Artist',
+        detail: 'Albrecht Dürer, German, Nuremberg 1471–1528 Nuremberg',
+        lang: 'en',
+      },
+      { term: 'Date', detail: '1514', lang: 'en' },
+      { term: 'Medium', detail: 'Engraving', lang: 'en' },
+      { term: 'Dimensions', detail: 'Plate: 9 7/16 × 7 5/16 in. (24 × 18.5 cm)', lang: 'en' },
+      { term: 'Culture', detail: null, lang: 'en' },
+      { term: 'Period', detail: null, lang: 'en' },
+      { term: 'Credit line', detail: 'Harris Brisbane Dick Fund, 1943', lang: 'en' },
       { term: 'Object number', detail: '43.106.1' },
       { term: 'Rights', detail: 'Public domain, Open Access (CC0)' },
       { term: 'Scan', detail: '2,820 × 3,561 px, read from the file' },

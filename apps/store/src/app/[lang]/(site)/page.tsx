@@ -17,10 +17,10 @@ import { media, tokens as t } from '@deckle/tokens';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { EditionBand } from '../../components/edition-band';
-import { PrintTiles } from '../../components/print-tiles';
-import { requestTime } from '../../components/request-time';
-import { copy } from '../../copy';
+import { EditionBand } from '../../../components/edition-band';
+import { PrintTiles } from '../../../components/print-tiles';
+import { requestTime } from '../../../components/request-time';
+import { getCopy } from '../../../copy/server';
 import {
   FRONT_PAGE,
   readCatalogue,
@@ -29,13 +29,13 @@ import {
   readDropStocks,
   readHome,
   readJournal,
-} from '../../gateway/reads';
-import { listedCurations, picturesOf } from '../../views/collections';
-import { featuredDrop, stocksBySlug } from '../../views/drops';
-import { imageAt } from '../../views/images';
-import { journalOf, storyHref } from '../../views/journal';
-import { sizingOf } from '../../views/sizing';
-import { smallestFirst } from '../../views/work';
+} from '../../../gateway/reads';
+import { listedCurations, picturesOf } from '../../../views/collections';
+import { featuredDrop, stocksBySlug } from '../../../views/drops';
+import { imageAt } from '../../../views/images';
+import { journalOf, storyHref } from '../../../views/journal';
+import { sizingOf } from '../../../views/sizing';
+import { smallestFirst } from '../../../views/work';
 
 const Hero = styled.div`
   display: grid;
@@ -142,8 +142,6 @@ const Three = styled(PrintGrid)`
   }
 `;
 
-const { home, locale } = copy;
-
 /** The front page, as approved: what Deckle is, the next drop, the prints, and how sizes are set. */
 export default function HomePage() {
   return (
@@ -154,7 +152,8 @@ export default function HomePage() {
 }
 
 /** What the page says before the gateway has answered: the same words, without the numbers. */
-function Opening() {
+async function Opening() {
+  const { home } = await getCopy();
   return (
     <Band aria-labelledby="home-title" aria-busy="true">
       <Hero>
@@ -167,16 +166,18 @@ function Opening() {
 }
 
 async function Home() {
+  const copy = await getCopy();
+  const { home, locale } = copy;
   // The gateway is not there when the image is built: this page renders on
   // request, and its reads come from the cache the gateway keeps honest.
   await connection();
   const [{ curation, hero, sizing }, { artworks }, { curations }, journal, drops, stocks] =
     await Promise.all([
-      readHome(),
+      readHome(copy.lang),
       readCatalogue(),
-      readCurations(),
-      readJournal(),
-      readDrops(),
+      readCurations(copy.lang),
+      readJournal(copy.lang),
+      readDrops(copy.lang),
       // Without its counts the band still says when the drop opens.
       readDropStocks().catch(() => []),
     ]);
@@ -198,10 +199,10 @@ async function Home() {
             <h1 id="home-title">{home.title}</h1>
             <p>{home.intro(total)}</p>
             <Actions>
-              <ButtonLink href="/prints" icon="arrow">
+              <ButtonLink href={copy.path('/prints')} icon="arrow">
                 {home.browse}
               </ButtonLink>
-              <TextLink href="/about/sizes">{home.howWeSize}</TextLink>
+              <TextLink href={copy.path('/about/sizes')}>{home.howWeSize}</TextLink>
             </Actions>
           </HeroCopy>
           {hero?.image && (
@@ -225,7 +226,7 @@ async function Home() {
           id="prints-title"
           title={home.prints}
           action={
-            <TextLink href="/prints" icon="arrow">
+            <TextLink href={copy.path('/prints')} icon="arrow">
               {home.seeAll(total)}
             </TextLink>
           }
@@ -255,7 +256,7 @@ async function Home() {
                   </li>
                 ))}
               </Sizes>
-              <TextLink href="/about/sizes" icon="arrow">
+              <TextLink href={copy.path('/about/sizes')} icon="arrow">
                 {home.howWeSize}
               </TextLink>
             </SizingCopy>
@@ -274,7 +275,7 @@ async function Home() {
             id="collections-title"
             title={home.collections}
             action={
-              <TextLink href="/collections" icon="arrow">
+              <TextLink href={copy.path('/collections')} icon="arrow">
                 {home.everyCollection}
               </TextLink>
             }
@@ -285,7 +286,7 @@ async function Home() {
               return cover ? (
                 <li key={collection.slug}>
                   <PrintTile
-                    href={`/collections/${collection.slug}`}
+                    href={copy.path(`/collections/${collection.slug}`)}
                     image={{
                       src: imageAt(cover.url, 'card'),
                       width: cover.width,
@@ -307,7 +308,7 @@ async function Home() {
             id="journal-title"
             title={home.journal}
             action={
-              <TextLink href="/journal" icon="arrow">
+              <TextLink href={copy.path('/journal')} icon="arrow">
                 {home.everyStory}
               </TextLink>
             }
@@ -316,7 +317,7 @@ async function Home() {
             {stories.map((story) => (
               <li key={story.slug}>
                 <StoryCard
-                  href={storyHref(story.slug)}
+                  href={copy.path(storyHref(story.slug))}
                   kicker={story.kicker}
                   title={story.title}
                   lede={story.lede}

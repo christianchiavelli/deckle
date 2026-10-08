@@ -20,11 +20,12 @@ import {
   TextField,
 } from '@deckle/ui';
 import { tokens as t } from '@deckle/tokens';
+import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, type SyntheticEvent, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useNow } from '../components/clock';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { lineOf, moneyOf, summaryOf } from '../views/cart';
 import { type CheckoutField, readCheckout, refusedFields } from '../views/checkout';
 import { imageAt } from '../views/images';
@@ -71,8 +72,6 @@ export interface Country {
   readonly name: string;
 }
 
-const { checkout: text } = copy;
-
 /** The country the form opens on: the shop's own, when it ships there. */
 const HOME = 'US';
 
@@ -99,6 +98,9 @@ export function CheckoutLive({ countries, drop, now }: CheckoutLiveProps) {
 }
 
 function CartCheckout({ countries }: { countries: readonly Country[] }) {
+  const copy = useCopy();
+  const { checkout: text } = copy;
+  const cartCrumbs = [{ label: text.cart, href: copy.path('/cart') }];
   const { data, error } = useQuery(CartPageDocument, { ssr: false });
   const [placeOrder] = useMutation(PlaceOrderDocument, {
     update: (cache) => {
@@ -151,6 +153,8 @@ function CopyCheckout({
   drop: string;
   now: number;
 }) {
+  const copy = useCopy();
+  const { checkout: text } = copy;
   const { data, error } = useQuery(CopyCheckoutDocument, {
     variables: { drop },
     ssr: false,
@@ -165,7 +169,7 @@ function CopyCheckout({
   const now = useNow(serverNow, 1000);
 
   const crumbs = [
-    { label: data?.drop?.page?.headline ?? copy.drops.title, href: `/drops/${drop}` },
+    { label: data?.drop?.page?.headline ?? copy.drops.title, href: copy.path(`/drops/${drop}`) },
   ];
   if (data === undefined) {
     return <Waiting failed={error !== undefined} crumbs={crumbs} />;
@@ -194,8 +198,6 @@ function CopyCheckout({
   );
 }
 
-const cartCrumbs = [{ label: text.cart, href: '/cart' }];
-
 function Waiting({
   failed,
   crumbs,
@@ -203,6 +205,7 @@ function Waiting({
   failed: boolean;
   crumbs: readonly { label: string; href: string }[];
 }) {
+  const { checkout: text } = useCopy();
   return (
     <Band aria-labelledby="checkout-title" aria-busy={!failed}>
       <PageHead
@@ -220,11 +223,13 @@ function Waiting({
 }
 
 function NotHeld({ drop }: { drop: string }) {
+  const copy = useCopy();
+  const { checkout: text } = copy;
   return (
     <Band aria-labelledby="checkout-title">
       <PageHead id="checkout-title" title={text.notHeldTitle} lede={text.notHeld} />
       <Below>
-        <ButtonLink href={`/drops/${drop}`} variant="accent" icon="arrow">
+        <ButtonLink href={copy.path(`/drops/${drop}`)} variant="accent" icon="arrow">
           {text.toDrop}
         </ButtonLink>
       </Below>
@@ -233,6 +238,8 @@ function NotHeld({ drop }: { drop: string }) {
 }
 
 function CartSummary({ cart }: { cart: CartViewFragment }) {
+  const copy = useCopy();
+  const { checkout: text } = copy;
   return (
     <OrderSummary
       id="summary-title"
@@ -267,6 +274,8 @@ function CopySummary({
   number: number;
   left: number;
 }) {
+  const copy = useCopy();
+  const { checkout: text } = copy;
   const price = moneyOf(edition.price, copy);
   const image = edition.artwork?.image ?? null;
   const title = edition.artwork?.title ?? edition.slug;
@@ -282,7 +291,7 @@ function CopySummary({
       lines={
         <CartLines>
           <CartLine
-            href={`/drops/${edition.slug}`}
+            href={copy.path(`/drops/${edition.slug}`)}
             image={
               image && {
                 src: imageAt(image.url, 'thumb'),
@@ -320,6 +329,8 @@ interface CheckoutProps {
 }
 
 function Checkout({ countries, crumbs, total, delivery, summary, place }: CheckoutProps) {
+  const copy = useCopy();
+  const { checkout: text } = copy;
   const router = useRouter();
   const form = useRef<HTMLFormElement>(null);
   const [invalid, setInvalid] = useState<readonly CheckoutField[]>([]);
@@ -350,7 +361,8 @@ function Checkout({ countries, crumbs, total, delivery, summary, place }: Checko
     try {
       const code = await place(read.input);
       if (code !== null) {
-        router.push(`/orders/${code}`);
+        // The order's page in this edition; typed routes cannot follow the edition's prefix.
+        router.push(copy.path(`/orders/${code}`) as Route);
         return;
       }
       setSaid(text.failed);

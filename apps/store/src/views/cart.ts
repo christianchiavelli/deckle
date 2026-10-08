@@ -46,7 +46,7 @@ export function lineOf(line: CartLineViewFragment | OrderLine, copy: Copy): Line
       : null;
   return {
     id: line.id,
-    href: numbered ? `/drops/${numbered.drop}` : `/prints/${line.artworkSlug}`,
+    href: copy.path(numbered ? `/drops/${numbered.drop}` : `/prints/${line.artworkSlug}`),
     image: work?.image
       ? {
           src: imageAt(work.image.url, 'thumb'),

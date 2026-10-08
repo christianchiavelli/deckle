@@ -1,8 +1,8 @@
 import { Band, BlankProof, ButtonLink, TextLink, typeRole } from '@deckle/ui';
 import { media, tokens as t } from '@deckle/tokens';
 import styled from 'styled-components';
-import { Chrome } from '../components/chrome';
-import { copy } from '../copy';
+import { Chrome } from '../../components/chrome';
+import { getCopy } from '../../copy/server';
 
 const Grid = styled.div`
   display: grid;
@@ -43,14 +43,14 @@ const Actions = styled.div`
   gap: ${t.space.gapLg};
 `;
 
-const { notFound: text } = copy;
-
 /**
  * Any address the store has no page for, a work it does not sell among them: a
  * blank proof. It renders under the root layout alone, even for a slug a section
  * turned away, so it brings its own chrome, in no section.
  */
-export default function NotFound() {
+export default async function NotFound() {
+  const copy = await getCopy();
+  const { notFound: text } = copy;
   return (
     <Chrome>
       <Band aria-labelledby="not-found-title">
@@ -59,10 +59,10 @@ export default function NotFound() {
             <h1 id="not-found-title">{text.title}</h1>
             <p>{text.text}</p>
             <Actions>
-              <ButtonLink href="/prints" icon="arrow">
+              <ButtonLink href={copy.path('/prints')} icon="arrow">
                 {text.browse}
               </ButtonLink>
-              <TextLink href="/">{text.home}</TextLink>
+              <TextLink href={copy.path('/')}>{text.home}</TextLink>
             </Actions>
           </Copy>
           <BlankProof mark={text.mark} />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copy } from '../copy';
+import { en as copy } from '../copy/en';
 import { greatWave, listedFrom, melencolia } from '../test/works';
 import type { Suggestions } from './search';
 import { suggestionListOf } from './suggestions';

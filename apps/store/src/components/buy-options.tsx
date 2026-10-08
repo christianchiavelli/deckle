@@ -2,7 +2,7 @@
 
 import { Assurances, Note, Price, PriceRule, SizeOptions, TextLink } from '@deckle/ui';
 import { type ReactNode, useState } from 'react';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import type { PaperOptionFragment } from '../gateway/generated';
 import { AddToCart, type AddToCartProps } from '../live/add-to-cart';
 import { moneyOf } from '../views/cart';
@@ -20,14 +20,14 @@ export interface BuyOptionsProps {
   edition?: ReactNode;
 }
 
-const { work } = copy;
-
 /**
  * The price, the sizes, "Add to cart" and what is true of the chosen one. The
  * price follows the size picked; the radios still work as a form field
  * before any script.
  */
 export function BuyOptions({ sizes, initial, note, artwork, edition }: BuyOptionsProps) {
+  const copy = useCopy();
+  const { work } = copy;
   const [chosen, setChosen] = useState<PaperOptionFragment['size']>(initial);
   const option = sizes.find((size) => size.size === chosen);
   const currency = sizes.find((size) => size.price !== null)?.price?.currencyCode ?? 'USD';
@@ -65,7 +65,7 @@ export function BuyOptions({ sizes, initial, note, artwork, edition }: BuyOption
         locale={copy.locale}
         unavailable={work.unavailable}
         missingPrice={work.missingPrice}
-        help={<TextLink href="/about/sizes">{copy.chrome.howWeSize}</TextLink>}
+        help={<TextLink href={copy.path('/about/sizes')}>{copy.chrome.howWeSize}</TextLink>}
         note={note === null ? undefined : <Note>{note}</Note>}
       />
       {option?.available && (

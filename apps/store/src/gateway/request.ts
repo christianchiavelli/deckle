@@ -50,13 +50,15 @@ export interface GatewayRequestOptions {
    * draft mode. The gateway honours it only from Docker's network.
    */
   readonly preview?: string;
+  /** The language the CMS's words come back in, as `Accept-Language` names it: `pt-BR`. */
+  readonly language?: string;
 }
 
 export async function requestGateway<TResult, TVariables>(
   url: string,
   document: TypedDocumentString<TResult, TVariables>,
   variables: TVariables,
-  { send = fetch, preview }: GatewayRequestOptions = {},
+  { send = fetch, preview, language }: GatewayRequestOptions = {},
 ): Promise<GatewayAnswer<TResult>> {
   let response: Response;
   try {
@@ -66,6 +68,7 @@ export async function requestGateway<TResult, TVariables>(
         'content-type': 'application/json',
         accept: 'application/graphql-response+json, application/json',
         ...(preview === undefined ? {} : { 'deckle-preview': preview }),
+        ...(language === undefined ? {} : { 'accept-language': language }),
       },
       body: JSON.stringify({ query: document.toString(), variables }),
     });

@@ -9,6 +9,7 @@ import {
 } from '@deckle/cache-tags';
 import { cacheLife, cacheTag } from 'next/cache';
 import { draftMode } from 'next/headers';
+import { copyOf, type Lang } from '../copy';
 import { serverEnv } from '../server-env';
 import {
   CatalogueDocument,
@@ -56,9 +57,15 @@ export const FRONT_PAGE = {
   sizing: 'melencolia-i',
 } as const;
 
+/**
+ * One read of the gateway, cached as the function that calls it is. A read
+ * of the CMS's words names the page's edition, an argument of the cached
+ * function, so each edition is cached apart; the rest is the same in both.
+ */
 async function ask<TResult, TVariables>(
   document: TypedDocumentString<TResult, TVariables>,
   variables: TVariables,
+  lang?: Lang,
 ): Promise<TResult> {
   // In draft mode Next runs every cached read afresh and keeps nothing, so the
   // CMS's newest drafts reach this one visitor, and the cache never sees them.
@@ -66,6 +73,7 @@ async function ask<TResult, TVariables>(
   const env = serverEnv();
   const answer = await requestGateway(env.GATEWAY_URL, document, variables, {
     ...(previewing ? { preview: env.GATEWAY_PREVIEW_SECRET } : {}),
+    ...(lang === undefined ? {} : { language: copyOf(lang).htmlLang }),
   });
   if (answer.complete) {
     cacheLife('gateway');
@@ -77,10 +85,10 @@ async function ask<TResult, TVariables>(
   return answer.data;
 }
 
-export async function readHome() {
+export async function readHome(lang: Lang) {
   'use cache';
   cacheTag(CATALOG, curationTag(FRONT_PAGE.curation));
-  return ask(HomeDocument, FRONT_PAGE);
+  return ask(HomeDocument, FRONT_PAGE, lang);
 }
 
 /** Every work as a tile: one entry for every page that lists or picks from them. */
@@ -90,31 +98,31 @@ export async function readCatalogue() {
   return ask(CatalogueDocument, {});
 }
 
-export async function readWork(slug: string) {
+export async function readWork(slug: string, lang: Lang) {
   'use cache';
   cacheTag(...workTags(slug));
-  return ask(WorkDocument, { slug });
+  return ask(WorkDocument, { slug }, lang);
 }
 
 /** Every work and its story: a story added, changed or removed anywhere drops it. */
-export async function readJournal() {
+export async function readJournal(lang: Lang) {
   'use cache';
   cacheTag(CATALOG, STORIES);
-  return ask(JournalDocument, {});
+  return ask(JournalDocument, {}, lang);
 }
 
 /** The editor's collections, each work as its picture. */
-export async function readCurations() {
+export async function readCurations(lang: Lang) {
   'use cache';
   cacheTag(CATALOG, CURATIONS);
-  return ask(CurationsDocument, {});
+  return ask(CurationsDocument, {}, lang);
 }
 
 /** One collection, its works as tiles. */
-export async function readCuration(slug: string) {
+export async function readCuration(slug: string, lang: Lang) {
   'use cache';
   cacheTag(CATALOG, curationTag(slug));
-  return ask(CurationDocument, { slug });
+  return ask(CurationDocument, { slug }, lang);
 }
 
 export async function readSizing() {
@@ -124,17 +132,17 @@ export async function readSizing() {
 }
 
 /** Every drop, with its words, its price and its print: never its stock. */
-export async function readDrops() {
+export async function readDrops(lang: Lang) {
   'use cache';
-  const { drops } = await ask(DropsDocument, {});
+  const { drops } = await ask(DropsDocument, {}, lang);
   cacheTag(CATALOG, ...drops.flatMap((drop) => [dropPageTag(drop.slug), priceTag(drop.slug)]));
   return drops;
 }
 
-export async function readDrop(slug: string) {
+export async function readDrop(slug: string, lang: Lang) {
   'use cache';
   cacheTag(dropPageTag(slug), priceTag(slug));
-  const { drop } = await ask(DropDocument, { slug });
+  const { drop } = await ask(DropDocument, { slug }, lang);
   if (drop) {
     cacheTag(...workTags(drop.artworkSlug));
   }

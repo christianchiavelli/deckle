@@ -2,7 +2,7 @@
 
 import { SiteHeader, type SiteHeaderProps } from '@deckle/ui';
 import { Suspense } from 'react';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { AddedSheet, useHeaderState } from '../live/header';
 import { askTheStore } from './suggestions';
 import { toggleTheme } from './theme';
@@ -19,17 +19,22 @@ export type StoreHeaderProps = Omit<SiteHeaderProps, 'theme' | 'account' | 'cart
  * account and cart, which no server render could know.
  */
 export function StoreHeader({ themeLabel, suggestionsLabel, search, ...props }: StoreHeaderProps) {
+  const copy = useCopy();
   const { cartCount, signedIn } = useHeaderState();
   return (
     <SiteHeader
       {...props}
-      search={{ ...search, suggest: { source: askTheStore, label: suggestionsLabel } }}
+      search={{ ...search, suggest: { source: askTheStore(copy.lang), label: suggestionsLabel } }}
       theme={{ label: themeLabel, onToggle: toggleTheme }}
       account={{
         label: signedIn ? copy.chrome.account : copy.chrome.signIn,
-        href: '/account',
+        href: copy.path('/account'),
       }}
-      cart={{ label: copy.chrome.cart(cartCount ?? 0), href: '/cart', count: cartCount ?? 0 }}
+      cart={{
+        label: copy.chrome.cart(cartCount ?? 0),
+        href: copy.path('/cart'),
+        count: cartCount ?? 0,
+      }}
       notice={
         // The sheet follows the page's path, which a shell built ahead of time cannot know.
         <Suspense fallback={null}>

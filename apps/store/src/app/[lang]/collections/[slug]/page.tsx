@@ -13,11 +13,12 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { PrintTiles } from '../../../components/print-tiles';
-import { copy } from '../../../copy';
-import { FRONT_PAGE, readCuration, readCurations } from '../../../gateway/reads';
-import { listedCurations, picturesOf } from '../../../views/collections';
-import { imageAt } from '../../../views/images';
+import { PrintTiles } from '../../../../components/print-tiles';
+import type { Lang } from '../../../../copy';
+import { getCopy } from '../../../../copy/server';
+import { FRONT_PAGE, readCuration, readCurations } from '../../../../gateway/reads';
+import { listedCurations, picturesOf } from '../../../../views/collections';
+import { imageAt } from '../../../../views/images';
 
 const Works = styled(PrintGrid)`
   margin-block-start: ${t.space.gap2xl};
@@ -32,11 +33,12 @@ const Three = styled(PrintGrid)`
   }
 `;
 
-const { collections: text } = copy;
-
 /** The collection at this address, with its works as tiles, and every listed collection. */
-async function curationAt(slug: string) {
-  const [{ curations }, { curation }] = await Promise.all([readCurations(), readCuration(slug)]);
+async function curationAt(slug: string, lang: Lang) {
+  const [{ curations }, { curation }] = await Promise.all([
+    readCurations(lang),
+    readCuration(slug, lang),
+  ]);
   const listed = listedCurations(curations, FRONT_PAGE.curation);
   // The front page's own selection has no page: only a listed collection does.
   const shown = listed.some((entry) => entry.slug === slug) ? curation : null;
@@ -45,9 +47,10 @@ async function curationAt(slug: string) {
 
 export async function generateMetadata({
   params,
-}: PageProps<'/collections/[slug]'>): Promise<Metadata> {
+}: PageProps<'/[lang]/collections/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
-  const { curation } = await curationAt(slug);
+  const { lang } = await getCopy();
+  const { curation } = await curationAt(slug, lang);
   if (!curation) {
     return {};
   }
@@ -57,7 +60,7 @@ export async function generateMetadata({
 }
 
 /** One collection: why its prints belong together, the prints, and the other collections. */
-export default function CollectionPage({ params }: PageProps<'/collections/[slug]'>) {
+export default function CollectionPage({ params }: PageProps<'/[lang]/collections/[slug]'>) {
   return (
     <Suspense fallback={<Band aria-busy="true" />}>
       <Collection params={params} />
@@ -65,9 +68,11 @@ export default function CollectionPage({ params }: PageProps<'/collections/[slug
   );
 }
 
-async function Collection({ params }: Pick<PageProps<'/collections/[slug]'>, 'params'>) {
+async function Collection({ params }: Pick<PageProps<'/[lang]/collections/[slug]'>, 'params'>) {
+  const copy = await getCopy();
+  const { collections: text } = copy;
   const { slug } = await params;
-  const { curation, listed } = await curationAt(slug);
+  const { curation, listed } = await curationAt(slug, copy.lang);
   if (!curation) {
     notFound();
   }
@@ -81,7 +86,7 @@ async function Collection({ params }: Pick<PageProps<'/collections/[slug]'>, 'pa
           crumbs={
             <Breadcrumbs
               label={text.crumbs}
-              items={[{ label: text.title, href: '/collections' }]}
+              items={[{ label: text.title, href: copy.path('/collections') }]}
             />
           }
           title={curation.title}
@@ -100,7 +105,7 @@ async function Collection({ params }: Pick<PageProps<'/collections/[slug]'>, 'pa
             id="more-title"
             title={text.more}
             action={
-              <TextLink href="/collections" icon="arrow">
+              <TextLink href={copy.path('/collections')} icon="arrow">
                 {text.every}
               </TextLink>
             }
@@ -111,7 +116,7 @@ async function Collection({ params }: Pick<PageProps<'/collections/[slug]'>, 'pa
               return cover ? (
                 <li key={other.slug}>
                   <PrintTile
-                    href={`/collections/${other.slug}`}
+                    href={copy.path(`/collections/${other.slug}`)}
                     image={{
                       src: imageAt(cover.url, 'card'),
                       width: cover.width,

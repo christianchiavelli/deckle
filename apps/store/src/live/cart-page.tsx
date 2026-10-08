@@ -17,7 +17,7 @@ import {
 import { media, tokens as t } from '@deckle/tokens';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { lineOf, summaryOf } from '../views/cart';
 import { CartPageDocument, SetCartLineQuantityDocument } from './generated';
 import { refusalOf } from './refusal';
@@ -52,15 +52,15 @@ const Below = styled.div`
   margin-block-start: ${t.space.gapXl};
 `;
 
-const { cart: text } = copy;
-
 /** The cart's empty state: what to do instead, here and at a checkout with nothing to pay for. */
 export function EmptyCart() {
+  const copy = useCopy();
+  const { cart: text } = copy;
   return (
     <Band aria-labelledby="cart-title">
       <PageHead id="cart-title" title={text.emptyTitle} lede={text.emptyLede} />
       <Below>
-        <ButtonLink href="/prints" icon="arrow">
+        <ButtonLink href={copy.path('/prints')} icon="arrow">
           {text.browse}
         </ButtonLink>
       </Below>
@@ -74,6 +74,8 @@ export function EmptyCart() {
  * answers with the whole cart, which the header counts too.
  */
 export function CartLive() {
+  const copy = useCopy();
+  const { cart: text } = copy;
   const { data, error, refetch } = useQuery(CartPageDocument, { ssr: false });
   const [setQuantity] = useMutation(SetCartLineQuantityDocument);
   const [busy, setBusy] = useState<string | null>(null);
@@ -158,10 +160,10 @@ export function CartLive() {
         </div>
         <OrderSummary id="summary-title" title={text.summary} rows={summaryOf(cart, copy)}>
           <Actions>
-            <ButtonLink href="/checkout" icon="arrow">
+            <ButtonLink href={copy.path('/checkout')} icon="arrow">
               {text.checkout}
             </ButtonLink>
-            <TextLink href="/prints">{text.keepBrowsing}</TextLink>
+            <TextLink href={copy.path('/prints')}>{text.keepBrowsing}</TextLink>
           </Actions>
           <PanelNote icon="info" title={text.testTitle}>
             {text.test}

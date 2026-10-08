@@ -10,7 +10,7 @@ import {
 } from '@deckle/ui';
 import { media, tokens as t } from '@deckle/tokens';
 import styled from 'styled-components';
-import { copy } from '../copy';
+import { getCopy } from '../copy/server';
 import {
   chipOf,
   type DropSummary,
@@ -75,7 +75,8 @@ export interface EditionBandProps {
  * A drop on the copper dark, as approved for the front page and a work's own
  * page: when it opens or how it stands, and the way to it.
  */
-export function EditionBand({ drop, stock, now }: EditionBandProps) {
+export async function EditionBand({ drop, stock, now }: EditionBandProps) {
+  const copy = await getCopy();
   const soon = phaseOf(drop, now) === 'soon';
   const chip = soon
     ? { label: soonChipOf(drop, now, copy), tone: 'accent' as const }
@@ -99,10 +100,10 @@ export function EditionBand({ drop, stock, now }: EditionBandProps) {
           {/* Once open, the tally already counts what is open. */}
           <EditionFacts items={soon ? facts : facts.slice(1)} />
           <Actions>
-            <ButtonLink href={`/drops/${drop.slug}`} variant="accent" icon="key">
+            <ButtonLink href={copy.path(`/drops/${drop.slug}`)} variant="accent" icon="key">
               {soon ? copy.drops.join : copy.drops.claim}
             </ButtonLink>
-            <TextLink href="/about/drops" tone="onFeature" icon="arrow">
+            <TextLink href={copy.path('/about/drops')} tone="onFeature" icon="arrow">
               {copy.drops.howTheyWork}
             </TextLink>
           </Actions>

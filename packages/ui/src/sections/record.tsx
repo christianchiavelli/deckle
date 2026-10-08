@@ -37,6 +37,8 @@ export interface RecordEntry {
   readonly term: string;
   /** `null` when the museum's record leaves the field empty. */
   readonly detail: ReactNode;
+  /** The detail's language, where it is not the page's: the museum writes in English. */
+  readonly lang?: string;
 }
 
 export interface RecordProps {
@@ -57,7 +59,7 @@ export function Record({ entries, missing }: RecordProps) {
               <Missing label={missing} />
             </Absent>
           ) : (
-            <dd>{entry.detail}</dd>
+            <dd lang={entry.lang}>{entry.detail}</dd>
           )}
         </div>
       ))}

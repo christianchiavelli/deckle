@@ -14,11 +14,11 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { copy } from '../../../../copy';
-import { readCatalogue, readSizing } from '../../../../gateway/reads';
-import { imageAt } from '../../../../views/images';
-import { noneAt, sizeRulesOf, verdictOf } from '../../../../views/size-rules';
-import { smallestFirst, tooSmallNote } from '../../../../views/work';
+import { getCopy } from '../../../../../copy/server';
+import { readCatalogue, readSizing } from '../../../../../gateway/reads';
+import { imageAt } from '../../../../../views/images';
+import { noneAt, sizeRulesOf, verdictOf } from '../../../../../views/size-rules';
+import { smallestFirst, tooSmallNote } from '../../../../../views/work';
 
 const Examples = styled.ol`
   display: grid;
@@ -85,13 +85,16 @@ const Note = styled.p`
   font-size: 0.875rem;
 `;
 
-const { sizes: text, locale } = copy;
 const ppi = String(MIN_PPI);
 
-export const metadata: Metadata = { title: text.title };
+export async function generateMetadata(): Promise<Metadata> {
+  const { sizes: text } = await getCopy();
+  return { title: text.title };
+}
 
 /** How sizes are set, with the shop's own scans as the examples, as approved. */
-export default function SizesPage() {
+export default async function SizesPage() {
+  const { sizes: text } = await getCopy();
   return (
     <>
       <Band aria-labelledby="sizes-title">
@@ -107,7 +110,9 @@ export default function SizesPage() {
   );
 }
 
-function Rules() {
+async function Rules() {
+  const copy = await getCopy();
+  const { sizes: text } = copy;
   return (
     <Band tone="band" aria-labelledby="rules-title">
       <SectionHead id="rules-title" title={text.rules} />
@@ -126,7 +131,7 @@ function Rules() {
         </div>
       </Columns>
       <Closing>
-        <ButtonLink href="/prints" icon="arrow">
+        <ButtonLink href={copy.path('/prints')} icon="arrow">
           {text.browse}
         </ButtonLink>
       </Closing>
@@ -136,6 +141,8 @@ function Rules() {
 
 /** The three scans and the table: what the shop's own data says. */
 async function Scans() {
+  const copy = await getCopy();
+  const { sizes: text, locale } = copy;
   await connection();
   const [examples, { artworks }] = await Promise.all([readSizing(), readCatalogue()]);
   const rules = sizeRulesOf(

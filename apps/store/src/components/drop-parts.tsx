@@ -1,6 +1,6 @@
 import { EditionCallout } from '@deckle/ui';
 import styled from 'styled-components';
-import { copy } from '../copy';
+import { getCopy } from '../copy/server';
 import { readDropStocks } from '../gateway/reads';
 import { calloutOf, type DropSummary, stocksBySlug } from '../views/drops';
 import { EditionBand } from './edition-band';
@@ -19,6 +19,7 @@ export const CalloutSpace = styled.div`
 
 /** The pointer from a work's buy box to its numbered edition. */
 export async function DropCallout({ drop }: { drop: DropSummary }) {
+  const copy = await getCopy();
   const now = await requestTime();
   return <EditionCallout href="#edition" {...calloutOf(drop, now, copy)} />;
 }

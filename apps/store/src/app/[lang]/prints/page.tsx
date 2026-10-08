@@ -3,10 +3,10 @@ import { media, tokens as t } from '@deckle/tokens';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { PrintTiles } from '../../components/print-tiles';
-import { copy } from '../../copy';
-import { readCatalogue } from '../../gateway/reads';
-import { choiceFrom, filterGroupsOf, isChosen, shownOf } from '../../views/listing';
+import { PrintTiles } from '../../../components/print-tiles';
+import { getCopy } from '../../../copy/server';
+import { readCatalogue } from '../../../gateway/reads';
+import { choiceFrom, filterGroupsOf, isChosen, shownOf } from '../../../views/listing';
 
 const Result = styled.p`
   display: flex;
@@ -45,12 +45,14 @@ const Aside = styled.div`
   }
 `;
 
-const { prints: text, locale } = copy;
-
-export const metadata: Metadata = { title: text.title };
+export async function generateMetadata(): Promise<Metadata> {
+  const { prints: text } = await getCopy();
+  return { title: text.title };
+}
 
 /** Every print, narrowed by technique, century and size, as approved. */
-export default function PrintsPage({ searchParams }: PageProps<'/prints'>) {
+export default async function PrintsPage({ searchParams }: PageProps<'/[lang]/prints'>) {
+  const { prints: text } = await getCopy();
   return (
     // The note on sizes comes in with the prints, so nothing under them moves when they do.
     <Suspense
@@ -66,7 +68,9 @@ export default function PrintsPage({ searchParams }: PageProps<'/prints'>) {
   );
 }
 
-function SizesNote() {
+async function SizesNote() {
+  const copy = await getCopy();
+  const { prints: text } = copy;
   return (
     <Band tone="band" aria-labelledby="sizes-title">
       <Aside>
@@ -74,7 +78,7 @@ function SizesNote() {
           <h2 id="sizes-title">{text.asideTitle}</h2>
           <p>{text.aside}</p>
         </div>
-        <TextLink href="/about/sizes" icon="arrow">
+        <TextLink href={copy.path('/about/sizes')} icon="arrow">
           {text.howWeSize}
         </TextLink>
       </Aside>
@@ -82,7 +86,9 @@ function SizesNote() {
   );
 }
 
-async function Prints({ searchParams }: Pick<PageProps<'/prints'>, 'searchParams'>) {
+async function Prints({ searchParams }: Pick<PageProps<'/[lang]/prints'>, 'searchParams'>) {
+  const copy = await getCopy();
+  const { prints: text, locale } = copy;
   // The query first: at build time it never comes, so the page reads nothing then.
   const params = await searchParams;
   const { artworks } = await readCatalogue();
@@ -107,7 +113,7 @@ async function Prints({ searchParams }: Pick<PageProps<'/prints'>, 'searchParams
       </PageHead>
       <Result>
         <strong>{text.count(shown.length, chosen ? artworks.totalCount : null)}</strong>
-        {chosen && <TextLink href="/prints">{text.clear}</TextLink>}
+        {chosen && <TextLink href={copy.path('/prints')}>{text.clear}</TextLink>}
       </Result>
       <PrintGrid>
         <PrintTiles works={shown} />

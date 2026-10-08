@@ -3,7 +3,7 @@
 import { Countdown } from '@deckle/ui';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { untilOpening } from '../views/time';
 import { useNow } from './clock';
 
@@ -18,6 +18,7 @@ export interface OpeningCountdownProps {
  * it reaches zero the page is drawn again by the server, which now says open.
  */
 export function OpeningCountdown({ opensAt, now }: OpeningCountdownProps) {
+  const copy = useCopy();
   const router = useRouter();
   const clock = useNow(now, 1000);
   const left = Date.parse(opensAt) - clock;

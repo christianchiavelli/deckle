@@ -1,6 +1,7 @@
 'use client';
 
 import { SearchField } from '@deckle/ui';
+import { useCopy } from '../copy/client';
 import { askTheStore } from './suggestions';
 
 export interface SearchAgainProps {
@@ -21,14 +22,15 @@ export function SearchAgain({
   placeholder,
   suggestions,
 }: SearchAgainProps) {
+  const copy = useCopy();
   return (
     <SearchField
-      action="/search"
+      action={copy.path('/search')}
       label={label}
       landmark={landmark}
       placeholder={placeholder}
       defaultValue={query}
-      suggest={{ source: askTheStore, label: suggestions }}
+      suggest={{ source: askTheStore(copy.lang), label: suggestions }}
     />
   );
 }

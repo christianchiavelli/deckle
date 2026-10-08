@@ -27,7 +27,7 @@ import { Layout } from './cart-page.tsx';
 import { Chrome } from './chrome.tsx';
 
 const COUNTRIES = [
-  { value: 'US', label: 'United States of America' },
+  { value: 'US', label: 'United States' },
   { value: 'BR', label: 'Brazil' },
   { value: 'GB', label: 'United Kingdom' },
   { value: 'JP', label: 'Japan' },

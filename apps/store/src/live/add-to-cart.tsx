@@ -3,7 +3,7 @@
 import { useMutation } from '@apollo/client/react';
 import { Button, Note } from '@deckle/ui';
 import { useState } from 'react';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { moneyOf } from '../views/cart';
 import { useAdded } from './added';
 import { AddToCartDocument, type PaperSize } from './generated';
@@ -29,6 +29,7 @@ export interface AddToCartProps {
  * what went in.
  */
 export function AddToCart({ artwork, size, detail }: AddToCartProps) {
+  const copy = useCopy();
   const { show } = useAdded();
   const [add, { loading }] = useMutation(AddToCartDocument);
   const [failed, setFailed] = useState(false);

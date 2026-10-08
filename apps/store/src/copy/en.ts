@@ -1,8 +1,10 @@
-import { ordinal } from './views/listing';
+import { ordinal } from '../views/listing';
+import type { Lang } from '.';
 
 /**
- * The store's words. Every page takes its text from here, never from a string
- * of its own, so the Portuguese edition is a second object of this shape.
+ * The store's words in English, the edition at the root of the address. Every
+ * page takes its text from here, never from a string of its own; the
+ * Portuguese edition is a second object of this shape.
  */
 
 export interface SizingText {
@@ -24,7 +26,12 @@ const prints = (count: number) => (count === 1 ? '1 print' : `${String(count)} p
 /** "1 minute", "3 minutes": a unit said in a sentence. */
 const unit = (count: number, one: string) => `${String(count)} ${one}${count === 1 ? '' : 's'}`;
 
-export const copy = {
+export const en = {
+  lang: 'en' as Lang,
+  /** The language as `<html lang>` and a link's `hreflang` name it. */
+  htmlLang: 'en',
+  /** A path within the store, as this edition's readers reach it: English needs no prefix. */
+  path: (href: string) => href,
   locale: 'en-US',
   /** Dates are written day first, as the approved pages have them: "Thu 15 Oct", "7 Oct 2026". */
   dateLocale: 'en-GB',
@@ -84,6 +91,8 @@ export const copy = {
     filters: 'Filter the prints',
     unit: 'prints',
     technique: 'Technique',
+    /** A technique family, as commerce names it. */
+    named: (technique: string) => technique,
     centuryGroup: 'Century',
     century: (n: number) => ordinal(n),
     printedAt: 'Printed at',
@@ -535,5 +544,3 @@ export const copy = {
     leave: 'See the published page',
   },
 };
-
-export type Copy = typeof copy;

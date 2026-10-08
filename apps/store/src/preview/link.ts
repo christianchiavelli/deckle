@@ -1,7 +1,9 @@
+import { copyOf, type Lang } from '../copy';
+
 /**
  * The CMS's preview links (apps/cms/src/preview/preview-url.ts):
  *
- *   /api/preview?secret=<PREVIEW_SECRET>&type=<type>&slug=<slug>
+ *   /api/preview?secret=<PREVIEW_SECRET>&type=<type>&slug=<slug>[&locale=pt]
  *
  * Each type is a document the store has a page for, and the slug is that
  * page's address: a story's work, a curation, a drop.
@@ -15,12 +17,24 @@ const PAGES = {
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-/** The page a preview link opens, or null when its type or slug names none. */
-export function previewPage(type: string | null, slug: string | null): string | null {
+/** The store's edition for the CMS's locale: Portuguese for `pt`, English for anything else. */
+export function editionOf(locale: string | null): Lang {
+  return locale === 'pt' ? 'pt-br' : 'en';
+}
+
+/**
+ * The page a preview link opens, in the edition of the locale being edited,
+ * or null when its type or slug names none.
+ */
+export function previewPage(
+  type: string | null,
+  slug: string | null,
+  locale: string | null = null,
+): string | null {
   if (type === null || slug === null || !Object.hasOwn(PAGES, type) || !SLUG.test(slug)) {
     return null;
   }
-  return PAGES[type as keyof typeof PAGES](slug);
+  return copyOf(editionOf(locale)).path(PAGES[type as keyof typeof PAGES](slug));
 }
 
 /** The way out of preview, back to `path` as published. */

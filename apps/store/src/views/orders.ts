@@ -8,19 +8,35 @@ export function firstNameOf(fullName: string | null | undefined): string | null 
   return first === undefined || first === '' ? null : first;
 }
 
-/** "Ana Souza, 1000 Fifth Avenue, New York 10028, United States of America". */
-export function addressOf(address: Omit<AddressFragment, '__typename'> | null): string | null {
+/**
+ * A country's name in the edition's language, from its code: "Brasil" for BR
+ * in Portuguese. Commerce names each country in English only.
+ */
+export function countryNameOf(code: string, locale: string): string | null {
+  try {
+    return new Intl.DisplayNames([locale], { type: 'region', fallback: 'none' }).of(code) ?? null;
+  } catch {
+    // Not shaped like a region code at all.
+    return null;
+  }
+}
+
+/** "Ana Souza, 1000 Fifth Avenue, New York 10028, United States", in the edition's `locale`. */
+export function addressOf(
+  address: Omit<AddressFragment, '__typename'> | null,
+  locale: string,
+): string | null {
   if (address === null) {
     return null;
   }
   const place = [address.city, address.postalCode].filter(Boolean).join(' ');
-  const parts = [
-    address.fullName,
-    address.streetLine1,
-    address.streetLine2,
-    place,
-    address.country ?? address.countryCode,
-  ].filter((part): part is string => typeof part === 'string' && part !== '');
+  const country =
+    (address.countryCode === null ? null : countryNameOf(address.countryCode, locale)) ??
+    address.country ??
+    address.countryCode;
+  const parts = [address.fullName, address.streetLine1, address.streetLine2, place, country].filter(
+    (part): part is string => typeof part === 'string' && part !== '',
+  );
   return parts.length === 0 ? null : parts.join(', ');
 }
 
@@ -30,6 +46,6 @@ export function placedOf(order: PlacedOrderViewFragment, copy: Copy) {
     title: copy.order.thanks(firstNameOf(order.shipTo?.fullName)),
     lede: copy.order.lede(order.code, order.email),
     paid: copy.order.paidOn(dateOf(order.placedAt, copy)),
-    shipTo: addressOf(order.shipTo),
+    shipTo: addressOf(order.shipTo, copy.locale),
   };
 }

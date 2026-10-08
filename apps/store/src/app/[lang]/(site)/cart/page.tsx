@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
-import { copy } from '../../../copy';
-import { CartLive } from '../../../live/cart-page';
+import { getCopy } from '../../../../copy/server';
+import { CartLive } from '../../../../live/cart-page';
 
-export const metadata: Metadata = { title: copy.cart.title };
+export async function generateMetadata(): Promise<Metadata> {
+  const { cart: text } = await getCopy();
+  return { title: text.title };
+}
 
 /** The cart, as approved: its prints, what they come to, and the way to pay. */
 export default function CartPage() {

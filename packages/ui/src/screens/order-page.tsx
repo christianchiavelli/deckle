@@ -64,7 +64,7 @@ export function OrderPage() {
             <Facts>
               <div>
                 <dt>Shipping to</dt>
-                <dd>Ana Souza, 1000 Fifth Avenue, New York 10028, United States of America</dd>
+                <dd>Ana Souza, 1000 Fifth Avenue, New York 10028, United States</dd>
               </div>
               <div>
                 <dt>Paid</dt>

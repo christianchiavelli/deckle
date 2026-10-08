@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copy } from '../copy';
+import { en as copy } from '../copy/en';
 import { melencoliaDrop, NOW, stockOf, waveDrop } from '../test/drops';
 import {
   allClaimed,

@@ -1,7 +1,7 @@
 import { Announcement } from '@deckle/ui';
 import { media, tokens as t } from '@deckle/tokens';
 import styled from 'styled-components';
-import { copy } from '../copy';
+import { getCopy } from '../copy/server';
 import { readDrops, readDropStocks } from '../gateway/reads';
 import { announcementOf, featuredDrop, stocksBySlug } from '../views/drops';
 import { requestTime } from './request-time';
@@ -25,9 +25,10 @@ export const AnnouncementSpace = styled.div`
  * with copies left, else the next to open. Nothing when every drop has run out.
  */
 export async function DropAnnouncement() {
+  const copy = await getCopy();
   const now = await requestTime();
   const [drops, stocks] = await Promise.all([
-    readDrops().catch(() => []),
+    readDrops(copy.lang).catch(() => []),
     readDropStocks().catch(() => []),
   ]);
   const drop = featuredDrop(drops, stocksBySlug(stocks), now);
@@ -36,7 +37,7 @@ export async function DropAnnouncement() {
   }
   const { text, link } = announcementOf(drop, now, copy);
   return (
-    <Announcement href={`/drops/${drop.slug}`} link={link}>
+    <Announcement href={copy.path(`/drops/${drop.slug}`)} link={link}>
       {text}
     </Announcement>
   );

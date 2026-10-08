@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copy } from '../copy';
+import { en as copy } from '../copy/en';
 import { listedFrom, melencolia, optionsFor } from '../test/works';
 import { noneAt, sizeRulesOf, verdictOf } from './size-rules';
 

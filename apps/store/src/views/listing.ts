@@ -58,6 +58,35 @@ export function ordinal(n: number): string {
   return `${String(n)}${suffix}`;
 }
 
+const NUMERALS = [
+  [1000, 'M'],
+  [900, 'CM'],
+  [500, 'D'],
+  [400, 'CD'],
+  [100, 'C'],
+  [90, 'XC'],
+  [50, 'L'],
+  [40, 'XL'],
+  [10, 'X'],
+  [9, 'IX'],
+  [5, 'V'],
+  [4, 'IV'],
+  [1, 'I'],
+] as const;
+
+/** "XVI": a century as Portuguese writes it, in Roman numerals. */
+export function roman(n: number): string {
+  let rest = n;
+  let numeral = '';
+  for (const [value, letters] of NUMERALS) {
+    while (rest >= value) {
+      numeral += letters;
+      rest -= value;
+    }
+  }
+  return numeral;
+}
+
 /** Where a work's largest size for sale stands among the paper sizes; -1 when none is. */
 function largestOf(work: ListedWork): number {
   return Math.max(
@@ -168,8 +197,8 @@ export function filterGroupsOf(
   const techniques = [
     ...new Set(forTechnique.flatMap((work) => (work.technique === null ? [] : [work.technique]))),
   ].map((technique) => ({
-    label: technique,
-    href: hrefOf({ ...choice, technique }),
+    label: text.named(technique),
+    href: copy.path(hrefOf({ ...choice, technique })),
     count: forTechnique.filter((work) => work.technique === technique).length,
     current: choice.technique === technique,
   }));
@@ -182,7 +211,7 @@ export function filterGroupsOf(
     .sort((a, b) => a - b)
     .map((century) => ({
       label: text.century(century),
-      href: hrefOf({ ...choice, century }),
+      href: copy.path(hrefOf({ ...choice, century })),
       count: forCentury.filter((work) => work.year !== null && centuryOf(work.year) === century)
         .length,
       current: choice.century === century,
@@ -191,14 +220,14 @@ export function filterGroupsOf(
   const forSize = without('size');
   const sizes = SIZE_CHOICES.map((size) => ({
     label: text.sizeAndUp(size),
-    href: hrefOf({ ...choice, size }),
+    href: copy.path(hrefOf({ ...choice, size })),
     count: forSize.filter((work) => reaches(work, size)).length,
     current: choice.size === size,
   }));
 
   const all = (key: keyof Choice, label: string): FilterOption => ({
     label,
-    href: hrefOf({ ...choice, [key]: null }),
+    href: copy.path(hrefOf({ ...choice, [key]: null })),
     current: choice[key] === null,
   });
 

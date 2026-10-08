@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client/react';
 import { AddedToCart } from '@deckle/ui';
 import { usePathname } from 'next/navigation';
 import { type KeyboardEvent, useEffect, useEffectEvent, useRef } from 'react';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { useAdded } from './added';
 import { HeaderStateDocument } from './generated';
 
@@ -26,6 +26,7 @@ export function useHeaderState(): HeaderState {
  * when the reader moves to another page.
  */
 export function AddedSheet() {
+  const copy = useCopy();
   const { print, dismiss } = useAdded();
   const sheet = useRef<HTMLElement>(null);
   const path = usePathname();
@@ -68,8 +69,8 @@ export function AddedSheet() {
       title={copy.added.title}
       print={{ image: print.image, title: print.title, detail: print.detail }}
       summary={print.summary}
-      cart={{ href: '/cart', label: copy.added.cart }}
-      checkout={{ href: '/checkout', label: copy.added.checkout }}
+      cart={{ href: copy.path('/cart'), label: copy.added.cart }}
+      checkout={{ href: copy.path('/checkout'), label: copy.added.checkout }}
       close={{ label: copy.added.close, onClick: dismiss }}
     />
   );

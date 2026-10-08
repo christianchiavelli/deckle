@@ -1,5 +1,5 @@
 import { connection } from 'next/server';
-import { copy } from '../../../copy';
+import { copyOf, isLang } from '../../../copy';
 import { readCatalogue } from '../../../gateway/reads';
 import { queryFrom, suggestionsOf } from '../../../views/search';
 import { suggestionListOf } from '../../../views/suggestions';
@@ -11,10 +11,17 @@ import { suggestionListOf } from '../../../views/suggestions';
  */
 export async function GET(request: Request): Promise<Response> {
   await connection();
-  const query = queryFrom(Object.fromEntries(new URL(request.url).searchParams));
+  const asked = new URL(request.url).searchParams;
+  const query = queryFrom(Object.fromEntries(asked));
+  // In the words of the page that asks: a Route Handler has no edition of its own.
+  const edition = asked.get('lang');
+  const copy = copyOf(isLang(edition) ? edition : 'en');
   const { artworks } = await readCatalogue();
   const works = artworks.edges.map((edge) => edge.node);
-  return Response.json(suggestionListOf(suggestionsOf(works, query, copy.locale), query, copy), {
-    headers: { 'Cache-Control': 'no-store' },
-  });
+  return Response.json(
+    suggestionListOf(suggestionsOf(works, query, copy.locale, copy.prints.named), query, copy),
+    {
+      headers: { 'Cache-Control': 'no-store' },
+    },
+  );
 }

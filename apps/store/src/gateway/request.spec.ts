@@ -90,6 +90,17 @@ describe('requestGateway', () => {
     expect(header(1)).toBe('the-preview-secret');
   });
 
+  it("names the page's language when it has one, for the CMS's words", async () => {
+    const { send, sent } = answering({ data: { artwork: null } });
+    await requestGateway(URL_, Document, { slug: 'x' }, { send });
+    await requestGateway(URL_, Document, { slug: 'x' }, { send, language: 'pt-BR' });
+
+    const header = (index: number) =>
+      new Headers(sent[index]?.init?.headers).get('accept-language');
+    expect(header(0)).toBeNull();
+    expect(header(1)).toBe('pt-BR');
+  });
+
   it('names an error without a code as unknown, and an empty answer as no data', async () => {
     await expect(
       requestGateway(

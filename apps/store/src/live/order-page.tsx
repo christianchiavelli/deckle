@@ -15,7 +15,7 @@ import {
 import { MISSING } from '@deckle/ui/format';
 import { tokens as t } from '@deckle/tokens';
 import styled from 'styled-components';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { lineOf, orderSummaryOf } from '../views/cart';
 import { placedOf } from '../views/orders';
 import { Layout } from './cart-page';
@@ -54,14 +54,14 @@ const Below = styled.div`
   margin-block-start: ${t.space.gapXl};
 `;
 
-const { order: text } = copy;
-
 /**
  * The order placed: its number, where the receipt went, what is in it and
  * what it came to. Right after checkout it is already in this browser's
  * cache; read again later, it is there only for the browser that placed it.
  */
 export function OrderLive({ code }: { code: string }) {
+  const copy = useCopy();
+  const { order: text } = copy;
   const { data, error } = useQuery(PlacedOrderDocument, { variables: { code }, ssr: false });
 
   if (!data?.order) {
@@ -73,7 +73,7 @@ export function OrderLive({ code }: { code: string }) {
             <PageHead id="order-title" title={text.missingTitle} lede={text.missing} />
             <Below>
               {error !== undefined && <Note>{copy.cart.failed}</Note>}
-              <ButtonLink href="/prints" icon="arrow">
+              <ButtonLink href={copy.path('/prints')} icon="arrow">
                 {text.browse}
               </ButtonLink>
             </Below>
@@ -123,7 +123,7 @@ export function OrderLive({ code }: { code: string }) {
           <PanelNote icon="tube" title={text.nothingShipsTitle}>
             {text.nothingShips}
           </PanelNote>
-          <ButtonLink href="/prints" icon="arrow">
+          <ButtonLink href={copy.path('/prints')} icon="arrow">
             {text.keepBrowsing}
           </ButtonLink>
         </OrderSummary>

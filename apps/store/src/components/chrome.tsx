@@ -2,7 +2,8 @@ import { SiteFooter } from '@deckle/ui';
 import { tokens as t } from '@deckle/tokens';
 import { type ReactNode, Suspense } from 'react';
 import styled from 'styled-components';
-import { copy } from '../copy';
+import type { Copy } from '../copy';
+import { getCopy } from '../copy/server';
 import { AnnouncementSpace, DropAnnouncement } from './drop-announcement';
 import { StoreHeader } from './store-header';
 
@@ -21,27 +22,15 @@ const Skip = styled.a`
   }
 `;
 
-/* A page whose content is still on its way marks its placeholder busy, and
-   the footer waits with it: drawn under the placeholder, it would be pushed
-   down the moment the content lands, a jump the reader sees and the layout
-   shift metric counts. */
-const Main = styled.main`
-  &:has(> [aria-busy='true']) + footer {
-    display: none;
-  }
-`;
-
-const { chrome } = copy;
-
 /** The parts of the shop the menu names. */
 export type Section = 'prints' | 'drops' | 'collections' | 'journal';
 
 const sections = [
-  { key: 'prints', label: chrome.prints, href: '/prints' },
-  { key: 'drops', label: chrome.drops, href: '/drops' },
-  { key: 'collections', label: chrome.collections, href: '/collections' },
-  { key: 'journal', label: chrome.journal, href: '/journal' },
-] as const satisfies readonly { key: Section; label: string; href: string }[];
+  { key: 'prints', label: 'prints', href: '/prints' },
+  { key: 'drops', label: 'drops', href: '/drops' },
+  { key: 'collections', label: 'collections', href: '/collections' },
+  { key: 'journal', label: 'journal', href: '/journal' },
+] as const satisfies readonly { key: Section; label: keyof Copy['chrome']; href: string }[];
 
 export interface ChromeProps {
   /** The section the page is in, marked in the menu; none for the front page or a search. */
@@ -58,7 +47,9 @@ export interface ChromeProps {
  * on the hour and on its copies, so it arrives on request into a space kept
  * for it.
  */
-export function Chrome({ current, announcement = true, children }: ChromeProps) {
+export async function Chrome({ current, announcement = true, children }: ChromeProps) {
+  const copy = await getCopy();
+  const { chrome } = copy;
   return (
     <>
       <Skip href="#main">{chrome.skip}</Skip>
@@ -68,17 +59,17 @@ export function Chrome({ current, announcement = true, children }: ChromeProps) 
         </Suspense>
       )}
       <StoreHeader
-        home={{ href: '/', label: chrome.home }}
+        home={{ href: copy.path('/'), label: chrome.home }}
         nav={{
           label: chrome.nav,
           items: sections.map(({ key, label, href }) => ({
-            label,
-            href,
+            label: chrome[label],
+            href: copy.path(href),
             current: key === current,
           })),
         }}
         search={{
-          action: '/search',
+          action: copy.path('/search'),
           label: chrome.search,
           placeholder: chrome.searchPlaceholder,
           shortcut: '/',
@@ -87,26 +78,27 @@ export function Chrome({ current, announcement = true, children }: ChromeProps) 
         suggestionsLabel={copy.search.suggest.label}
         menu={{ open: chrome.menuOpen, close: chrome.menuClose }}
       />
-      <Main id="main">{children}</Main>
+      {/* The footer waits while the content is busy: see store.css. */}
+      <main id="main">{children}</main>
       <SiteFooter
-        home={{ href: '/', label: chrome.home }}
+        home={{ href: copy.path('/'), label: chrome.home }}
         label={chrome.footer}
         about={chrome.about}
         columns={[
           {
             title: chrome.shop,
             links: [
-              { label: chrome.prints, href: '/prints' },
-              { label: chrome.drops, href: '/drops' },
-              { label: chrome.collections, href: '/collections' },
+              { label: chrome.prints, href: copy.path('/prints') },
+              { label: chrome.drops, href: copy.path('/drops') },
+              { label: chrome.collections, href: copy.path('/collections') },
             ],
           },
           {
             title: chrome.aboutColumn,
             links: [
-              { label: chrome.howWeSize, href: '/about/sizes' },
-              { label: chrome.howDropsWork, href: '/about/drops' },
-              { label: chrome.journal, href: '/journal' },
+              { label: chrome.howWeSize, href: copy.path('/about/sizes') },
+              { label: chrome.howDropsWork, href: copy.path('/about/drops') },
+              { label: chrome.journal, href: copy.path('/journal') },
             ],
           },
         ]}

@@ -15,7 +15,7 @@ export async function GET(request: Request): Promise<Response> {
   if (!sameSecret(link.get('secret') ?? '', serverEnv().PREVIEW_SECRET)) {
     return new Response('This preview link is not valid.', { status: 401 });
   }
-  const page = previewPage(link.get('type'), link.get('slug'));
+  const page = previewPage(link.get('type'), link.get('slug'), link.get('locale'));
   if (page === null) {
     return new Response('This preview link names no page of the store.', { status: 404 });
   }

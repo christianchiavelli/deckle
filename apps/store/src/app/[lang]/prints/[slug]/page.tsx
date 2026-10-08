@@ -15,17 +15,17 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { BuyOptions } from '../../../components/buy-options';
-import { CalloutSpace, DropBand, DropCallout } from '../../../components/drop-parts';
-import { PrintTiles } from '../../../components/print-tiles';
-import { ScrollToFragment } from '../../../components/scroll-to-fragment';
-import { StoryBody } from '../../../components/story-body';
-import { copy } from '../../../copy';
-import { readCatalogue, readDrops, readWork } from '../../../gateway/reads';
-import { imageAt } from '../../../views/images';
-import { hrefOf, NO_CHOICE } from '../../../views/listing';
-import { morePrints } from '../../../views/more';
-import { defaultSize, factsOf, lifeOf, recordOf, tooSmallNote } from '../../../views/work';
+import { BuyOptions } from '../../../../components/buy-options';
+import { CalloutSpace, DropBand, DropCallout } from '../../../../components/drop-parts';
+import { PrintTiles } from '../../../../components/print-tiles';
+import { ScrollToFragment } from '../../../../components/scroll-to-fragment';
+import { StoryBody } from '../../../../components/story-body';
+import { getCopy } from '../../../../copy/server';
+import { readCatalogue, readDrops, readWork } from '../../../../gateway/reads';
+import { imageAt } from '../../../../views/images';
+import { hrefOf, NO_CHOICE } from '../../../../views/listing';
+import { morePrints } from '../../../../views/more';
+import { defaultSize, factsOf, lifeOf, recordOf, tooSmallNote } from '../../../../views/work';
 
 /*
  * Doubled to outrank the band's own padding: a server component's styles stream
@@ -49,11 +49,12 @@ const Grid = styled.div`
   }
 `;
 
-const { work: text } = copy;
-
-export async function generateMetadata({ params }: PageProps<'/prints/[slug]'>): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<'/[lang]/prints/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
-  const { artwork } = await readWork(slug);
+  const { lang } = await getCopy();
+  const { artwork } = await readWork(slug, lang);
   return artwork
     ? {
         title: artwork.title,
@@ -68,7 +69,7 @@ export async function generateMetadata({ params }: PageProps<'/prints/[slug]'>):
  * A work's own page, as approved: the print and how to buy it, its numbered
  * edition when a drop prints it, its story and its record.
  */
-export default function WorkPage({ params }: PageProps<'/prints/[slug]'>) {
+export default function WorkPage({ params }: PageProps<'/[lang]/prints/[slug]'>) {
   return (
     <Suspense fallback={<Product aria-busy="true" />}>
       <Work params={params} />
@@ -76,13 +77,15 @@ export default function WorkPage({ params }: PageProps<'/prints/[slug]'>) {
   );
 }
 
-async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
+async function Work({ params }: Pick<PageProps<'/[lang]/prints/[slug]'>, 'params'>) {
+  const copy = await getCopy();
+  const { work: text } = copy;
   const { slug } = await params;
   const [{ artwork }, { artworks }, drops] = await Promise.all([
-    readWork(slug),
+    readWork(slug, copy.lang),
     readCatalogue(),
     // A work sells without its drop: the page stands if drops cannot be read.
-    readDrops().catch(() => []),
+    readDrops(copy.lang).catch(() => []),
   ]);
   if (!artwork) {
     notFound();
@@ -102,13 +105,13 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
         <Breadcrumbs
           label={text.crumbs}
           items={[
-            { label: text.prints, href: '/prints' },
+            { label: text.prints, href: copy.path('/prints') },
             ...(artwork.technique === null
               ? []
               : [
                   {
-                    label: artwork.technique,
-                    href: hrefOf({ ...NO_CHOICE, technique: artwork.technique }),
+                    label: copy.prints.named(artwork.technique),
+                    href: copy.path(hrefOf({ ...NO_CHOICE, technique: artwork.technique })),
                   },
                 ]),
           ]}
@@ -134,7 +137,7 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
               artist={{
                 name: artwork.artist?.name ?? text.unknownArtist,
                 href: artwork.artist
-                  ? `/search?q=${encodeURIComponent(artwork.artist.name)}`
+                  ? copy.path(`/search?q=${encodeURIComponent(artwork.artist.name)}`)
                   : undefined,
                 bio: lifeOf(artwork.artist),
               }}
@@ -222,7 +225,7 @@ async function Work({ params }: Pick<PageProps<'/prints/[slug]'>, 'params'>) {
             id="more-title"
             title={text.more}
             action={
-              <TextLink href="/prints" icon="arrow">
+              <TextLink href={copy.path('/prints')} icon="arrow">
                 {copy.home.seeAll(new Intl.NumberFormat(copy.locale).format(artworks.totalCount))}
               </TextLink>
             }

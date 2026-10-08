@@ -2,7 +2,7 @@ import { Band, ButtonLink, PageHead, SectionHead, Steps, typeRole } from '@deckl
 import { media, tokens as t } from '@deckle/tokens';
 import type { Metadata } from 'next';
 import styled from 'styled-components';
-import { copy } from '../../../../copy';
+import { getCopy } from '../../../../../copy/server';
 
 const Columns = styled.div`
   display: grid;
@@ -30,12 +30,15 @@ const Closing = styled.div`
   margin-block-start: ${t.space.gap3xl};
 `;
 
-const { howDrops: text } = copy;
-
-export const metadata: Metadata = { title: text.title, description: text.lede };
+export async function generateMetadata(): Promise<Metadata> {
+  const { howDrops: text } = await getCopy();
+  return { title: text.title, description: text.lede };
+}
 
 /** How a drop runs, in three steps, and the rules that keep it fair. */
-export default function HowDropsWorkPage() {
+export default async function HowDropsWorkPage() {
+  const copy = await getCopy();
+  const { howDrops: text } = copy;
   return (
     <>
       <Band aria-labelledby="how-title">
@@ -58,7 +61,7 @@ export default function HowDropsWorkPage() {
           ))}
         </Columns>
         <Closing>
-          <ButtonLink href="/drops" variant="accent" icon="arrow">
+          <ButtonLink href={copy.path('/drops')} variant="accent" icon="arrow">
             {text.see}
           </ButtonLink>
         </Closing>

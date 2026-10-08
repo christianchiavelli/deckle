@@ -105,7 +105,11 @@ export function printedAt(size: PaperOptionFragment, copy: Copy): string {
 export interface RecordEntry {
   readonly term: string;
   readonly detail: string | null;
+  readonly lang?: string;
 }
+
+/** The museum writes its record in English, whatever the edition: a reader's voice should too. */
+const MUSEUM = 'en';
 
 /** The museum's record, in the order a catalogue entry gives it; null fields read as a dash. */
 export function recordOf(work: Work, copy: Copy): RecordEntry[] {
@@ -115,13 +119,13 @@ export function recordOf(work: Work, copy: Copy): RecordEntry[] {
     ? [work.artist.name, work.artist.bio].filter(Boolean).join(', ')
     : null;
   return [
-    { term: record.artist, detail: artist },
-    { term: record.date, detail: work.date },
-    { term: record.medium, detail: work.medium },
-    { term: record.dimensions, detail: work.dimensions[0] ?? null },
-    { term: record.culture, detail: work.culture },
-    { term: record.period, detail: work.period },
-    { term: record.creditLine, detail: work.creditLine },
+    { term: record.artist, detail: artist, lang: MUSEUM },
+    { term: record.date, detail: work.date, lang: MUSEUM },
+    { term: record.medium, detail: work.medium, lang: MUSEUM },
+    { term: record.dimensions, detail: work.dimensions[0] ?? null, lang: MUSEUM },
+    { term: record.culture, detail: work.culture, lang: MUSEUM },
+    { term: record.period, detail: work.period, lang: MUSEUM },
+    { term: record.creditLine, detail: work.creditLine, lang: MUSEUM },
     { term: record.objectNumber, detail: work.accessionNumber },
     { term: record.rights, detail: copy.work.rights },
     {

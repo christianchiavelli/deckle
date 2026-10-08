@@ -22,7 +22,7 @@ import { media, tokens as t } from '@deckle/tokens';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNow } from '../components/clock';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { marksOf, soonChipOf, type Stock, standingOf, tallyOf } from '../views/drops';
 import { leftToPay, untilOpening } from '../views/time';
 import {
@@ -169,8 +169,6 @@ export interface DropLiveProps {
   readonly now: number;
 }
 
-const { drop: text, drops: words } = copy;
-
 /**
  * A drop's page, the part that moves: whether it is open, the copies as they
  * are claimed, and the reader's own copy, held or paid. The copies come from
@@ -178,6 +176,8 @@ const { drop: text, drops: words } = copy;
  * way in with a passkey, from this browser's session.
  */
 export function DropLive(props: DropLiveProps) {
+  const copy = useCopy();
+  const { drop: text, drops: words } = copy;
   const { slug, editionSize } = props;
   const now = useNow(props.now, 1000);
   const soon = Date.parse(props.opensAt) > now;
@@ -390,7 +390,11 @@ export function DropLive(props: DropLiveProps) {
             <Actions>
               {held ? (
                 <>
-                  <ButtonLink href={`/checkout?drop=${slug}`} variant="accent" icon="bag">
+                  <ButtonLink
+                    href={copy.path(`/checkout?drop=${slug}`)}
+                    variant="accent"
+                    icon="bag"
+                  >
                     {text.pay(props.price)}
                   </ButtonLink>
                   <TextButton
@@ -402,12 +406,16 @@ export function DropLive(props: DropLiveProps) {
                   </TextButton>
                 </>
               ) : sold && mine.orderCode ? (
-                <ButtonLink href={`/orders/${mine.orderCode}`} variant="accent" icon="arrow">
+                <ButtonLink
+                  href={copy.path(`/orders/${mine.orderCode}`)}
+                  variant="accent"
+                  icon="arrow"
+                >
                   {text.order}
                 </ButtonLink>
               ) : soon ? (
                 !signedIn && (
-                  <ButtonLink href="/account" variant="accent" icon="key">
+                  <ButtonLink href={copy.path('/account')} variant="accent" icon="key">
                     {words.readyWithPasskey}
                   </ButtonLink>
                 )
@@ -423,7 +431,7 @@ export function DropLive(props: DropLiveProps) {
                 </Button>
               )}
               {!held && (
-                <TextLink href="/about/drops" tone="onFeature" icon="arrow">
+                <TextLink href={copy.path('/about/drops')} tone="onFeature" icon="arrow">
                   {words.howTheyWork}
                 </TextLink>
               )}

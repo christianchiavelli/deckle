@@ -17,7 +17,7 @@ import { media, tokens as t } from '@deckle/tokens';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNow } from '../components/clock';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { moneyOf } from '../views/cart';
 import { imageAt } from '../views/images';
 import { clockOf, dateOf } from '../views/time';
@@ -133,10 +133,9 @@ const None = styled.div`
   }
 `;
 
-const { account: text } = copy;
-
 /** An account is a passkey: the two ways in, or, once in, the copies it holds and the way out. */
 export function AccountLive({ now: serverNow }: { now: number }) {
+  const { account: text } = useCopy();
   const { data, error } = useQuery(AccountPageDocument, {
     ssr: false,
     fetchPolicy: 'cache-and-network',
@@ -164,6 +163,8 @@ export function AccountLive({ now: serverNow }: { now: number }) {
 }
 
 function SignIn() {
+  const copy = useCopy();
+  const { account: text } = copy;
   const passkeys = usePasskeys();
   const busy = passkeys.step === 'waiting';
   return (
@@ -211,6 +212,8 @@ function Account({
   drops: AccountPageQuery['drops'];
   serverNow: number;
 }) {
+  const copy = useCopy();
+  const { account: text } = copy;
   const client = useApolloClient();
   const now = useNow(serverNow, 1000);
   const [signOut, signingOut] = useMutation(SignOutDocument);
@@ -241,7 +244,7 @@ function Account({
         {viewer.copies.length === 0 ? (
           <None>
             <p>{text.noCopies}</p>
-            <TextLink href="/drops" icon="arrow">
+            <TextLink href={copy.path('/drops')} icon="arrow">
               {text.seeDrops}
             </TextLink>
           </None>
@@ -277,12 +280,16 @@ function Account({
                   </Words>
                   <Action>
                     {held ? (
-                      <ButtonLink href={`/checkout?drop=${mine.drop}`} variant="accent" icon="bag">
+                      <ButtonLink
+                        href={copy.path(`/checkout?drop=${mine.drop}`)}
+                        variant="accent"
+                        icon="bag"
+                      >
                         {text.pay(price)}
                       </ButtonLink>
                     ) : (
                       mine.orderCode && (
-                        <TextLink href={`/orders/${mine.orderCode}`} icon="arrow">
+                        <TextLink href={copy.path(`/orders/${mine.orderCode}`)} icon="arrow">
                           {text.order(mine.orderCode)}
                         </TextLink>
                       )

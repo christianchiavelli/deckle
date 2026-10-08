@@ -3,11 +3,11 @@ import { tokens as t } from '@deckle/tokens';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { PrintTiles } from '../../../components/print-tiles';
-import { SearchAgain } from '../../../components/search-again';
-import { copy } from '../../../copy';
-import { readCatalogue } from '../../../gateway/reads';
-import { queryFrom, searchWorks } from '../../../views/search';
+import { PrintTiles } from '../../../../components/print-tiles';
+import { SearchAgain } from '../../../../components/search-again';
+import { getCopy } from '../../../../copy/server';
+import { readCatalogue } from '../../../../gateway/reads';
+import { queryFrom, searchWorks } from '../../../../views/search';
 
 const Field = styled.div`
   inline-size: 100%;
@@ -42,15 +42,17 @@ const Suggestions = styled.ul`
   gap: ${t.space.gapSm} ${t.space.gapLg};
 `;
 
-const { search: text, locale } = copy;
-
-export async function generateMetadata({ searchParams }: PageProps<'/search'>): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: PageProps<'/[lang]/search'>): Promise<Metadata> {
   const query = queryFrom(await searchParams);
+  const { search: text } = await getCopy();
   return { title: query === '' ? text.title : text.results(query) };
 }
 
 /** What a search found, with the field to search again, as approved. */
-export default function SearchPage({ searchParams }: PageProps<'/search'>) {
+export default async function SearchPage({ searchParams }: PageProps<'/[lang]/search'>) {
+  const { search: text } = await getCopy();
   return (
     <Suspense
       fallback={
@@ -64,7 +66,9 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   );
 }
 
-async function Search({ searchParams }: Pick<PageProps<'/search'>, 'searchParams'>) {
+async function Search({ searchParams }: Pick<PageProps<'/[lang]/search'>, 'searchParams'>) {
+  const copy = await getCopy();
+  const { search: text, locale } = copy;
   // The query first: at build time it never comes, so the page reads nothing then.
   const params = await searchParams;
   const { artworks } = await readCatalogue();
@@ -73,6 +77,7 @@ async function Search({ searchParams }: Pick<PageProps<'/search'>, 'searchParams
     artworks.edges.map((edge) => edge.node),
     query,
     locale,
+    copy.prints.named,
   );
   const title =
     query === '' ? text.title : found.length > 0 ? text.results(query) : text.none(query);
@@ -108,13 +113,13 @@ async function Search({ searchParams }: Pick<PageProps<'/search'>, 'searchParams
           <Suggestions>
             {text.suggestions.map((suggestion) => (
               <li key={suggestion}>
-                <TextLink href={`/search?q=${encodeURIComponent(suggestion)}`}>
+                <TextLink href={copy.path(`/search?q=${encodeURIComponent(suggestion)}`)}>
                   {suggestion}
                 </TextLink>
               </li>
             ))}
           </Suggestions>
-          <ButtonLink href="/prints" icon="arrow">
+          <ButtonLink href={copy.path('/prints')} icon="arrow">
             {text.browse}
           </ButtonLink>
         </Empty>

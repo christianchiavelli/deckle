@@ -118,11 +118,20 @@ interface Field {
   readonly weight: number;
 }
 
-function fieldsOf(work: ListedWork): Field[] {
+/** A technique family in the edition's words; commerce names them in English. */
+export type Naming = (technique: string) => string;
+
+const inEnglish: Naming = (technique) => technique;
+
+/** A family's name, and the edition's for it: "Woodcuts Xilogravuras". */
+const bothNames = (technique: string, naming: Naming) =>
+  naming(technique) === technique ? technique : `${technique} ${naming(technique)}`;
+
+function fieldsOf(work: ListedWork, naming: Naming): Field[] {
   return [
     { words: wordsOf(`${work.title} ${work.fullTitle}`), weight: 3 },
     { words: wordsOf(work.artist?.name ?? ''), weight: 3 },
-    { words: wordsOf(work.technique ?? ''), weight: 2 },
+    { words: wordsOf(work.technique === null ? '' : bothNames(work.technique, naming)), weight: 2 },
     { words: wordsOf(work.medium ?? ''), weight: 1 },
     { words: wordsOf(work.culture ?? ''), weight: 1 },
   ];
@@ -157,12 +166,17 @@ interface Search {
   readonly searched: readonly Searched[];
 }
 
-function searchOf(works: readonly ListedWork[], query: string, locale: string): Search | null {
+function searchOf(
+  works: readonly ListedWork[],
+  query: string,
+  locale: string,
+  naming: Naming,
+): Search | null {
   const words = wordsOf(query);
   if (words.length === 0) {
     return null;
   }
-  const records = inOrder(works, locale).map((work) => ({ work, fields: fieldsOf(work) }));
+  const records = inOrder(works, locale).map((work) => ({ work, fields: fieldsOf(work, naming) }));
   const vocabulary = [
     ...new Set(records.flatMap(({ fields }) => fields.flatMap((field) => field.words))),
   ];
@@ -195,14 +209,16 @@ function ranked({ records, searched }: Search): ListedWork[] {
  * still be being typed, so from six letters it may be a start with a typo in
  * it: "melanc" finds Melencolia. The closest come first: a whole word before a
  * start, a start before a typo, a title or a maker before a medium; then the
- * oldest. Nothing searched for finds nothing.
+ * oldest. Nothing searched for finds nothing. A technique is also found by its
+ * name in the edition's words.
  */
 export function searchWorks(
   works: readonly ListedWork[],
   query: string,
   locale: string,
+  naming: Naming = inEnglish,
 ): ListedWork[] {
-  const search = searchOf(works, query, locale);
+  const search = searchOf(works, query, locale, naming);
   return search ? ranked(search) : [];
 }
 
@@ -217,6 +233,7 @@ function namesOf(
   { records, searched }: Search,
   nameOf: (work: ListedWork) => string | null,
   locale: string,
+  naming: Naming = inEnglish,
 ): Named[] {
   const counts = new Map<string, number>();
   for (const { work } of records) {
@@ -229,7 +246,7 @@ function namesOf(
     .map(([name, count]) => ({
       name,
       count,
-      score: scoreOf([{ words: wordsOf(name), weight: 1 }], searched),
+      score: scoreOf([{ words: wordsOf(bothNames(name, naming)), weight: 1 }], searched),
     }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || b.count - a.count || a.name.localeCompare(b.name, locale))
@@ -259,8 +276,9 @@ export function suggestionsOf(
   works: readonly ListedWork[],
   query: string,
   locale: string,
+  naming: Naming = inEnglish,
 ): Suggestions {
-  const search = searchOf(works, query, locale);
+  const search = searchOf(works, query, locale, naming);
   if (!search) {
     return { works: [], artists: [], techniques: [], total: 0 };
   }
@@ -271,7 +289,10 @@ export function suggestionsOf(
       0,
       SUGGESTED.artists,
     ),
-    techniques: namesOf(search, (work) => work.technique, locale).slice(0, SUGGESTED.techniques),
+    techniques: namesOf(search, (work) => work.technique, locale, naming).slice(
+      0,
+      SUGGESTED.techniques,
+    ),
     total: found.length,
   };
 }

@@ -6,6 +6,7 @@ import { ApolloProvider } from '@apollo/client/react';
 import { OperationTypeNode } from 'graphql';
 import { createClient } from 'graphql-ws';
 import { type ReactNode, useState } from 'react';
+import { useCopy } from '../copy/client';
 
 /** The gateway, on the store's own origin: Caddy routes it, so the session cookie goes along. */
 const ENDPOINT = '/graphql';
@@ -44,10 +45,16 @@ export function makeCache(): InMemoryCache {
  * Queries and changes go over HTTP; a drop's live count over a WebSocket, which
  * opens with the first subscription and closes with the last. On the server
  * nothing is ever sent: the islands render their waiting state there, and ask
- * once they are in the browser, where the cookie is.
+ * once they are in the browser, where the cookie is. Each request names the
+ * page's language, so the CMS's words come in the page's edition, whatever
+ * the browser's own setting.
  */
-function makeClient(): ApolloClient {
-  const http = new HttpLink({ uri: ENDPOINT, credentials: 'same-origin' });
+function makeClient(language: string): ApolloClient {
+  const http = new HttpLink({
+    uri: ENDPOINT,
+    credentials: 'same-origin',
+    headers: { 'accept-language': language },
+  });
   if (typeof window === 'undefined') {
     return new ApolloClient({ link: http, cache: makeCache(), ssrMode: true });
   }
@@ -67,6 +74,7 @@ function makeClient(): ApolloClient {
 
 /** One client per page load in the browser, and one per request on the server. */
 export function StoreApollo({ children }: { children: ReactNode }) {
-  const [client] = useState(makeClient);
+  const { htmlLang } = useCopy();
+  const [client] = useState(() => makeClient(htmlLang));
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }

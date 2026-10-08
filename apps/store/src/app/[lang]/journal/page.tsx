@@ -4,20 +4,22 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import { copy } from '../../copy';
-import { readJournal } from '../../gateway/reads';
-import { journalOf, storyHref } from '../../views/journal';
+import { getCopy } from '../../../copy/server';
+import { readJournal } from '../../../gateway/reads';
+import { journalOf, storyHref } from '../../../views/journal';
 
 const Lead = styled.div`
   margin-block-start: ${t.space.gap2xl};
 `;
 
-const { journal: text } = copy;
-
-export const metadata: Metadata = { title: text.title };
+export async function generateMetadata(): Promise<Metadata> {
+  const { journal: text } = await getCopy();
+  return { title: text.title };
+}
 
 /** Every story, the newest first and widest, as approved. Each leads to its print's page. */
-export default function JournalPage() {
+export default async function JournalPage() {
+  const { journal: text } = await getCopy();
   return (
     <Suspense
       fallback={
@@ -32,8 +34,10 @@ export default function JournalPage() {
 }
 
 async function Journal() {
+  const copy = await getCopy();
+  const { journal: text } = copy;
   await connection();
-  const { artworks } = await readJournal();
+  const { artworks } = await readJournal(copy.lang);
   const [first, ...rest] = journalOf(artworks.edges.map((edge) => edge.node));
 
   return (
@@ -43,7 +47,7 @@ async function Journal() {
         {first && (
           <Lead>
             <StoryLead
-              href={storyHref(first.slug)}
+              href={copy.path(storyHref(first.slug))}
               kicker={first.kicker}
               title={first.title}
               lede={first.lede}
@@ -61,7 +65,7 @@ async function Journal() {
             {rest.map((entry) => (
               <li key={entry.slug}>
                 <StoryCard
-                  href={storyHref(entry.slug)}
+                  href={copy.path(storyHref(entry.slug))}
                   kicker={entry.kicker}
                   title={entry.title}
                   lede={entry.lede}

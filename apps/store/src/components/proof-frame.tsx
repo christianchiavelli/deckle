@@ -3,10 +3,8 @@
 import { TrialProof } from '@deckle/ui';
 import { usePathname } from 'next/navigation';
 import type { MouseEvent } from 'react';
-import { copy } from '../copy';
+import { useCopy } from '../copy/client';
 import { leaveLink } from '../preview/link';
-
-const { preview } = copy;
 
 /** The page as it stands when the reader leaves, query and anchor too: a story's preview is left at the story. */
 function leaveFromHere(event: MouseEvent<HTMLAnchorElement>) {
@@ -20,6 +18,7 @@ function leaveFromHere(event: MouseEvent<HTMLAnchorElement>) {
  * and the click adds what only the browser knows.
  */
 export function ProofFrame() {
+  const { preview } = useCopy();
   const pathname = usePathname();
   return (
     <TrialProof

@@ -22,7 +22,7 @@ export function suggestionListOf(
     {
       label: text.artists,
       suggestions: suggestions.artists.map(({ name, count }) => ({
-        href: `/search?q=${encodeURIComponent(name)}`,
+        href: copy.path(`/search?q=${encodeURIComponent(name)}`),
         label: name,
         count: copy.search.count(count),
       })),
@@ -30,15 +30,15 @@ export function suggestionListOf(
     {
       label: text.techniques,
       suggestions: suggestions.techniques.map(({ name, count }) => ({
-        href: hrefOf({ ...NO_CHOICE, technique: name }),
-        label: name,
+        href: copy.path(hrefOf({ ...NO_CHOICE, technique: name })),
+        label: copy.prints.named(name),
         count: copy.search.count(count),
       })),
     },
     {
       label: text.prints,
       suggestions: suggestions.works.map((work) => ({
-        href: `/prints/${work.slug}`,
+        href: copy.path(`/prints/${work.slug}`),
         label: work.title,
         detail: metaOf(work),
         ...(work.image && {
@@ -57,7 +57,7 @@ export function suggestionListOf(
     all:
       suggestions.total > 0
         ? {
-            href: `/search?q=${encodeURIComponent(query)}`,
+            href: copy.path(`/search?q=${encodeURIComponent(query)}`),
             label: text.all(suggestions.total, query),
           }
         : null,

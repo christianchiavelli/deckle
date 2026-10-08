@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copy } from '../copy';
+import { en as copy } from '../copy/en';
 import { greatWave, melencolia, tileFrom } from '../test/works';
 import { imageAt } from './images';
 import { metaOf, priceOf, tileOf, tilesOf } from './tiles';

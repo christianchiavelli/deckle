@@ -1,11 +1,14 @@
 import { Band } from '@deckle/ui';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { requestTime } from '../../../components/request-time';
-import { copy } from '../../../copy';
-import { AccountLive } from '../../../live/account-page';
+import { requestTime } from '../../../../components/request-time';
+import { getCopy } from '../../../../copy/server';
+import { AccountLive } from '../../../../live/account-page';
 
-export const metadata: Metadata = { title: copy.account.title, robots: { index: false } };
+export async function generateMetadata(): Promise<Metadata> {
+  const { account } = await getCopy();
+  return { title: account.title, robots: { index: false } };
+}
 
 /** The account, as approved: a passkey to sign in with, then the copies it holds. */
 export default function AccountPage() {

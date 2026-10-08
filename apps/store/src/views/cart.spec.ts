@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copy } from '../copy';
+import { en as copy } from '../copy/en';
 import { cart, cartLine, copyOrder, placedOrder } from '../test/drops';
 import { lineOf, moneyOf, orderSummaryOf, summaryOf } from './cart';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copy } from '../copy';
+import { en as copy } from '../copy/en';
 import { greatWave, listedFrom, melencolia, optionsFor } from '../test/works';
 import {
   centuryOf,
@@ -9,6 +9,7 @@ import {
   isChosen,
   NO_CHOICE,
   ordinal,
+  roman,
   shownOf,
   slugOf,
   type ListedWork,
@@ -74,6 +75,22 @@ describe('ordinal', () => {
     [111, '111th'],
   ])('names %i the %s', (n, name) => {
     expect(ordinal(n)).toBe(name);
+  });
+});
+
+describe('roman', () => {
+  it.each([
+    [1, 'I'],
+    [4, 'IV'],
+    [9, 'IX'],
+    [15, 'XV'],
+    [16, 'XVI'],
+    [19, 'XIX'],
+    [21, 'XXI'],
+    [40, 'XL'],
+    [1999, 'MCMXCIX'],
+  ])('writes %i as %s', (n, numeral) => {
+    expect(roman(n)).toBe(numeral);
   });
 });
 

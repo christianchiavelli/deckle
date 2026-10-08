@@ -2,10 +2,10 @@ import { Band, Record, SectionHead, Steps } from '@deckle/ui';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { requestTime } from '../../../../components/request-time';
-import { copy } from '../../../../copy';
-import { readDrop, readDropStocks } from '../../../../gateway/reads';
-import { DropLive } from '../../../../live/drop-page';
+import { requestTime } from '../../../../../components/request-time';
+import { getCopy } from '../../../../../copy/server';
+import { readDrop, readDropStocks } from '../../../../../gateway/reads';
+import { DropLive } from '../../../../../live/drop-page';
 import {
   headlineOf,
   openingOf,
@@ -13,14 +13,15 @@ import {
   priceOf,
   recordOf,
   stocksBySlug,
-} from '../../../../views/drops';
-import { imageAt } from '../../../../views/images';
+} from '../../../../../views/drops';
+import { imageAt } from '../../../../../views/images';
 
-const { drop: text } = copy;
-
-export async function generateMetadata({ params }: PageProps<'/drops/[slug]'>): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<'/[lang]/drops/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
-  const drop = await readDrop(slug);
+  const copy = await getCopy();
+  const drop = await readDrop(slug, copy.lang);
   return drop
     ? { title: headlineOf(drop, copy), description: paragraphsOf(drop)[0] ?? undefined }
     : {};
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: PageProps<'/drops/[slug]'>): 
  * A drop's page, as approved: the edition and the way to a copy, the fifty
  * copies as they go, how a drop works and what the print is.
  */
-export default function DropPage({ params }: PageProps<'/drops/[slug]'>) {
+export default function DropPage({ params }: PageProps<'/[lang]/drops/[slug]'>) {
   return (
     <Suspense fallback={<Band tone="feature" aria-busy="true" />}>
       <Drop params={params} />
@@ -38,9 +39,11 @@ export default function DropPage({ params }: PageProps<'/drops/[slug]'>) {
   );
 }
 
-async function Drop({ params }: Pick<PageProps<'/drops/[slug]'>, 'params'>) {
+async function Drop({ params }: Pick<PageProps<'/[lang]/drops/[slug]'>, 'params'>) {
+  const copy = await getCopy();
+  const { drop: text } = copy;
   const { slug } = await params;
-  const drop = await readDrop(slug);
+  const drop = await readDrop(slug, copy.lang);
   if (!drop) {
     notFound();
   }

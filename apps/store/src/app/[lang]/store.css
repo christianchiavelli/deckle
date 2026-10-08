@@ -9,3 +9,15 @@
 :root[data-theme='dark'] {
   color-scheme: dark;
 }
+
+/*
+ * A page whose content is still on its way marks its placeholder busy, and
+ * the footer waits with it: drawn under the placeholder, it would be pushed
+ * down the moment the content lands, a jump the reader sees and the layout
+ * shift metric counts. Plain CSS, where no styled-components plugin rewrites
+ * it: a Server Component leaves its <style> tags between main and the footer,
+ * which `~` steps over.
+ */
+#main:has(> [aria-busy='true']) ~ footer {
+  display: none;
+}

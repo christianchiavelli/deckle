@@ -249,3 +249,28 @@ describe('suggestionsOf', () => {
     expect(suggest('monet')).toEqual({ works: [], artists: [], techniques: [], total: 0 });
   });
 });
+
+describe("a technique in the edition's words", () => {
+  const rhinoceros = work('the-rhinoceros', 1515, {
+    title: 'The Rhinoceros',
+    fullTitle: 'The Rhinoceros',
+    technique: 'Woodcuts',
+    medium: 'Woodcut',
+  });
+  const shop = [listedFrom(melencolia, 1514), rhinoceros, witches];
+  const inPortuguese = (technique: string) =>
+    technique === 'Woodcuts' ? 'Xilogravuras' : technique;
+
+  it('finds the works of a technique by its name in the edition, accents aside', () => {
+    expect(searchWorks(shop, 'xilogravura', 'pt-BR', inPortuguese).map(({ slug }) => slug)).toEqual(
+      ['the-witches', 'the-rhinoceros'],
+    );
+    expect(searchWorks(shop, 'xilogravura', 'en-US')).toEqual([]);
+  });
+
+  it('suggests the technique by that name too', () => {
+    expect(suggestionsOf(shop, 'xilo', 'pt-BR', inPortuguese).techniques).toEqual([
+      { name: 'Woodcuts', count: 2 },
+    ]);
+  });
+});

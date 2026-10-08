@@ -1,9 +1,9 @@
 import { Band, DropRow, PageHead } from '@deckle/ui';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { requestTime } from '../../../components/request-time';
-import { copy } from '../../../copy';
-import { readDrops, readDropStocks } from '../../../gateway/reads';
+import { requestTime } from '../../../../components/request-time';
+import { getCopy } from '../../../../copy/server';
+import { readDrops, readDropStocks } from '../../../../gateway/reads';
 import {
   chipOf,
   factsOf,
@@ -11,15 +11,17 @@ import {
   paragraphsOf,
   phaseOf,
   stocksBySlug,
-} from '../../../views/drops';
-import { imageAt } from '../../../views/images';
+} from '../../../../views/drops';
+import { imageAt } from '../../../../views/images';
 
-const { drops: text } = copy;
-
-export const metadata: Metadata = { title: text.title, description: text.lede };
+export async function generateMetadata(): Promise<Metadata> {
+  const { drops: text } = await getCopy();
+  return { title: text.title, description: text.lede };
+}
 
 /** Every drop: the one open now on the copper dark, then the ones still to open. */
-export default function DropsPage() {
+export default async function DropsPage() {
+  const { drops: text } = await getCopy();
   return (
     <>
       <Band aria-labelledby="drops-title">
@@ -33,9 +35,14 @@ export default function DropsPage() {
 }
 
 async function Drops() {
+  const copy = await getCopy();
+  const { drops: text } = copy;
   // Which drop is open, and how many of its copies, are a matter of the moment.
   const now = await requestTime();
-  const [drops, stocks] = await Promise.all([readDrops(), readDropStocks().catch(() => [])]);
+  const [drops, stocks] = await Promise.all([
+    readDrops(copy.lang),
+    readDropStocks().catch(() => []),
+  ]);
   const counted = stocksBySlug(stocks);
 
   return drops.map((drop) => {
@@ -48,7 +55,7 @@ async function Drops() {
         key={drop.slug}
         id={`${drop.slug}-title`}
         tone={open ? 'feature' : 'page'}
-        href={`/drops/${drop.slug}`}
+        href={copy.path(`/drops/${drop.slug}`)}
         image={{ src: imageAt(image.url, 'card'), width: image.width, height: image.height }}
         state={chipOf(drop, stock, now, copy)}
         title={headlineOf(drop, copy)}
