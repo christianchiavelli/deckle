@@ -15,14 +15,19 @@
     "schema:check": "graphql-codegen --config codegen.ts --check"
   },
   "dependencies": {
+    "@apollo/client": "catalog:",
     "@deckle/brand": "workspace:*",
     "@deckle/cache-tags": "workspace:*",
     "@deckle/print-sizes": "workspace:*",
     "@deckle/tokens": "workspace:*",
     "@deckle/ui": "workspace:*",
+    "@simplewebauthn/browser": "catalog:",
+    "graphql": "catalog:",
+    "graphql-ws": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "rxjs": "catalog:",
     "styled-components": "catalog:",
     "zod": "catalog:"
   },
@@ -38,7 +43,6 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
-    "graphql": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
