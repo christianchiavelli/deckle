@@ -3,10 +3,17 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   type DocumentNode,
+  type GraphQLInputType,
   type GraphQLSchema,
+  isEnumType,
+  isInputObjectType,
+  isInputType,
+  isListType,
+  isNonNullType,
   Kind,
   type OperationDefinitionNode,
   parse,
+  typeFromAST,
 } from 'graphql';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { MAX_QUERY_COMPLEXITY } from './complexity.js';
@@ -56,50 +63,74 @@ const fanOuts = {
 };
 
 /**
- * The store's own operations, read from its source: a page the store adds is
+ * The store's own operations, read from its source: what its pages read on the
+ * server, and what they send from the browser. An operation the store adds is
  * priced here before it can meet the limit in production.
  */
-const STORE_OPERATIONS = fileURLToPath(
-  new URL('../../../../apps/store/src/gateway/operations/', import.meta.url),
+const STORE_OPERATIONS = ['gateway', 'live'].map((folder) =>
+  fileURLToPath(new URL(`../../../../apps/store/src/${folder}/operations/`, import.meta.url)),
 );
 
-async function storeOperations() {
-  const files = (await readdir(STORE_OPERATIONS)).filter((file) => file.endsWith('.graphql'));
-  const sources = await Promise.all(
-    files.map((file) => readFile(join(STORE_OPERATIONS, file), 'utf8')),
+const SCALAR_SAMPLES: Record<string, unknown> = { Int: 1, Float: 1, Boolean: true };
+
+/** A value the type accepts, so an operation is priced with variables it could be sent. */
+function sampleOf(type: GraphQLInputType): unknown {
+  if (isNonNullType(type)) return sampleOf(type.ofType);
+  if (isListType(type)) return [sampleOf(type.ofType)];
+  if (isEnumType(type)) return type.getValues()[0]?.name;
+  if (isInputObjectType(type)) {
+    return Object.fromEntries(
+      Object.values(type.getFields()).map((field) => [field.name, sampleOf(field.type)]),
+    );
+  }
+  return SCALAR_SAMPLES[type.name] ?? 'a-slug';
+}
+
+function variablesOf(schema: GraphQLSchema, operation: OperationDefinitionNode) {
+  return Object.fromEntries(
+    (operation.variableDefinitions ?? []).map(({ variable, type }) => {
+      const input = typeFromAST(schema, type);
+      if (!isInputType(input)) throw new Error(`$${variable.name.value} has no input type`);
+      return [variable.name.value, sampleOf(input)];
+    }),
   );
-  // One document, so every operation finds the fragments it spreads.
-  const document = parse(sources.join('\n'));
-  return document.definitions
-    .filter(
-      (definition): definition is OperationDefinitionNode =>
-        definition.kind === Kind.OPERATION_DEFINITION,
-    )
-    .map((operation) => ({
-      name: operation.name?.value ?? 'anonymous',
-      document,
-      // Every variable the store's operations take is a slug or a string.
-      variables: Object.fromEntries(
-        (operation.variableDefinitions ?? []).map((variable) => [
-          variable.variable.name.value,
-          'a-slug',
-        ]),
-      ),
-    }));
+}
+
+async function storeOperations(schema: GraphQLSchema) {
+  const documents = await Promise.all(
+    STORE_OPERATIONS.map(async (folder) => {
+      const files = (await readdir(folder)).filter((file) => file.endsWith('.graphql'));
+      const sources = await Promise.all(files.map((file) => readFile(join(folder, file), 'utf8')));
+      // One document a folder, so every operation finds the fragments it spreads.
+      return parse(sources.join('\n'));
+    }),
+  );
+  return documents.flatMap((document) =>
+    document.definitions
+      .filter(
+        (definition): definition is OperationDefinitionNode =>
+          definition.kind === Kind.OPERATION_DEFINITION,
+      )
+      .map((operation) => ({
+        name: operation.name?.value ?? 'anonymous',
+        document,
+        variables: variablesOf(schema, operation),
+      })),
+  );
 }
 
 describe('query complexity', () => {
   let schema: GraphQLSchema;
-  let operations: { name: string; document: DocumentNode; variables: Record<string, string> }[];
+  let operations: { name: string; document: DocumentNode; variables: Record<string, unknown> }[];
 
   beforeAll(async () => {
     schema = await buildGatewaySchema();
-    operations = await storeOperations();
+    operations = await storeOperations(schema);
   });
 
   it('lets every operation the store sends through, with room to spare', () => {
-    expect(operations.map(({ name }) => name).sort()).toEqual(
-      expect.arrayContaining(['Catalogue', 'Home', 'Work']),
+    expect(operations.map(({ name }) => name)).toEqual(
+      expect.arrayContaining(['Catalogue', 'Home', 'Work', 'CartPage', 'PlaceOrder', 'DropLive']),
     );
     const costs = Object.fromEntries(
       operations.map(({ name, document, variables }) => [
