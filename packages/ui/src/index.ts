@@ -126,7 +126,14 @@ export {
 export { PrintGrid, PrintTile, type PrintTileProps } from './sections/print-tile.tsx';
 export { Record, type RecordEntry, type RecordProps } from './sections/record.tsx';
 export { type FooterColumn, SiteFooter, type SiteFooterProps } from './sections/site-footer.tsx';
-export { type NavItem, SiteHeader, type SiteHeaderProps } from './sections/site-header.tsx';
+export {
+  LanguageCodes,
+  type LanguageCodesProps,
+  type LanguageOption,
+  type NavItem,
+  SiteHeader,
+  type SiteHeaderProps,
+} from './sections/site-header.tsx';
 export { type DiagramSize, SizeDiagram, type SizeDiagramProps } from './sections/size-diagram.tsx';
 export { type SizeRow, SizeTable, type SizeTableProps } from './sections/size-table.tsx';
 export { Stage, type StageImage, type StageProps, TrimMarks } from './sections/stage.tsx';

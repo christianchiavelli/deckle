@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import styled from 'styled-components';
 import { Announcement } from '../sections/announcement.tsx';
 import { SiteFooter } from '../sections/site-footer.tsx';
-import { SiteHeader } from '../sections/site-header.tsx';
+import { LanguageCodes, SiteHeader } from '../sections/site-header.tsx';
 import { TrialProof } from '../sections/trial-proof.tsx';
 import { suggestFromDataSet } from './suggest.ts';
 
@@ -82,6 +82,18 @@ export function Chrome({
         }}
         menu={{ open: 'Menu', close: 'Close the menu' }}
         notice={notice}
+        languages={{
+          label: 'Language',
+          codes: (
+            <LanguageCodes
+              label="Language"
+              items={[
+                { name: 'English', short: 'EN', lang: 'en', href: '/', current: true },
+                { name: 'Português', short: 'PT', lang: 'pt-BR', href: '/pt-br' },
+              ]}
+            />
+          ),
+        }}
       />
       <main id="main">{children}</main>
       <SiteFooter

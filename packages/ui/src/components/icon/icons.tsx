@@ -32,6 +32,14 @@ export const icons = {
       <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" />
     </>
   ),
+  /** The store's languages, beside their switch in the phone's menu. */
+  language: (
+    <>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M4 12h16" />
+      <path d="M12 4c2.4 2.3 3.6 5 3.6 8s-1.2 5.7-3.6 8c-2.4-2.3-3.6-5-3.6-8S9.6 6.3 12 4Z" />
+    </>
+  ),
   arrow: <path d="M5 12h13M13 7l5 5-5 5" />,
   /** Leaves the store: The Met's page for a work, for instance. */
   out: <path d="M8 16 16 8M10 8h6v6" />,

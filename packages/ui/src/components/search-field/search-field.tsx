@@ -29,6 +29,8 @@ const Input = styled.input`
   border-radius: ${t.radius.chip};
   background: ${t.surface.sheet};
   font-size: 0.9375rem;
+  /* Where the bar leaves the field narrow, its hint ends in an ellipsis rather than halfway through a word. */
+  text-overflow: ellipsis;
 
   &::placeholder {
     color: ${t.text.secondary};

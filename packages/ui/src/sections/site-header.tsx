@@ -1,10 +1,11 @@
 import { media, tokens as t } from '@deckle/tokens';
-import { type ReactNode, useId } from 'react';
+import { type MouseEventHandler, type ReactNode, useId } from 'react';
 import styled from 'styled-components';
 import { Icon } from '../components/icon/icon.tsx';
 import { IconButton, IconLink } from '../components/icon-button/icon-button.tsx';
 import { Logo } from '../components/logo/logo.tsx';
 import { SearchField, type SearchFieldProps } from '../components/search-field/search-field.tsx';
+import { VisuallyHidden } from '../components/visually-hidden/visually-hidden.tsx';
 import { typeRole } from '../theme/type.ts';
 import { inline } from './band.tsx';
 
@@ -156,8 +157,8 @@ const SheetLinks = styled.ul`
   display: grid;
   gap: ${t.space.gapXs};
 
-  a,
-  button {
+  > li > a,
+  > li > button {
     display: flex;
     align-items: center;
     gap: ${t.space.gapSm};
@@ -177,6 +178,75 @@ const SheetLinks = styled.ul`
   }
 `;
 
+/* The store's languages in two letters each: the current one is marked as the
+   menu marks its page, and the other leads to the same page in it. */
+const Codes = styled.nav`
+  display: flex;
+  align-items: center;
+
+  a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    padding-inline: ${t.space.gapXs};
+    color: ${t.text.secondary};
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a[aria-current='true'] {
+    color: ${t.text.primary};
+  }
+
+  a + a::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block: 36%;
+    inline-size: ${t.strokeWidth.hairline};
+    background: ${t.stroke.default};
+  }
+
+  a[aria-current='true']::after {
+    content: '';
+    position: absolute;
+    inset-inline: ${t.space.gapXs};
+    inset-block-end: 0.5rem;
+    block-size: ${t.strokeWidth.rule};
+    border-radius: ${t.radius.chip};
+    background: ${t.accent.default};
+  }
+`;
+
+/* In the phone's sheet the switch is a row of its own, named, like the theme's. */
+const SheetCodes = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${t.space.gapSm};
+  min-block-size: 2.75rem;
+  font-weight: 500;
+
+  > nav {
+    margin-inline-start: auto;
+  }
+`;
+
+export interface LanguageOption {
+  /** The language's name, as its own readers write it: "English", "Português". */
+  readonly name: string;
+  /** Two letters, all the switch shows of it: "EN", "PT". */
+  readonly short: string;
+  /** Its BCP 47 tag: "en", "pt-BR". */
+  readonly lang: string;
+  /** The page the reader is on, in that language. */
+  readonly href: string;
+  readonly current?: boolean;
+}
+
 export interface NavItem {
   readonly label: string;
   readonly href: string;
@@ -195,6 +265,43 @@ export interface SiteHeaderProps {
   menu: { open: string; close: string };
   /** A sheet laid under the bar, such as what was just added to the cart: it follows the bar as it sticks. */
   notice?: ReactNode;
+  /**
+   * The switch between the store's languages, a `LanguageCodes`: in the bar on
+   * a laptop, in a row of the sheet on a phone, named by the label there.
+   */
+  languages?: { label: string; codes: ReactNode };
+}
+
+export interface LanguageCodesProps {
+  /** What the switch is, for a screen reader: "Language". */
+  label: string;
+  items: readonly LanguageOption[];
+  /** As the reader follows the link to another language, before the browser leaves. */
+  onFollow?: MouseEventHandler<HTMLAnchorElement>;
+}
+
+/**
+ * The switch between the store's languages, two letters each. A screen reader
+ * hears each language's name as well, said in that language.
+ */
+export function LanguageCodes({ label, items, onFollow }: LanguageCodesProps) {
+  return (
+    <Codes aria-label={label}>
+      {items.map((item) => (
+        <a
+          key={item.lang}
+          href={item.href}
+          lang={item.lang}
+          hrefLang={item.current ? undefined : item.lang}
+          aria-current={item.current ? 'true' : undefined}
+          onClick={item.current ? undefined : onFollow}
+        >
+          {item.short}
+          <VisuallyHidden> {item.name}</VisuallyHidden>
+        </a>
+      ))}
+    </Codes>
+  );
 }
 
 /**
@@ -210,6 +317,7 @@ export function SiteHeader({
   cart,
   menu,
   notice,
+  languages,
 }: SiteHeaderProps) {
   const menuId = useId();
   const links = (inSheet: boolean) =>
@@ -236,6 +344,7 @@ export function SiteHeader({
       </Wide>
       <Tools>
         <Wide>
+          {languages?.codes}
           <IconButton icon="theme" label={theme.label} onClick={theme.onToggle} />
           {account && <IconLink icon="user" label={account.label} href={account.href} />}
         </Wide>
@@ -275,6 +384,15 @@ export function SiteHeader({
                 {theme.label}
               </button>
             </li>
+            {languages && (
+              <li>
+                <SheetCodes>
+                  <Icon name="language" />
+                  {languages.label}
+                  {languages.codes}
+                </SheetCodes>
+              </li>
+            )}
           </SheetLinks>
         </SheetBody>
       </Sheet>
