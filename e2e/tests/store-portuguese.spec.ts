@@ -74,8 +74,9 @@ test.describe('the Portuguese edition', () => {
       '/pt-br/drops/the-great-wave-numbered',
     ]) {
       await page.goto(`${store}${path}`);
+      // The language switch is the one way out of the edition.
       const found = await page
-        .locator('a[href^="/"]')
+        .locator('a[href^="/"]:not(nav[aria-label="Idioma"] a)')
         .evaluateAll((links) => links.map((link) => link.getAttribute('href') ?? ''));
       for (const href of found) {
         hrefs.add(href.replace(/#.*$/, ''));
@@ -93,6 +94,62 @@ test.describe('the Portuguese edition', () => {
     }
     expect(hrefs.size).toBeGreaterThan(50);
     expect(broken).toEqual([]);
+  });
+
+  test('switches to the same page in English, and back', async ({ page }) => {
+    await page.goto(`${store}/pt-br/prints/melencolia-i`);
+    const portuguese = page.getByRole('banner').getByRole('navigation', { name: 'Idioma' });
+    await expect(portuguese.getByRole('link', { name: 'PT Português' })).toHaveAttribute(
+      'aria-current',
+      'true',
+    );
+    await portuguese.getByRole('link', { name: 'EN English' }).click();
+    await expect(page).toHaveURL(`${store}/prints/melencolia-i`);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+
+    const english = page.getByRole('banner').getByRole('navigation', { name: 'Language' });
+    await english.getByRole('link', { name: 'PT Português' }).click();
+    await expect(page).toHaveURL(`${store}/pt-br/prints/melencolia-i`);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
+  });
+
+  test('finds the page in the other edition from where the browser came, with no script', async ({
+    request,
+  }) => {
+    // What the switch asks while a work's page has yet to learn its own address.
+    const switched = (to: string, referer: string) =>
+      request.get(`${store}/api/edition?to=${to}`, {
+        headers: { Referer: referer },
+        maxRedirects: 0,
+      });
+    const portuguese = await switched('pt-br', `${store}/prints?technique=etchings`);
+    expect(portuguese.status()).toBe(307);
+    expect(portuguese.headers()['location']).toBe('/pt-br/prints?technique=etchings');
+    const english = await switched('en', `${store}/pt-br/prints/melencolia-i`);
+    expect(english.headers()['location']).toBe('/prints/melencolia-i');
+    const elsewhere = await switched('pt-br', 'https://elsewhere.example/prints');
+    expect(elsewhere.headers()['location']).toBe('/pt-br');
+  });
+
+  test('carries a search over to the other edition, from the phone’s menu too', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${store}/pt-br/search?q=durer`);
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Gravuras para “durer”' }),
+    ).toBeVisible();
+    // The query is the browser's to add, once the header has hydrated: open and follow until it does.
+    await expect(async () => {
+      await page.goto(`${store}/pt-br/search?q=durer`);
+      await page.getByRole('button', { name: 'Menu' }).click();
+      await page
+        .getByRole('navigation', { name: 'Idioma' })
+        .getByRole('link', { name: 'EN English' })
+        .click();
+      await expect(page).toHaveURL(`${store}/search?q=durer`, { timeout: 2000 });
+    }).toPass();
+    await expect(page.getByRole('heading', { level: 1, name: 'Prints for “durer”' })).toBeVisible();
   });
 
   test('reads the CMS’s words in Portuguese, through the gateway', async ({ page, request }) => {

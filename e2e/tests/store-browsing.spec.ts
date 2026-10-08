@@ -69,8 +69,9 @@ test.describe('the links', () => {
       ...pages.map(([, path]) => path),
     ]) {
       await page.goto(`${store}${path}`);
+      // The language switch leads to the Portuguese edition, whose own spec follows its links.
       const found = await page
-        .locator('a[href^="/"]')
+        .locator('a[href^="/"]:not(nav[aria-label="Language"] a)')
         .evaluateAll((links) => links.map((link) => link.getAttribute('href') ?? ''));
       for (const href of found) {
         hrefs.add(href.replace(/#.*$/, ''));

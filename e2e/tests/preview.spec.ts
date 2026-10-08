@@ -33,6 +33,10 @@ const draftTitle = (about: string) => `${about}, a draft of ${String(Date.now())
 test.describe('a draft in preview', () => {
   // Payload picks the admin's language from the browser's.
   test.use({ locale: 'pt-BR', storageState: EDITOR_STATE });
+  // The admin keeps the editor's last language for the next page it opens, and
+  // every test here is the same editor: one at a time, or one test's language
+  // leaks into another's preview link.
+  test.describe.configure({ mode: 'default' });
 
   test("opens from the CMS behind a trial proof, and leaves it for what's published", async ({
     page,
@@ -83,7 +87,8 @@ test.describe('a draft in preview', () => {
   }) => {
     await openStory(page, 'south-wind-clear-sky', 'pt');
     const title = page.getByRole('textbox', { name: /^Título/ });
-    await expect(title).toHaveValue('Sobre a gravura');
+    // The Portuguese title, or an earlier run's draft of it.
+    await expect(title).toHaveValue(/^Sobre a gravura/);
 
     const draft = draftTitle('Sobre a gravura');
     const kept = page.waitForResponse(
@@ -112,6 +117,9 @@ test.describe('a draft in preview', () => {
     ).toBeVisible();
     await expect(proof).toHaveCount(0);
     await expect(tab).toHaveURL(`${store}/pt-br/prints/south-wind-clear-sky#story`);
+
+    // Back to English, which the admin keeps for whoever opens it next.
+    await openStory(page, 'south-wind-clear-sky', 'en');
   });
 
   test("follows what the editor types, in the CMS's live preview", async ({ page, browser }) => {
