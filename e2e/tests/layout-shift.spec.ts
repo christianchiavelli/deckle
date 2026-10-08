@@ -1,6 +1,9 @@
 import { expect, type Page, test } from '@playwright/test';
 
 const store = process.env['STORE_URL'] ?? 'http://localhost:8080';
+// compose.yaml's own: the secret in the CMS's preview links.
+const previewSecret =
+  process.env['PREVIEW_SECRET'] ?? 'local-only-preview-secret-not-for-production';
 
 /**
  * Google counts a layout shift below 0.1 as good. A page here is a static shell
@@ -72,6 +75,17 @@ for (const [device, viewport] of [
         expect(await shiftAsItLoads(page, path)).toBeLessThan(MOST);
       });
     }
+
+    test('a print in preview holds still behind its trial proof', async ({ page }) => {
+      const link = new URLSearchParams({
+        secret: previewSecret,
+        type: 'story',
+        slug: 'melencolia-i',
+      });
+      await page.goto(`${store}/api/preview?${link.toString()}`);
+      await expect(page.getByRole('complementary', { name: 'Trial proof' })).toBeVisible();
+      expect(await shiftAsItLoads(page, '/prints/melencolia-i')).toBeLessThan(MOST);
+    });
 
     test('the cart holds still with a print in it', async ({ page }) => {
       await page.goto(`${store}/prints/melencolia-i`);

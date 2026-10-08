@@ -14,4 +14,8 @@ export default defineConfig({
     ...devices['Desktop Chrome'],
     trace: 'retain-on-failure',
   },
+  projects: [
+    { name: 'setup', testMatch: /\.setup\.ts$/ },
+    { name: 'chromium', testIgnore: /\.setup\.ts$/, dependencies: ['setup'] },
+  ],
 });

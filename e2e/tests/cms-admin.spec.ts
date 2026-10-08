@@ -1,8 +1,5 @@
 import { expect, test } from '@playwright/test';
-
-const cms = process.env['CMS_URL'] ?? 'http://localhost:8081';
-const email = process.env['CMS_ADMIN_EMAIL'] ?? 'editor@deckle.localhost';
-const password = process.env['CMS_ADMIN_PASSWORD'] ?? 'deckle-editor';
+import { cms, editor } from '../support/cms.js';
 
 test.describe("Payload admin in Deckle's brand", () => {
   test("signs in under Deckle's mark, in the store's typeface", async ({ page, request }) => {
@@ -25,8 +22,8 @@ test.describe('Payload admin in Brazilian Portuguese', () => {
 
   test('shows a story with our labels and a date written the Brazilian way', async ({ page }) => {
     await page.goto(`${cms}/admin/login`);
-    await page.getByRole('textbox', { name: /E-?mail/ }).fill(email);
-    await page.getByRole('textbox', { name: 'Senha' }).fill(password);
+    await page.getByRole('textbox', { name: /E-?mail/ }).fill(editor.email);
+    await page.getByRole('textbox', { name: 'Senha' }).fill(editor.password);
     // Payload's Portuguese keeps the English word on this one button.
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(
@@ -36,6 +33,8 @@ test.describe('Payload admin in Brazilian Portuguese', () => {
     await page.goto(`${cms}/admin/collections/stories`);
     // A search, as an editor would: the seeded stories run past the list's first page.
     await page.getByRole('textbox', { name: 'Buscar por Slug da obra' }).fill('melencolia-i');
+    // The list puts the search in its address a moment later, which would undo an earlier click.
+    await expect(page).toHaveURL(/[?&]search=melencolia-i/);
     await page.getByRole('link', { name: 'melencolia-i' }).click();
 
     await expect(page.getByRole('textbox', { name: /^Slug da obra/ })).toBeVisible();
