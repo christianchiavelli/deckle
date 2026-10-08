@@ -16,10 +16,10 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/drops` | The numbered drops the stack opens with: the gateway records them, commerce seeds their editions, the CMS holds their words |
 | `packages/tokens` | The design tokens: DTCG files from the chosen art direction, built by Style Dictionary into CSS, a typed module and the Storybook data |
 | `packages/brand` | The mark, the favicon and the typeface: what the store, Storybook and both admin panels share, with no framework |
-| `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them |
+| `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them, which the stack serves built (ADR 0055) |
 | `packages/eslint-config` | The lint rules every package shares |
 | `data/met` | The imported data set: `catalog.json` and the reduced images, baked into the published images |
-| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes and both editions, a passkey made with a virtual authenticator, a page that holds still as it loads, a draft opened from the CMS, and the admin panels in Portuguese |
+| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes and both editions, a passkey made with a virtual authenticator, a page that holds still as it loads, a draft opened from the CMS, the admin panels in Portuguese, and the Storybook the stack serves |
 | `load` | The drop's load test in k6: a thousand people, each with a passkey made in software, claim its copies in the same second through two gateways (ADR 0052) |
 | `design/art-direction` | The art directions compared before the choice, in static HTML: the record of how the copper plate palette was picked |
 | `design/logo` | The logo options compared the same way, and the record of the chosen one: the studio seal, with the name set as an imprint |
@@ -40,7 +40,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm --filter @deckle/cms seed`: creates the editor, the gateway's read-only user and the starter curations, stories and drop pages, through the API of a CMS that is already running.
 - `pnpm -r --if-present run test:integration`: the specs that need a real Postgres, in Testcontainers. Needs Docker running.
 - `pnpm --filter @deckle/tokens build`: rebuilds `dist/` after a change under `packages/tokens/tokens`, and `test -u` once the new output in the snapshot has been reviewed.
-- `pnpm --filter @deckle/ui storybook`: the components and the Foundations pages on port 6006, both themes side by side.
+- `pnpm --filter @deckle/ui storybook`: the components and the Foundations pages on port 6006, both themes side by side, reloading as you edit. The stack serves the built one on 8083.
 - `pnpm --filter @deckle/ui test:stories`: every story in Chromium, with its interactions and an axe audit in both themes. The first time, `pnpm --filter @deckle/ui exec playwright install chromium` fetches the browser.
 - `pnpm --filter @deckle/brand fonts`: rewrites `assets/fonts/fonts.css` and its metric-matched fallback after a font file changes.
 - `pnpm --filter @deckle/brand favicon`: rewrites `assets/favicon.svg` from the seal and the accent copper, after either changes. A unit test fails while it is stale.
@@ -67,6 +67,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 | `cms` | 3000 | `http://cms:3000`. `/admin`, `/api`; host port 8081 for the admin |
 | `postgres` | 5432 | One database and one role per service: `commerce`, `cms`, `gateway` |
 | `mailpit` | 1025 SMTP, 8025 UI | host port 8025 |
+| `storybook` | 80 | host port 8083: the static Storybook, served by Caddy |
 
 - **Commerce and CMS changes reach the gateway as signed webhooks.** `POST /hooks/commerce` and `POST /hooks/cms`, JSON, with `Deckle-Signature: t=<unix seconds>,v1=<hex HMAC-SHA256 of "<t>.<raw body>">` and a five-minute tolerance. The gateway turns each event into cache tags for the store.
 - **The gateway asks the store to drop cache tags.** `POST http://store:3000/api/revalidate`, with `Authorization: Bearer <STORE_REVALIDATE_SECRET>` and `{ "tags": [...], "profile": "expire" | "max" }`. Tags come from `@deckle/cache-tags`, and the store refuses any other with a 400.
