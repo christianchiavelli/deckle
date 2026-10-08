@@ -228,3 +228,8 @@ patchedDependencies:
   # chart sized its value axis to the largest value rather than to the top tick,
   # which cut the first letter off "US$ 1.000".
   '@vendure/dashboard@3.7.4': patches/@vendure__dashboard@3.7.4.patch
+  # A page in draft mode logged three errors per load. Next keeps no "use cache"
+  # entry in draft mode, by design, then warns of an "unexpected cache miss" when
+  # the final render finds none of what the warming render made, and blames the
+  # arguments. The patch skips the warning in draft mode only; the render is the same.
+  next@16.3.8: patches/next@16.3.8.patch

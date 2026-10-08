@@ -1,0 +1,50 @@
+diff --git a/dist/esm/server/use-cache/use-cache-wrapper.js b/dist/esm/server/use-cache/use-cache-wrapper.js
+index a838e2d876f2fee6f2920ea5529485ac5ee2add0..5593fc0fe0a8191e86e0d34a6eeb948f8087c876 100644
+--- a/dist/esm/server/use-cache/use-cache-wrapper.js
++++ b/dist/esm/server/use-cache/use-cache-wrapper.js
+@@ -1897,11 +1897,15 @@ export async function cache(kind, id, boundArgsLength, originalFn, args) {
+                         // already handled by the early return above. We return a hanging
+                         // promise so this becomes a dynamic hole rather than generating a
+                         // broken cache entry that gets aborted.
+-                        console.warn(Object.defineProperty(new Error(`Unexpected cache miss after cache warming phase during prerendering. This is likely caused by non-deterministic arguments that differ between the cache warming phase and the final prerender phase (e.g. unstable array order). Ensure that arguments passed to cached functions are deterministic.`), "__NEXT_ERROR_CODE", {
+-                            value: "E1163",
+-                            enumerable: false,
+-                            configurable: true
+-                        }));
++                        // Draft mode saves no entry while caches warm, by design, so its
++                        // misses here are expected and say nothing about the arguments.
++                        if (!workStore.isDraftMode) {
++                            console.warn(Object.defineProperty(new Error(`Unexpected cache miss after cache warming phase during prerendering. This is likely caused by non-deterministic arguments that differ between the cache warming phase and the final prerender phase (e.g. unstable array order). Ensure that arguments passed to cached functions are deterministic.`), "__NEXT_ERROR_CODE", {
++                                value: "E1163",
++                                enumerable: false,
++                                configurable: true
++                            }));
++                        }
+                         // This is an anomaly (non-deterministic cache key), so we can't
+                         // know whether a runtime prerender would resolve it. Treat it as
+                         // runtime data, conservatively: the cost is at most a redundant
+diff --git a/dist/server/use-cache/use-cache-wrapper.js b/dist/server/use-cache/use-cache-wrapper.js
+index 422acf47d8516ae2c9dc61f97c5981d363fe9f27..200a5016a3d40e6d765c6019e1d47e3d98449845 100644
+--- a/dist/server/use-cache/use-cache-wrapper.js
++++ b/dist/server/use-cache/use-cache-wrapper.js
+@@ -1953,11 +1953,15 @@ async function cache(kind, id, boundArgsLength, originalFn, args) {
+                         // already handled by the early return above. We return a hanging
+                         // promise so this becomes a dynamic hole rather than generating a
+                         // broken cache entry that gets aborted.
+-                        console.warn(Object.defineProperty(new Error(`Unexpected cache miss after cache warming phase during prerendering. This is likely caused by non-deterministic arguments that differ between the cache warming phase and the final prerender phase (e.g. unstable array order). Ensure that arguments passed to cached functions are deterministic.`), "__NEXT_ERROR_CODE", {
+-                            value: "E1163",
+-                            enumerable: false,
+-                            configurable: true
+-                        }));
++                        // Draft mode saves no entry while caches warm, by design, so its
++                        // misses here are expected and say nothing about the arguments.
++                        if (!workStore.isDraftMode) {
++                            console.warn(Object.defineProperty(new Error(`Unexpected cache miss after cache warming phase during prerendering. This is likely caused by non-deterministic arguments that differ between the cache warming phase and the final prerender phase (e.g. unstable array order). Ensure that arguments passed to cached functions are deterministic.`), "__NEXT_ERROR_CODE", {
++                                value: "E1163",
++                                enumerable: false,
++                                configurable: true
++                            }));
++                        }
+                         // This is an anomaly (non-deterministic cache key), so we can't
+                         // know whether a runtime prerender would resolve it. Treat it as
+                         // runtime data, conservatively: the cost is at most a redundant
