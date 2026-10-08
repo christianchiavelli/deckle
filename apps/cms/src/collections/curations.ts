@@ -27,6 +27,7 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
       useAsTitle: 'title',
       defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
       preview: (doc) => previewLink('curation', doc['slug']),
+      livePreview: { url: ({ data }) => previewLink('curation', data['slug']) },
     },
     access: contentAccess,
     versions: { drafts: true, maxPerDoc: 50 },

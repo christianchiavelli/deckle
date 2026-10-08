@@ -27,6 +27,7 @@ export function dropPages({ previewLink }: ContentCollectionOptions): Collection
       useAsTitle: 'headline',
       defaultColumns: ['headline', 'slug', 'artworkSlug', '_status', 'updatedAt'],
       preview: (doc) => previewLink('drop-page', doc['slug']),
+      livePreview: { url: ({ data }) => previewLink('drop-page', data['slug']) },
     },
     access: contentAccess,
     versions: { drafts: true, maxPerDoc: 50 },
