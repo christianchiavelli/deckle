@@ -37,6 +37,11 @@ export interface ChromeProps {
   current?: Section;
   /** The bar above the header about the drop worth knowing today. Not on a drop's own page. */
   announcement?: boolean;
+  /**
+   * Where the language switch leads, in each edition: the page the reader is
+   * on unless this names another, as a page that is not there does.
+   */
+  switchTo?: string;
   children: ReactNode;
 }
 
@@ -47,7 +52,7 @@ export interface ChromeProps {
  * on the hour and on its copies, so it arrives on request into a space kept
  * for it.
  */
-export async function Chrome({ current, announcement = true, children }: ChromeProps) {
+export async function Chrome({ current, announcement = true, switchTo, children }: ChromeProps) {
   const copy = await getCopy();
   const { chrome } = copy;
   return (
@@ -77,6 +82,7 @@ export async function Chrome({ current, announcement = true, children }: ChromeP
         themeLabel={chrome.theme}
         suggestionsLabel={copy.search.suggest.label}
         menu={{ open: chrome.menuOpen, close: chrome.menuClose }}
+        switchTo={switchTo}
       />
       {/* The footer waits while the content is busy: see store.css. */}
       <main id="main">{children}</main>

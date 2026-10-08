@@ -4,6 +4,7 @@ import { SiteHeader, type SiteHeaderProps } from '@deckle/ui';
 import { Suspense } from 'react';
 import { useCopy } from '../copy/client';
 import { AddedSheet, useHeaderState } from '../live/header';
+import { EditionSwitch } from './edition-switch';
 import { askTheStore } from './suggestions';
 import { toggleTheme } from './theme';
 
@@ -11,6 +12,8 @@ export type StoreHeaderProps = Omit<SiteHeaderProps, 'theme' | 'account' | 'cart
   themeLabel: string;
   /** Names the list the search suggests as one types. */
   suggestionsLabel: string;
+  /** Where the language switch leads, when not to the page the reader is on. */
+  switchTo?: string;
 };
 
 /**
@@ -18,7 +21,13 @@ export type StoreHeaderProps = Omit<SiteHeaderProps, 'theme' | 'account' | 'cart
  * switch, the store's suggestions for the search, and this browser's own
  * account and cart, which no server render could know.
  */
-export function StoreHeader({ themeLabel, suggestionsLabel, search, ...props }: StoreHeaderProps) {
+export function StoreHeader({
+  themeLabel,
+  suggestionsLabel,
+  search,
+  switchTo,
+  ...props
+}: StoreHeaderProps) {
   const copy = useCopy();
   const { cartCount, signedIn } = useHeaderState();
   return (
@@ -35,6 +44,7 @@ export function StoreHeader({ themeLabel, suggestionsLabel, search, ...props }: 
         href: copy.path('/cart'),
         count: cartCount ?? 0,
       }}
+      languages={{ label: copy.chrome.language, codes: <EditionSwitch page={switchTo} /> }}
       notice={
         // The sheet follows the page's path, which a shell built ahead of time cannot know.
         <Suspense fallback={null}>

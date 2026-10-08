@@ -35,11 +35,13 @@ const across = (side: 'across' | 'tall' | 'down', of: 'de' | 'na') =>
 export const ptBr: Copy = {
   lang: 'pt-br',
   htmlLang: 'pt-BR',
+  edition: { short: 'PT', name: 'Português' },
   path: (href: string) => (href === '/' ? '/pt-br' : `/pt-br${href}`),
   locale: 'pt-BR',
   dateLocale: 'pt-BR',
   chrome: {
     skip: 'Pular para o conteúdo',
+    language: 'Idioma',
     home: 'Deckle, página inicial',
     nav: 'Loja',
     prints: 'Gravuras',

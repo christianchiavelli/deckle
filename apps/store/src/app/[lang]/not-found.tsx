@@ -52,7 +52,8 @@ export default async function NotFound() {
   const copy = await getCopy();
   const { notFound: text } = copy;
   return (
-    <Chrome>
+    // The page is not there in either edition, so the switch leads to the front pages.
+    <Chrome switchTo="/">
       <Band aria-labelledby="not-found-title">
         <Grid>
           <Copy>

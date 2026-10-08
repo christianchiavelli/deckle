@@ -30,6 +30,8 @@ export const en = {
   lang: 'en' as Lang,
   /** The language as `<html lang>` and a link's `hreflang` name it. */
   htmlLang: 'en',
+  /** How the edition names itself in the switch between them, whichever the page's. */
+  edition: { short: 'EN', name: 'English' },
   /** A path within the store, as this edition's readers reach it: English needs no prefix. */
   path: (href: string) => href,
   locale: 'en-US',
@@ -37,6 +39,7 @@ export const en = {
   dateLocale: 'en-GB',
   chrome: {
     skip: 'Skip to content',
+    language: 'Language',
     home: 'Deckle, home',
     nav: 'Shop',
     prints: 'Prints',
