@@ -41,11 +41,14 @@ test.describe('the header', () => {
       ['/collections', 'Collections'],
       ['/collections/durer-in-copper-and-wood', 'Collections'],
       ['/journal', 'Journal'],
+      ['/drops', 'Drops'],
+      ['/drops/melencolia-i-numbered', 'Drops'],
+      ['/about/drops', 'Drops'],
     ] as const) {
       await page.goto(`${store}${path}`);
       await expect(current, path).toHaveText(section);
     }
-    for (const path of ['/', '/search?q=durer', '/about/sizes']) {
+    for (const path of ['/', '/search?q=durer', '/about/sizes', '/cart', '/account']) {
       await page.goto(`${store}${path}`);
       await expect(current, path).toHaveCount(0);
     }
@@ -55,7 +58,16 @@ test.describe('the header', () => {
 test.describe('the links', () => {
   test('lead to a page, every one the store shows', async ({ page, request }) => {
     const hrefs = new Set<string>();
-    for (const path of ['/', '/prints/melencolia-i', ...pages.map(([, path]) => path)]) {
+    for (const path of [
+      '/',
+      '/prints/melencolia-i',
+      '/drops',
+      '/drops/melencolia-i-numbered',
+      '/about/drops',
+      '/cart',
+      '/account',
+      ...pages.map(([, path]) => path),
+    ]) {
       await page.goto(`${store}${path}`);
       const found = await page
         .locator('a[href^="/"]')

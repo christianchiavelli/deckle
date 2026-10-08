@@ -85,7 +85,8 @@ test.describe("a work's page", () => {
     // The product band renders in the Suspense fallback and again in the content:
     // the styled-components bug the prerelease fixes (ADR 0007) dropped its CSS there.
     await page.goto(`${store}/prints/melencolia-i`);
-    const product = page.getByRole('region', { name: 'Melencolia I' });
+    // Exactly: the band of its numbered edition is named after the work too.
+    const product = page.getByRole('region', { name: 'Melencolia I', exact: true });
     await expect(product).toBeVisible();
     await expect(product).not.toHaveCSS('padding-top', '0px');
     await expect(page.getByRole('img', { name: /^Melencolia I/ })).toBeVisible();

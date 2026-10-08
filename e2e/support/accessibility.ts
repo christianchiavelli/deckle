@@ -6,5 +6,13 @@ export async function expectAccessible(page: Page): Promise<void> {
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
-  expect(results.violations.map((violation) => `${violation.id}: ${violation.help}`)).toEqual([]);
+  // Each finding names the elements it found, so a failure says where to look.
+  expect(
+    results.violations.map(
+      (violation) =>
+        `${violation.id}: ${violation.help} (${violation.nodes
+          .map((node) => node.target.join(' '))
+          .join('; ')})`,
+    ),
+  ).toEqual([]);
 }
