@@ -82,17 +82,25 @@ const Measure = styled.span`
 /** Styled only to be named: a chosen tile turns its chip to the page colour. */
 const Ppi = styled(Chip)``;
 
+/*
+ * The sizes are doubled to outrank the icon's own: in a page rendered on the
+ * server, the icon's styles can arrive after these. Hidden stays single, so
+ * the checked option's rule shows it.
+ */
 const Check = styled(Icon)`
-  position: absolute;
-  inset-block-start: -0.4375rem;
-  inset-inline-end: -0.4375rem;
-  inline-size: 1.25rem;
-  block-size: 1.25rem;
-  padding: 0.1875rem;
-  border-radius: 50%;
-  background: ${t.accent.default};
-  color: ${t.text.onAccent};
-  stroke-width: 2.4;
+  && {
+    position: absolute;
+    inset-block-start: -0.4375rem;
+    inset-inline-end: -0.4375rem;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    padding: 0.1875rem;
+    border-radius: 50%;
+    background: ${t.accent.default};
+    color: ${t.text.onAccent};
+    stroke-width: 2.4;
+  }
+
   visibility: hidden;
 `;
 

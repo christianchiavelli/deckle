@@ -161,13 +161,16 @@ const Count = styled.span`
   font-variant-numeric: tabular-nums;
 `;
 
+// Doubled to outrank the option's own columns and colour, whichever arrives last.
 const All = styled(Option)`
-  grid-template-columns: minmax(0, 1fr) auto;
-  margin-block-start: ${t.space.gapXs};
-  border-block-start: ${t.strokeWidth.hairline} solid ${t.stroke.subtle};
-  color: ${t.text.accent};
-  font-size: 0.875rem;
-  font-weight: ${t.type.label.weight};
+  && {
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-block-start: ${t.space.gapXs};
+    border-block-start: ${t.strokeWidth.hairline} solid ${t.stroke.subtle};
+    color: ${t.text.accent};
+    font-size: 0.875rem;
+    font-weight: ${t.type.label.weight};
+  }
 `;
 
 const None = styled.p`

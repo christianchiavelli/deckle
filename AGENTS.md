@@ -79,6 +79,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 - Zod at every border: environment, upstream responses, webhooks, files read from disk. Code that ships to a browser imports `zod/mini`.
 - Layers are enforced by each package's `eslint.config.js` through `restrictImports()`. Do not weaken a rule to make an import pass.
 - A store page's placeholder, while its content streams in, is marked `aria-busy="true"`: the footer waits for it, so nothing moves when the content lands (ADR 0051).
+- A `styled(Component)` that changes what the component already sets wraps those declarations in `&&`. A page rendered on the server streams each component's styles where it renders, so the component's own rules can arrive after the override and win; Storybook renders in the browser and never shows it.
 - Tests sit next to what they test as `*.spec.ts`. Anything that needs Postgres runs against a real one in Testcontainers, never a mock of the database.
 - Comments explain why, at the line that needs it. No comments that restate the code.
 - Everything written in the repository is in English: code, docs, commit messages.

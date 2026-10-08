@@ -115,13 +115,16 @@ const Crop = styled.span<{ $corner: keyof typeof corner }>`
   ${({ $corner }) => corner[$corner]}
 `;
 
+// Doubled to outrank the button's own position and fill, whichever arrives last.
 const Zoom = styled(IconButton)`
-  position: absolute;
-  inset-block-start: ${t.space.gapMd};
-  inset-inline-end: ${t.space.gapMd};
-  background: ${t.surface.page};
+  && {
+    position: absolute;
+    inset-block-start: ${t.space.gapMd};
+    inset-inline-end: ${t.space.gapMd};
+    background: ${t.surface.page};
+  }
 
-  &:hover {
+  &&:hover {
     background: ${t.surface.page};
     color: ${t.icon.accent};
   }
