@@ -157,6 +157,8 @@ jobs:
             dockerfile: services/gateway/Dockerfile
           - service: store
             dockerfile: apps/store/Dockerfile
+          - service: storybook
+            dockerfile: packages/ui/Dockerfile
     env:
       IMAGE: ghcr.io/${{ github.repository_owner }}/deckle-${{ matrix.service }}
     steps:
@@ -230,6 +232,8 @@ jobs:
             --data '{"query":"{ artworks(first: 1) { totalCount } }"}' \
             | jq --exit-status '.data.artworks.totalCount > 0'
           curl --fail --silent --show-error --output /dev/null http://localhost:8080/
+          curl --fail --silent --show-error http://localhost:8083/index.json \
+            | jq --exit-status '.entries["screens-work-page--desktop"].type == "story"'
           # Only the gateway, from inside Docker's network, may drop the store's cache.
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' \
             --request POST http://localhost:8080/api/revalidate)" = 404

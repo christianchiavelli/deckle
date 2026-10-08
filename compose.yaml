@@ -291,6 +291,18 @@ services:
       store:
         condition: service_healthy
 
+  # The design system's Storybook, as static files: the foundations, every
+  # component and the screens the store was built from, at http://localhost:8083.
+  storybook:
+    image: ghcr.io/christianchiavelli/deckle-storybook:${DECKLE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: packages/ui/Dockerfile
+    restart: unless-stopped
+    pull_policy: missing
+    ports:
+      - 127.0.0.1:8083:80
+
   # The drop's load test, run on demand and never by `up`: a thousand people
   # claim its copies at once, through Caddy, as a browser would. It runs
   # against the stack as it stands, with `run --no-deps`: starting what it

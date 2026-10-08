@@ -1,0 +1,21 @@
+# Read by BuildKit for packages/ui/Dockerfile instead of a root .dockerignore.
+# The image needs the workspace manifests, the shared lint config, the design
+# system and the packages it builds on, and the data set its screens show.
+**/node_modules
+**/.next
+**/dist
+**/coverage
+**/*.tsbuildinfo
+**/.env
+**/.env.*
+.git
+apps
+services
+design
+docs
+e2e
+load
+packages/met
+packages/cache-tags
+packages/drops
+packages/ui/storybook-static

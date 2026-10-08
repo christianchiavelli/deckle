@@ -1,0 +1,25 @@
+# The Storybook image's server: the static build, and nothing else.
+{
+	auto_https off
+	admin off
+}
+
+:80 {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	# For the container's own healthcheck.
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	handle {
+		root * /srv
+		file_server
+	}
+}
