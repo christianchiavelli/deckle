@@ -38,6 +38,19 @@ describe('the starter content', () => {
     }
   });
 
+  it('says everything in Portuguese too, paragraph for paragraph', () => {
+    for (const story of storySeeds) {
+      expect(story.pt.paragraphs, story.artworkSlug).toHaveLength(story.paragraphs.length);
+      expect(story.pt.title, story.artworkSlug).not.toBe(story.title);
+    }
+    for (const page of dropPageSeeds) {
+      expect(page.pt.paragraphs, page.slug).toHaveLength(page.paragraphs.length);
+    }
+    for (const curation of curationSeeds) {
+      expect(curation.pt.intro === null, curation.slug).toBe(curation.intro === null);
+    }
+  });
+
   it('points each story card at a part of its print, within the bounds the CMS accepts', () => {
     for (const { artworkSlug, detail } of storySeeds) {
       expect(detail.x, artworkSlug).toBeGreaterThanOrEqual(0);

@@ -24,8 +24,10 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
     admin: {
       useAsTitle: 'artworkSlug',
       defaultColumns: ['artworkSlug', 'title', '_status', 'updatedAt'],
-      preview: (doc) => previewLink('story', doc['artworkSlug']),
-      livePreview: { url: ({ data }) => previewLink('story', data['artworkSlug']) },
+      preview: (doc, { locale }) => previewLink('story', doc['artworkSlug'], locale),
+      livePreview: {
+        url: ({ data, locale }) => previewLink('story', data['artworkSlug'], locale.code),
+      },
     },
     access: contentAccess,
     versions: {
@@ -53,10 +55,17 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
           },
         },
       },
-      { name: 'title', type: 'text', required: true, label: { en: 'Title', pt: 'Título' } },
+      {
+        name: 'title',
+        type: 'text',
+        required: true,
+        localized: true,
+        label: { en: 'Title', pt: 'Título' },
+      },
       {
         name: 'lede',
         type: 'textarea',
+        localized: true,
         required: true,
         label: { en: 'Lede', pt: 'Abertura' },
         admin: {
@@ -69,6 +78,7 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
       {
         name: 'body',
         type: 'richText',
+        localized: true,
         required: true,
         label: { en: 'Body', pt: 'Texto' },
         editor: proseEditor,

@@ -24,8 +24,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const env = configEnv();
 
-const previewLink: PreviewLink = (type, slug) =>
-  previewUrlFor(env.STORE_PREVIEW_URL, env.PREVIEW_SECRET, type, slug);
+const previewLink: PreviewLink = (type, slug, locale) =>
+  previewUrlFor(env.STORE_PREVIEW_URL, env.PREVIEW_SECRET, type, slug, locale);
 
 export default buildConfig({
   secret: env.PAYLOAD_SECRET,
@@ -49,6 +49,16 @@ export default buildConfig({
   },
   // The admin follows the browser's language, and each editor can change it in their account.
   i18n: { supportedLanguages: { en, pt }, fallbackLanguage: 'en' },
+  // The words the store prints, in its two editions: English, its default, and
+  // Brazilian Portuguese. A field nobody has translated reads in English.
+  localization: {
+    locales: [
+      { code: 'en', label: { en: 'English', pt: 'Inglês' } },
+      { code: 'pt', label: { en: 'Portuguese', pt: 'Português' } },
+    ],
+    defaultLocale: 'en',
+    fallback: true,
+  },
   collections: [
     users,
     stories({ previewLink }),

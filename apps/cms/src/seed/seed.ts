@@ -28,9 +28,10 @@ export class SeedError extends Error {
 /**
  * Brings a CMS to the state a fresh stack needs, as many times as it is run:
  * the admin exists, the gateway's user reads with `gatewayApiKey`, and the
- * starter curations, stories and drop pages exist. Content an editor has
- * since changed is kept as it is; only the API key is set every time, so the
- * CMS always matches the key the gateway was given.
+ * starter curations, stories and drop pages exist, in English and Portuguese.
+ * Content an editor has since changed is kept as it is, but for a document
+ * with no Portuguese yet, which gets it; only the API key is set every time,
+ * so the CMS always matches the key the gateway was given.
  */
 export async function seed(cms: CmsClient, input: SeedInput): Promise<SeedStep[]> {
   const steps: SeedStep[] = [];
@@ -91,40 +92,80 @@ async function ensureGatewayUser(
   return { what, outcome: id === null ? 'created' : 'updated' };
 }
 
+type Localized = 'stories' | 'curations' | 'drop-pages';
+
+/**
+ * A document in both languages. A new one is written in English as a draft,
+ * which reports nothing, then published once with its Portuguese, which
+ * reports it once. One that exists gets its Portuguese only if it has none and
+ * no editor has a draft of it pending, which is theirs to publish.
+ */
+async function ensureLocalized(
+  cms: CmsClient,
+  session: Session,
+  document: {
+    readonly collection: Localized;
+    readonly key: readonly [field: string, value: string];
+    readonly english: object;
+    readonly portuguese: object;
+    /** A field the Portuguese always has, which reads null until it is written. */
+    readonly translated: string;
+  },
+): Promise<SeedOutcome> {
+  const { collection, key, english, portuguese, translated } = document;
+  const existing = await cms.findIdBy(session, collection, ...key);
+  const id = existing ?? (await cms.create(session, collection, { ...english, _status: 'draft' }));
+  if (existing !== null) {
+    const current = await cms.readInLocale(session, collection, existing, 'pt');
+    const written = current[translated] !== null && current[translated] !== undefined;
+    if (written || current._status === 'draft') {
+      return 'kept';
+    }
+  }
+  await cms.update(session, collection, id, { ...portuguese, _status: 'published' }, 'pt');
+  return existing === null ? 'created' : 'updated';
+}
+
 async function ensureCuration(
   cms: CmsClient,
   session: Session,
   curation: CurationSeed,
 ): Promise<SeedStep> {
-  const what = `curation ${curation.slug}`;
-  if ((await cms.findIdBy(session, 'curations', 'slug', curation.slug)) !== null) {
-    return { what, outcome: 'kept' };
-  }
-  await cms.create(session, 'curations', {
-    title: curation.title,
-    slug: curation.slug,
-    intro: curation.intro,
-    artworks: curation.artworks,
-    _status: 'published',
+  const outcome = await ensureLocalized(cms, session, {
+    collection: 'curations',
+    key: ['slug', curation.slug],
+    english: {
+      title: curation.title,
+      slug: curation.slug,
+      intro: curation.intro,
+      artworks: curation.artworks,
+    },
+    portuguese: { title: curation.pt.title, intro: curation.pt.intro },
+    translated: 'title',
   });
-  return { what, outcome: 'created' };
+  return { what: `curation ${curation.slug}`, outcome };
 }
 
 async function ensureStory(cms: CmsClient, session: Session, story: StorySeed): Promise<SeedStep> {
-  const what = `story ${story.artworkSlug}`;
-  if ((await cms.findIdBy(session, 'stories', 'artworkSlug', story.artworkSlug)) !== null) {
-    return { what, outcome: 'kept' };
-  }
-  await cms.create(session, 'stories', {
-    artworkSlug: story.artworkSlug,
-    title: story.title,
-    lede: story.lede,
-    detail: story.detail,
-    body: proseFromParagraphs(story.paragraphs),
-    sources: story.sources,
-    _status: 'published',
+  const outcome = await ensureLocalized(cms, session, {
+    collection: 'stories',
+    key: ['artworkSlug', story.artworkSlug],
+    english: {
+      artworkSlug: story.artworkSlug,
+      title: story.title,
+      lede: story.lede,
+      detail: story.detail,
+      body: proseFromParagraphs(story.paragraphs),
+      sources: story.sources,
+    },
+    portuguese: {
+      title: story.pt.title,
+      lede: story.pt.lede,
+      body: proseFromParagraphs(story.pt.paragraphs),
+    },
+    translated: 'title',
   });
-  return { what, outcome: 'created' };
+  return { what: `story ${story.artworkSlug}`, outcome };
 }
 
 async function ensureDropPage(
@@ -132,16 +173,17 @@ async function ensureDropPage(
   session: Session,
   page: DropPageSeed,
 ): Promise<SeedStep> {
-  const what = `drop page ${page.slug}`;
-  if ((await cms.findIdBy(session, 'drop-pages', 'slug', page.slug)) !== null) {
-    return { what, outcome: 'kept' };
-  }
-  await cms.create(session, 'drop-pages', {
-    slug: page.slug,
-    artworkSlug: page.artworkSlug,
-    headline: page.headline,
-    body: proseFromParagraphs(page.paragraphs),
-    _status: 'published',
+  const outcome = await ensureLocalized(cms, session, {
+    collection: 'drop-pages',
+    key: ['slug', page.slug],
+    english: {
+      slug: page.slug,
+      artworkSlug: page.artworkSlug,
+      headline: page.headline,
+      body: proseFromParagraphs(page.paragraphs),
+    },
+    portuguese: { headline: page.pt.headline, body: proseFromParagraphs(page.pt.paragraphs) },
+    translated: 'headline',
   });
-  return { what, outcome: 'created' };
+  return { what: `drop page ${page.slug}`, outcome };
 }

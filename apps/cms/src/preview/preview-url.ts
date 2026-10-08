@@ -7,7 +7,8 @@ import type { CmsEventType } from '../webhooks/event';
  *
  * `type` is `story`, `curation` or `drop-page`, the same names the webhooks
  * use, and `slug` is the address the store renders: a story's artwork slug,
- * a curation's or a drop page's own slug. The store compares the secret in
+ * a curation's or a drop page's own slug. A document edited in Portuguese adds
+ * `&locale=pt`, and the store opens its Portuguese edition. The store compares the secret in
  * constant time, turns on Next.js draft mode and redirects to the page, which
  * then reads drafts through the gateway, so the secret never stays in the
  * address bar.
@@ -15,6 +16,8 @@ import type { CmsEventType } from '../webhooks/event';
 export interface PreviewTarget {
   readonly type: CmsEventType;
   readonly slug: string;
+  /** The locale being edited; English, the default, needs no word. */
+  readonly locale?: string;
 }
 
 export function previewUrl(storePreviewUrl: string, secret: string, target: PreviewTarget): string {
@@ -22,6 +25,9 @@ export function previewUrl(storePreviewUrl: string, secret: string, target: Prev
   url.searchParams.set('secret', secret);
   url.searchParams.set('type', target.type);
   url.searchParams.set('slug', target.slug);
+  if (target.locale !== undefined && target.locale !== 'en') {
+    url.searchParams.set('locale', target.locale);
+  }
   return url.toString();
 }
 
@@ -35,8 +41,13 @@ export function previewUrlFor(
   secret: string,
   type: CmsEventType,
   slug: unknown,
+  locale?: string,
 ): string | null {
   return typeof slug === 'string' && slug.length > 0
-    ? previewUrl(storePreviewUrl, secret, { type, slug })
+    ? previewUrl(storePreviewUrl, secret, {
+        type,
+        slug,
+        ...(locale === undefined ? {} : { locale }),
+      })
     : null;
 }

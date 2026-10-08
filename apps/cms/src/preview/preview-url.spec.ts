@@ -15,6 +15,17 @@ describe('previewUrl', () => {
     });
   });
 
+  it('opens the Portuguese edition for a document edited in Portuguese, and English as is', () => {
+    const inPortuguese = new URL(
+      previewUrl(base, secret, { type: 'story', slug: 'melencolia-i', locale: 'pt' }),
+    );
+    expect(inPortuguese.searchParams.get('locale')).toBe('pt');
+    const inEnglish = new URL(
+      previewUrl(base, secret, { type: 'story', slug: 'melencolia-i', locale: 'en' }),
+    );
+    expect(inEnglish.searchParams.has('locale')).toBe(false);
+  });
+
   it('keeps any query the store address already has', () => {
     const url = new URL(previewUrl(`${base}?v=2`, secret, { type: 'drop-page', slug: 'x' }));
     expect(url.searchParams.get('v')).toBe('2');
@@ -26,6 +37,12 @@ describe('previewUrlFor', () => {
   it('builds the address once the document has a slug', () => {
     expect(previewUrlFor(base, secret, 'curation', 'first-impressions')).toContain(
       'slug=first-impressions',
+    );
+  });
+
+  it('passes the locale being edited on', () => {
+    expect(previewUrlFor(base, secret, 'curation', 'first-impressions', 'pt')).toContain(
+      'locale=pt',
     );
   });
 

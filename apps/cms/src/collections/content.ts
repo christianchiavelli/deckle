@@ -3,7 +3,8 @@ import { readContent, writeContent } from '../access/rules';
 import type { CmsEventType } from '../webhooks/event';
 
 /** Builds the store's preview address for a document, or `null` while it has no slug. */
-export type PreviewLink = (type: CmsEventType, slug: unknown) => string | null;
+/** The store page that previews a document, in the locale being edited. */
+export type PreviewLink = (type: CmsEventType, slug: unknown, locale?: string) => string | null;
 
 export interface ContentCollectionOptions {
   readonly previewLink: PreviewLink;

@@ -26,8 +26,10 @@ export function dropPages({ previewLink }: ContentCollectionOptions): Collection
     admin: {
       useAsTitle: 'headline',
       defaultColumns: ['headline', 'slug', 'artworkSlug', '_status', 'updatedAt'],
-      preview: (doc) => previewLink('drop-page', doc['slug']),
-      livePreview: { url: ({ data }) => previewLink('drop-page', data['slug']) },
+      preview: (doc, { locale }) => previewLink('drop-page', doc['slug'], locale),
+      livePreview: {
+        url: ({ data, locale }) => previewLink('drop-page', data['slug'], locale.code),
+      },
     },
     access: contentAccess,
     versions: { drafts: true, maxPerDoc: 50 },
@@ -65,12 +67,14 @@ export function dropPages({ previewLink }: ContentCollectionOptions): Collection
       {
         name: 'headline',
         type: 'text',
+        localized: true,
         required: true,
         label: { en: 'Headline', pt: 'Título' },
       },
       {
         name: 'body',
         type: 'richText',
+        localized: true,
         required: true,
         label: { en: 'Body', pt: 'Texto' },
         editor: proseEditor,

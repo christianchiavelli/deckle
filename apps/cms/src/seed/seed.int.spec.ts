@@ -1,3 +1,4 @@
+import { sql } from '@payloadcms/db-postgres';
 import type { Payload } from 'payload';
 import { aroundAll, describe, expect, it } from 'vitest';
 import { type HookReceiver, signatureIsValid, startHookReceiver } from '../test/hook-receiver';
@@ -42,6 +43,12 @@ const documents = curationSeeds.length + storySeeds.length + dropPageSeeds.lengt
 
 const asGateway = { authorization: `users API-Key ${input.gatewayApiKey}` };
 
+/** A rich text's paragraphs as plain text. */
+const paragraphsOf = (body: { root: { children: Record<string, unknown>[] } }) =>
+  body.root.children.map((paragraph) =>
+    (paragraph['children'] as { text: string }[]).map((text) => text.text).join(''),
+  );
+
 const get = async (path: string, headers: HeadersInit = {}) => {
   const response = await api(`${base}${path}`, { headers });
   return { status: response.status, body: (await response.json()) as Record<string, unknown> };
@@ -76,13 +83,21 @@ describe('the seed', () => {
         title: story.title,
         lede: story.lede,
         detail: story.detail,
-        paragraphs: story.body.root.children.map((paragraph) =>
-          (paragraph['children'] as { text: string }[]).map((text) => text.text).join(''),
-        ),
+        paragraphs: paragraphsOf(story.body),
         sources: story.sources.map(({ label, url }) => ({ label, url })),
         status: story._status,
       })),
-    ).toEqual(storySeeds.map((story) => ({ ...story, status: 'published' })));
+    ).toEqual(
+      storySeeds.map(({ artworkSlug, title, lede, detail, paragraphs, sources }) => ({
+        artworkSlug,
+        title,
+        lede,
+        detail,
+        paragraphs,
+        sources,
+        status: 'published',
+      })),
+    );
   });
 
   it('publishes the curations with their artworks in order, and an intro only where one was written', async () => {
@@ -100,7 +115,15 @@ describe('the seed', () => {
         artworks: curation.artworks,
         status: curation._status,
       })),
-    ).toEqual(curationSeeds.map((curation) => ({ ...curation, status: 'published' })));
+    ).toEqual(
+      curationSeeds.map(({ title, slug, intro, artworks }) => ({
+        title,
+        slug,
+        intro,
+        artworks,
+        status: 'published',
+      })),
+    );
   });
 
   it('publishes the drop pages with their words exactly as given', async () => {
@@ -115,12 +138,47 @@ describe('the seed', () => {
         slug: page.slug,
         artworkSlug: page.artworkSlug,
         headline: page.headline,
-        paragraphs: page.body.root.children.map((paragraph) =>
-          (paragraph['children'] as { text: string }[]).map((text) => text.text).join(''),
-        ),
+        paragraphs: paragraphsOf(page.body),
         status: page._status,
       })),
-    ).toEqual(dropPageSeeds.map((page) => ({ ...page, status: 'published' })));
+    ).toEqual(
+      dropPageSeeds.map(({ slug, artworkSlug, headline, paragraphs }) => ({
+        slug,
+        artworkSlug,
+        headline,
+        paragraphs,
+        status: 'published',
+      })),
+    );
+  });
+
+  it('publishes every story, curation and drop page in Portuguese too, with no English fallen back on', async () => {
+    const inPortuguese = {
+      locale: 'pt',
+      fallbackLocale: false,
+      depth: 0,
+      pagination: false,
+    } as const;
+    const stories = await payload.find({
+      collection: 'stories',
+      sort: '-createdAt',
+      ...inPortuguese,
+    });
+    expect(
+      stories.docs.map((story) => ({
+        title: story.title,
+        lede: story.lede,
+        paragraphs: paragraphsOf(story.body),
+      })),
+    ).toEqual(storySeeds.map(({ pt }) => pt));
+    const curations = await payload.find({ collection: 'curations', sort: 'id', ...inPortuguese });
+    expect(
+      curations.docs.map((curation) => ({ title: curation.title, intro: curation.intro ?? null })),
+    ).toEqual(curationSeeds.map(({ pt }) => pt));
+    const pages = await payload.find({ collection: 'drop-pages', sort: 'id', ...inPortuguese });
+    expect(
+      pages.docs.map((page) => ({ headline: page.headline, paragraphs: paragraphsOf(page.body) })),
+    ).toEqual(dropPageSeeds.map(({ pt }) => pt));
   });
 
   it('reports each seeded document to the gateway once, through the running queue', async () => {
@@ -169,6 +227,26 @@ describe('the seed', () => {
     await new Promise((resolve) => setTimeout(resolve, 11_000));
     expect(receiver.received).toHaveLength(documents);
   }, 30_000);
+
+  it('gives the Portuguese to a document an older seed wrote in English only', async () => {
+    const [first] = curationSeeds;
+    const curation = (
+      await payload.find({ collection: 'curations', where: { slug: { equals: first!.slug } } })
+    ).docs[0]!;
+    // As a stack seeded before there were locales has it: its words in English alone.
+    await payload.db.drizzle.execute(
+      sql`DELETE FROM "curations_locales" WHERE "_locale" = 'pt' AND "_parent_id" = ${curation.id}`,
+    );
+    const steps = await seed(createCmsClient(base, api), input);
+    expect(steps.find(({ what }) => what === `curation ${first!.slug}`)?.outcome).toBe('updated');
+    const translated = await payload.findByID({
+      collection: 'curations',
+      id: curation.id,
+      locale: 'pt',
+      fallbackLocale: false,
+    });
+    expect(translated.title).toBe(first!.pt.title);
+  });
 
   it('lets the gateway read by API key, published or draft', async () => {
     const [story] = (

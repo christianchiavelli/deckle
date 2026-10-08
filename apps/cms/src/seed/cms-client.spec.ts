@@ -92,6 +92,27 @@ describe('the CMS client', () => {
     expect(call(1).headers.get('authorization')).toBe('JWT jwt-token');
   });
 
+  it('changes and reads a document in a locale, its newest version and no fallback', async () => {
+    const { send, call } = answering({ doc: { id: 3 }, id: 3, _status: 'draft', title: null });
+    const cms = createCmsClient('http://cms.test/api', send);
+
+    await cms.update(session, 'stories', 3, { title: 'Sobre a gravura' }, 'pt');
+    expect(call(0).url.searchParams.get('locale')).toBe('pt');
+
+    await expect(cms.readInLocale(session, 'stories', 3, 'pt')).resolves.toMatchObject({
+      _status: 'draft',
+      title: null,
+    });
+    expect(call(1).method).toBe('GET');
+    expect(call(1).url.pathname).toBe('/api/stories/3');
+    expect(Object.fromEntries(call(1).url.searchParams)).toEqual({
+      locale: 'pt',
+      'fallback-locale': 'none',
+      draft: 'true',
+      depth: '0',
+    });
+  });
+
   it('asks who an API key signs in as, the way the gateway sends it', async () => {
     const { send, call } = answering({ user: { id: 2, email: 'gw@x.test', role: 'gateway' } });
     const cms = createCmsClient('http://cms.test/api', send);

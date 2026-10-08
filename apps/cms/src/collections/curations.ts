@@ -26,8 +26,10 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
     admin: {
       useAsTitle: 'title',
       defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
-      preview: (doc) => previewLink('curation', doc['slug']),
-      livePreview: { url: ({ data }) => previewLink('curation', data['slug']) },
+      preview: (doc, { locale }) => previewLink('curation', doc['slug'], locale),
+      livePreview: {
+        url: ({ data, locale }) => previewLink('curation', data['slug'], locale.code),
+      },
     },
     access: contentAccess,
     versions: { drafts: true, maxPerDoc: 50 },
@@ -37,7 +39,13 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
       afterDelete: [events.afterDelete],
     },
     fields: [
-      { name: 'title', type: 'text', required: true, label: { en: 'Title', pt: 'Título' } },
+      {
+        name: 'title',
+        type: 'text',
+        required: true,
+        localized: true,
+        label: { en: 'Title', pt: 'Título' },
+      },
       {
         name: 'slug',
         type: 'text',
@@ -55,6 +63,7 @@ export function curations({ previewLink }: ContentCollectionOptions): Collection
       {
         name: 'intro',
         type: 'textarea',
+        localized: true,
         hooks: { beforeChange: [blankToNull] },
         label: { en: 'Introduction', pt: 'Introdução' },
         admin: {

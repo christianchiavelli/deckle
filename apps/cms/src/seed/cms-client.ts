@@ -170,17 +170,42 @@ export function createCmsClient(apiUrl: string, send: typeof fetch = fetch) {
       return doc.id;
     },
 
+    /** Changes a document; its localized fields in `locale`, or in the default locale without one. */
     async update(
       session: Session,
       collection: Collection,
       id: number,
       data: object,
+      locale?: string,
     ): Promise<void> {
       await request(z.object({ doc: docSchema }), 'PATCH', `/${collection}/${String(id)}`, {
         authorization: asUser(session),
-        query: { depth: '0' },
+        query: { depth: '0', ...(locale === undefined ? {} : { locale }) },
         body: data,
       });
+    },
+
+    /**
+     * A document as an editor reads it in `locale`, its newest version, draft or
+     * not, with no fallback: a field nobody has translated reads null.
+     */
+    readInLocale(
+      session: Session,
+      collection: Collection,
+      id: number,
+      locale: string,
+    ): Promise<
+      Readonly<Record<string, unknown>> & { readonly _status?: 'draft' | 'published' | null }
+    > {
+      return request(
+        z.looseObject({ _status: z.enum(['draft', 'published']).nullish() }),
+        'GET',
+        `/${collection}/${String(id)}`,
+        {
+          authorization: asUser(session),
+          query: { locale, 'fallback-locale': 'none', draft: 'true', depth: '0' },
+        },
+      );
     },
   };
 }
