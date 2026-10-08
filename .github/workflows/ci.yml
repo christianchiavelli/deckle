@@ -212,11 +212,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # The images this run published, by the tag metadata-action gave them.
+      # The images this run published, by the tag metadata-action gave them, with
+      # two gateways: the browser checks run across both, and so does the load.
       - name: Start
         run: |
           echo "DECKLE_TAG=sha-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
-          DECKLE_TAG="sha-${GITHUB_SHA::7}" docker compose up --wait --wait-timeout 300 --no-build
+          DECKLE_TAG="sha-${GITHUB_SHA::7}" docker compose up --wait --wait-timeout 300 --no-build \
+            --scale gateway=2
 
       - name: Answer through the front door
         run: |
@@ -247,6 +249,17 @@ jobs:
 
       - name: Check in a browser
         run: pnpm --filter @deckle/e2e test:e2e
+
+      # A thousand people claim the drop's copies in the same second, through both
+      # gateways. Each gateway must have answered its share, or two proved nothing.
+      - name: Load the drop through two gateways
+        run: |
+          since="$(date --utc +%Y-%m-%dT%H:%M:%SZ)"
+          docker compose run --rm --no-deps load
+          docker compose logs gateway --since "$since" --no-color \
+            | grep '"method":"POST","path":"/graphql"' \
+            | cut --delimiter '|' --fields 1 | sort | uniq --count | tee answered
+          test "$(wc --lines < answered)" -eq 2
 
       - name: Upload the browser report
         if: ${{ failure() }}
