@@ -2,7 +2,7 @@ import { Injectable, Logger, Module } from '@nestjs/common';
 import DataLoader from 'dataloader';
 import { ArtworksService } from '../catalog/artworks.service.js';
 import { CatalogModule } from '../catalog/catalog.module.js';
-import { CmsClient } from '../cms/cms.client.js';
+import { CmsClient, type CmsReading } from '../cms/cms.client.js';
 import { CmsModule } from '../cms/cms.module.js';
 import { CommerceModule } from '../commerce/commerce.module.js';
 import { ShopApiClient } from '../commerce/shop-api.client.js';
@@ -28,10 +28,10 @@ export class RequestLoadersFactory {
   /**
    * Fresh loaders for one operation. A query caches what it read for its own
    * duration; a subscription must not, because its context outlives every event
-   * and a cached artwork would go stale between them. In preview, the CMS's
-   * words come from its newest drafts.
+   * and a cached artwork would go stale between them. The CMS's words come in
+   * the request's language, and in preview from its newest drafts.
    */
-  create({ cache, drafts }: { cache: boolean; drafts: boolean }): RequestLoaders {
+  create({ cache, ...reading }: { cache: boolean } & Required<CmsReading>): RequestLoaders {
     const options = { cache, maxBatchSize: MAX_BATCH_SIZE };
     return {
       artworkBySlug: new DataLoader(
@@ -39,12 +39,12 @@ export class RequestLoadersFactory {
         options,
       ),
       storyByArtworkSlug: new DataLoader(
-        (slugs: readonly string[]) => this.stories.forArtworks(slugs, { drafts }),
+        (slugs: readonly string[]) => this.stories.forArtworks(slugs, reading),
         options,
       ),
       dropPageBySlug: new DataLoader(async (slugs: readonly string[]) => {
         const pages = new Map(
-          (await this.cms.dropPages(slugs, { drafts })).map((page) => [page.slug, page]),
+          (await this.cms.dropPages(slugs, reading)).map((page) => [page.slug, page]),
         );
         return slugs.map((slug) => {
           const page = pages.get(slug);

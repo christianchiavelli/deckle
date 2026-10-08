@@ -3,7 +3,7 @@ import type { Client } from 'graphql-ws';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Browser } from '../../test/support/browser.js';
 import { FakeUpstreams } from '../../test/support/fake-upstreams.js';
-import { errorCodes } from '../../test/support/graphql.js';
+import { errorCodes, graphql } from '../../test/support/graphql.js';
 import { SoftAuthenticator } from '../../test/support/soft-authenticator.js';
 import { subscriptionClient } from '../../test/support/subscriptions.js';
 import {
@@ -225,6 +225,19 @@ describe('drops over GraphQL', () => {
       upstreams.requests.cms.filter((request) => request.path === '/api/drop-pages'),
     ).toHaveLength(1);
     expect(upstreams.commerceOperations().filter((name) => name === 'Editions')).toHaveLength(1);
+  });
+
+  it("reads a drop's words in Portuguese for a request that accepts it", async () => {
+    const response = await graphql(gateway, '{ drops { slug page { headline } } }', undefined, {
+      'Accept-Language': 'pt-BR',
+    });
+
+    expect(response.data).toMatchObject({
+      drops: [
+        { slug: MELENCOLIA, page: { headline: 'Melencolia I, em cinquenta exemplares numerados' } },
+        { slug: WAVE, page: null },
+      ],
+    });
   });
 
   it('asks a guest to sign in first', async () => {

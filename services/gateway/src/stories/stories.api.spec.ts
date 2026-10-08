@@ -159,6 +159,25 @@ describe('stories over GraphQL', () => {
     expect(guessed.data).toEqual(browsed.data);
   });
 
+  it('reads a story in Portuguese for a request that accepts it, English where untranslated', async () => {
+    const query = `{
+      melencolia: artwork(slug: "melencolia-i") { story { title } }
+      wave: artwork(slug: "under-the-wave-off-kanagawa") { story { title } }
+    }`;
+    const portuguese = { 'Accept-Language': 'pt-BR' };
+
+    expect((await graphql(gateway, query, undefined, portuguese)).data).toEqual({
+      melencolia: { story: { title: 'O anjo que não age' } },
+      wave: { story: { title: 'A wave seen from the boats' } },
+    });
+    expect(upstreams.requests.cms.at(-1)?.query.get('fallback-locale')).toBe('en');
+    expect((await graphql(gateway, query)).data).toEqual({
+      melencolia: { story: { title: 'The angel who cannot act' } },
+      wave: { story: { title: 'A wave seen from the boats' } },
+    });
+    expect(upstreams.requests.cms.at(-1)?.query.has('locale')).toBe(false);
+  });
+
   it('shows a story that was never published, in preview only', async () => {
     const query = '{ artwork(slug: "the-rhinoceros") { story { title } } }';
 

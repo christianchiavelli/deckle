@@ -9,6 +9,7 @@ import { SessionsModule } from '../sessions/sessions.module.js';
 import { armorProtection, MAX_TOKENS } from './armor.js';
 import { MAX_QUERY_COMPLEXITY } from './complexity.js';
 import { readsDrafts } from './drafts.js';
+import { languageOf } from './language.js';
 import { errorLoggingPlugin, formatGatewayError } from './errors.js';
 import type { GatewayContext } from './gateway-context.js';
 import { complexityPlugin } from './query-complexity.js';
@@ -66,15 +67,18 @@ const upgradeRequestOf = (context: unknown): IncomingMessage | undefined => {
             if (!isHttpOperation(operation)) {
               // A subscription is a browser's, and only counts copies: never drafts.
               return {
-                loaders: loaders.create({ cache: false, drafts: false }),
+                loaders: loaders.create({ cache: false, drafts: false, language: 'en' }),
                 drafts: false,
+                language: 'en',
                 session: sessions.forSubscription(upgradeRequestOf(operation)),
               };
             }
             const drafts = readsDrafts(operation.req, previewSecret);
+            const language = languageOf(operation.req);
             return {
-              loaders: loaders.create({ cache: true, drafts }),
+              loaders: loaders.create({ cache: true, drafts, language }),
               drafts,
+              language,
               session: sessions.forHttp(operation.req, operation.res),
             };
           },

@@ -37,12 +37,21 @@ const PUBLISHED_ONLY = { 'where[_status][equals]': 'published' } as const;
 /** Payload's own switch: the newest version of each document, a draft if there is one. */
 const NEWEST_DRAFTS = { draft: 'true' } as const;
 
+/** The languages the CMS keeps its words in; English is its default. */
+export type CmsLanguage = 'en' | 'pt';
+
 export interface CmsReading {
   /** The newest version of each document, draft or not: for the store's preview only. */
   readonly drafts?: boolean;
+  /** The language of the words; a field nobody has translated comes back in English. */
+  readonly language?: CmsLanguage;
 }
 
 const versionsFor = ({ drafts = false }: CmsReading) => (drafts ? NEWEST_DRAFTS : PUBLISHED_ONLY);
+
+/** Payload's own switches: a locale, and the one to fall back on, English being the default. */
+const languageFor = ({ language = 'en' }: CmsReading): Record<string, string> =>
+  language === 'en' ? {} : { locale: language, 'fallback-locale': 'en' };
 
 type Publishable = z.ZodType<{ readonly _status: 'draft' | 'published' | null }>;
 
@@ -109,6 +118,7 @@ export class CmsClient {
     for (const [key, value] of Object.entries({
       ...query,
       ...versionsFor(reading),
+      ...languageFor(reading),
       depth: '0',
     })) {
       url.searchParams.set(key, value);

@@ -43,6 +43,20 @@ describe('curations over GraphQL', () => {
     expect(upstreams.requests.commerce).toHaveLength(1);
   });
 
+  it('reads a curation in Portuguese for a request that accepts it', async () => {
+    const response = await graphql(
+      gateway,
+      '{ curations { title } curation(slug: "durer-and-the-occult") { title } }',
+      undefined,
+      { 'Accept-Language': 'pt-BR,pt;q=0.9' },
+    );
+
+    expect(response.data).toEqual({
+      curations: [{ title: 'Dürer e o oculto' }],
+      curation: { title: 'Dürer e o oculto' },
+    });
+  });
+
   it('never shows a curation that is still a draft', async () => {
     const response = await graphql(
       gateway,

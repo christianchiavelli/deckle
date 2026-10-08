@@ -22,7 +22,7 @@ export class CurationsResolver {
     complexity: listOf(10),
   })
   curations(@Context() context: GatewayContext) {
-    return this.curationService.list({ drafts: context.drafts });
+    return this.curationService.list({ drafts: context.drafts, language: context.language });
   }
 
   @Query(() => Curation, { nullable: true, description: 'Null when no curation has this slug.' })
@@ -30,7 +30,10 @@ export class CurationsResolver {
     @Args('slug', { type: () => String }, new ArgsSchemaPipe(slugSchema)) slug: string,
     @Context() context: GatewayContext,
   ) {
-    return this.curationService.bySlug(slug, { drafts: context.drafts });
+    return this.curationService.bySlug(slug, {
+      drafts: context.drafts,
+      language: context.language,
+    });
   }
 
   @ResolveField(() => [Artwork], {

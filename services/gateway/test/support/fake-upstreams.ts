@@ -39,6 +39,19 @@ export class FakeUpstreams {
   storyDrafts: typeof fixtures.stories = [];
   /** Answers drafts even to a published-only query, as a misconfigured CMS would. */
   ignoreStatusFilter = false;
+  /**
+   * The words an editor translated, which Payload answers in their place when
+   * asked with `locale=pt`; anything untranslated stays in English, its fallback.
+   */
+  readonly portuguese: Readonly<
+    Record<string, { readonly title?: string; readonly headline?: string }>
+  > = {
+    'story melencolia-i': { title: 'O anjo que não age' },
+    'curation durer-and-the-occult': { title: 'Dürer e o oculto' },
+    'drop-page melencolia-i-numbered': {
+      headline: 'Melencolia I, em cinquenta exemplares numerados',
+    },
+  };
 
   private servers: Server[] = [];
   commerceUrl = '';
@@ -232,6 +245,9 @@ export class FakeUpstreams {
 
     // Like Payload for the gateway's user: drafts too, unless the query filters them out.
     const status = this.ignoreStatusFilter ? null : query.get('where[_status][equals]');
+    const inPortuguese = query.get('locale') === 'pt';
+    const translated = <T extends object>(key: string, doc: T): T =>
+      inPortuguese ? { ...doc, ...this.portuguese[key] } : doc;
     const limit = Number(query.get('limit') ?? 10);
     if (path === '/api/stories') {
       const slugs = (query.get('where[artworkSlug][in]') ?? '').split(',');
@@ -242,17 +258,19 @@ export class FakeUpstreams {
                 this.storyDrafts.find((draft) => draft.artworkSlug === story.artworkSlug) ?? story,
             )
           : this.stories;
-      const docs = newest.filter(
-        (story) =>
-          slugs.includes(story.artworkSlug) && (status === null || story._status === status),
-      );
+      const docs = newest
+        .filter(
+          (story) =>
+            slugs.includes(story.artworkSlug) && (status === null || story._status === status),
+        )
+        .map((story) => translated(`story ${story.artworkSlug}`, story));
       return json(response, 200, payloadList(docs.slice(0, limit)));
     }
     if (path === '/api/drop-pages') {
       const slugs = (query.get('where[slug][in]') ?? '').split(',');
-      const docs = fixtures.dropPages.filter(
-        (page) => slugs.includes(page.slug) && (status === null || page._status === status),
-      );
+      const docs = fixtures.dropPages
+        .filter((page) => slugs.includes(page.slug) && (status === null || page._status === status))
+        .map((page) => translated(`drop-page ${page.slug}`, page));
       return json(response, 200, payloadList(docs.slice(0, limit)));
     }
     if (path === '/api/curations') {
@@ -260,6 +278,7 @@ export class FakeUpstreams {
       const docs = fixtures.curations
         .filter((curation) => slug === null || curation.slug === slug)
         .filter((curation) => status === null || curation._status === status)
+        .map((curation) => translated(`curation ${curation.slug}`, curation))
         .sort((a, b) => a.title.localeCompare(b.title));
       return json(response, 200, payloadList(docs.slice(0, limit)));
     }

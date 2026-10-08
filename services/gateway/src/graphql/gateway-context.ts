@@ -1,4 +1,5 @@
 import type DataLoader from 'dataloader';
+import type { CmsLanguage } from '../cms/cms.client.js';
 import type { Artwork } from '../catalog/models/artwork.model.js';
 import type { Edition } from '../commerce/shop-api.client.js';
 import type { DropPage } from '../drops/drop.model.js';
@@ -28,6 +29,8 @@ export interface GatewayContext {
    * published: the store's, in preview, and never a browser's (see drafts.ts).
    */
   readonly drafts: boolean;
+  /** The language the CMS's words are read in, from the request's Accept-Language (see language.ts). */
+  readonly language: CmsLanguage;
   /** This browser's session, read from its cookie the first time a resolver asks. */
   readonly session: RequestSession;
 }
