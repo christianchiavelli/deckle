@@ -14,6 +14,7 @@ const valid = {
   COMMERCE_HOOK_SECRET: 'local-only-commerce-hook-secret-not-for-production',
   CMS_HOOK_SECRET: 'local-only-cms-hook-secret-not-for-production',
   STORE_REVALIDATE_SECRET: 'local-only-revalidate-secret-not-for-production',
+  GATEWAY_PREVIEW_SECRET: 'local-only-gateway-preview-secret-not-for-production',
 };
 
 const issuesOf = (env: Record<string, unknown>) =>
@@ -35,6 +36,7 @@ describe('the environment', () => {
       'COMMERCE_HOOK_SECRET',
       'CMS_HOOK_SECRET',
       'STORE_REVALIDATE_SECRET',
+      'GATEWAY_PREVIEW_SECRET',
     ] as const) {
       expect(issuesOf(without(valid, secret))).toEqual([secret]);
     }

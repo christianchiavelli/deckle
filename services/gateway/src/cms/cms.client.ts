@@ -30,9 +30,19 @@ const MAX_CURATIONS = 100;
 /**
  * The gateway's CMS user can read drafts, because preview goes through it. Every
  * query here asks for published documents only, and `find` drops a draft that
- * comes back anyway.
+ * comes back anyway, unless the store asked for drafts, in preview.
  */
 const PUBLISHED_ONLY = { 'where[_status][equals]': 'published' } as const;
+
+/** Payload's own switch: the newest version of each document, a draft if there is one. */
+const NEWEST_DRAFTS = { draft: 'true' } as const;
+
+export interface CmsReading {
+  /** The newest version of each document, draft or not: for the store's preview only. */
+  readonly drafts?: boolean;
+}
+
+const versionsFor = ({ drafts = false }: CmsReading) => (drafts ? NEWEST_DRAFTS : PUBLISHED_ONLY);
 
 type Publishable = z.ZodType<{ readonly _status: 'draft' | 'published' | null }>;
 
@@ -49,40 +59,42 @@ export class CmsClient {
   }
 
   /** The published story of each of these works that has one: one request for a whole page. */
-  async storiesForArtworks(artworkSlugs: readonly string[]): Promise<readonly CmsStory[]> {
+  async storiesForArtworks(
+    artworkSlugs: readonly string[],
+    reading: CmsReading = {},
+  ): Promise<readonly CmsStory[]> {
     if (artworkSlugs.length === 0) return [];
-    return this.find('stories', cmsStorySchema, {
+    return this.find('stories', cmsStorySchema, reading, {
       // Slugs are lowercase words joined by hyphens, so the comma list Payload expects is safe.
       'where[artworkSlug][in]': artworkSlugs.join(','),
-      ...PUBLISHED_ONLY,
       // `artworkSlug` is unique in the CMS: at most one story per work.
       limit: String(artworkSlugs.length),
     });
   }
 
-  async curations(): Promise<readonly CmsCuration[]> {
-    return this.find('curations', cmsCurationSchema, {
-      ...PUBLISHED_ONLY,
+  async curations(reading: CmsReading = {}): Promise<readonly CmsCuration[]> {
+    return this.find('curations', cmsCurationSchema, reading, {
       sort: 'title',
       limit: String(MAX_CURATIONS),
     });
   }
 
-  async curationBySlug(slug: string): Promise<CmsCuration | null> {
-    const [curation] = await this.find('curations', cmsCurationSchema, {
+  async curationBySlug(slug: string, reading: CmsReading = {}): Promise<CmsCuration | null> {
+    const [curation] = await this.find('curations', cmsCurationSchema, reading, {
       'where[slug][equals]': slug,
-      ...PUBLISHED_ONLY,
       limit: '1',
     });
     return curation ?? null;
   }
 
   /** The published page of each of these drops that has one: one request for the drops page. */
-  async dropPages(slugs: readonly string[]): Promise<readonly CmsDropPage[]> {
+  async dropPages(
+    slugs: readonly string[],
+    reading: CmsReading = {},
+  ): Promise<readonly CmsDropPage[]> {
     if (slugs.length === 0) return [];
-    return this.find('drop-pages', cmsDropPageSchema, {
+    return this.find('drop-pages', cmsDropPageSchema, reading, {
       'where[slug][in]': slugs.join(','),
-      ...PUBLISHED_ONLY,
       limit: String(slugs.length),
     });
   }
@@ -90,10 +102,15 @@ export class CmsClient {
   private async find<T extends Publishable>(
     collection: string,
     document: T,
+    reading: CmsReading,
     query: Record<string, string>,
   ): Promise<z.output<T>[]> {
     const url = new URL(`${this.baseUrl}/${collection}`);
-    for (const [key, value] of Object.entries({ ...query, depth: '0' })) {
+    for (const [key, value] of Object.entries({
+      ...query,
+      ...versionsFor(reading),
+      depth: '0',
+    })) {
       url.searchParams.set(key, value);
     }
 
@@ -115,6 +132,9 @@ export class CmsClient {
     const parsed = payloadList(document).safeParse(response.json);
     if (!parsed.success) {
       throw new UpstreamContractError('cms', `GET /${collection}`, parsed.error);
+    }
+    if (reading.drafts === true) {
+      return parsed.data.docs;
     }
     const published = parsed.data.docs.filter((doc) => doc._status !== 'draft');
     if (published.length < parsed.data.docs.length) {

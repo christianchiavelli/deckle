@@ -24,6 +24,10 @@ x-secrets:
   cms-api-key: &cms-api-key ${CMS_API_KEY:-local-only-cms-api-key-not-for-production}
   # The gateway's bearer token when it asks the store to drop cache tags.
   store-revalidate: &store-revalidate-secret ${STORE_REVALIDATE_SECRET:-local-only-revalidate-secret-not-for-production}
+  # In the CMS's preview links, which the store checks before it shows a draft.
+  preview: &preview-secret ${PREVIEW_SECRET:-local-only-preview-secret-not-for-production}
+  # What the store's server sends the gateway to read drafts, in preview.
+  gateway-preview: &gateway-preview-secret ${GATEWAY_PREVIEW_SECRET:-local-only-gateway-preview-secret-not-for-production}
 
 x-commerce: &commerce
   <<: *app
@@ -157,7 +161,7 @@ services:
       GATEWAY_HOOK_URL: http://gateway:4000/hooks/cms
       HOOK_SECRET: *cms-hook-secret
       STORE_PREVIEW_URL: http://localhost:8080/api/preview
-      PREVIEW_SECRET: ${PREVIEW_SECRET:-local-only-preview-secret-not-for-production}
+      PREVIEW_SECRET: *preview-secret
     volumes:
       - cms-media:/app/apps/cms/media
     ports:
@@ -220,6 +224,7 @@ services:
       CMS_HOOK_SECRET: *cms-hook-secret
       STORE_REVALIDATE_URL: http://store:3000/api/revalidate
       STORE_REVALIDATE_SECRET: *store-revalidate-secret
+      GATEWAY_PREVIEW_SECRET: *gateway-preview-secret
     healthcheck:
       <<: *node-health
       test:
@@ -249,6 +254,10 @@ services:
       PORT: '3000'
       GATEWAY_URL: http://gateway:4000/graphql
       STORE_REVALIDATE_SECRET: *store-revalidate-secret
+      PREVIEW_SECRET: *preview-secret
+      GATEWAY_PREVIEW_SECRET: *gateway-preview-secret
+      # Where the CMS's admin lives, the only page that may ask the store to refresh a draft.
+      CMS_PUBLIC_URL: http://localhost:8081
     healthcheck:
       <<: *node-health
       test:

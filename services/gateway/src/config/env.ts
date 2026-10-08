@@ -35,6 +35,8 @@ export const envSchema = z.object({
   // Optional until the store exists: without it the gateway logs what it would revalidate.
   STORE_REVALIDATE_URL: optional(httpUrl),
   STORE_REVALIDATE_SECRET: secret,
+  /** What the store's server sends to read the CMS's drafts, in preview. No browser holds it. */
+  GATEWAY_PREVIEW_SECRET: secret,
 });
 
 /**

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { FakeUpstreams } from '../../test/support/fake-upstreams.js';
 import { graphql } from '../../test/support/graphql.js';
-import { createTestApp, type TestApp, testEnv } from '../../test/support/test-app.js';
+import { createTestApp, TEST_SECRETS, type TestApp, testEnv } from '../../test/support/test-app.js';
 
 describe('curations over GraphQL', () => {
   const upstreams = new FakeUpstreams();
@@ -52,6 +52,20 @@ describe('curations over GraphQL', () => {
     expect(response.data).toEqual({
       curations: [{ slug: 'durer-and-the-occult' }],
       curation: null,
+    });
+  });
+
+  it('shows the store a curation that is still a draft, in preview', async () => {
+    const response = await graphql(
+      gateway,
+      '{ curations { slug } curation(slug: "animals-on-paper") { title } }',
+      undefined,
+      { 'Deckle-Preview': TEST_SECRETS.GATEWAY_PREVIEW_SECRET },
+    );
+
+    expect(response.data).toEqual({
+      curations: [{ slug: 'animals-on-paper' }, { slug: 'durer-and-the-occult' }],
+      curation: { title: 'Animals on paper' },
     });
   });
 

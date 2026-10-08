@@ -30,6 +30,7 @@ export const TEST_SECRETS = {
   COMMERCE_HOOK_SECRET: 'commerce-hook-secret-for-the-test-suite',
   CMS_HOOK_SECRET: 'cms-hook-secret-for-the-test-suite-only',
   STORE_REVALIDATE_SECRET: 'store-revalidate-secret-for-the-test-suite',
+  GATEWAY_PREVIEW_SECRET: 'gateway-preview-secret-for-the-test-suite',
 } as const;
 
 export const PUBLIC_ORIGIN = 'http://localhost:8080';

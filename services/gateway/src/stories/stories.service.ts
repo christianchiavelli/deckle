@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CmsClient } from '../cms/cms.client.js';
+import { CmsClient, type CmsReading } from '../cms/cms.client.js';
 import type { CmsStory } from '../cms/cms.responses.js';
 import { lexicalToBlocks, safeHref } from '../cms/lexical/lexical-to-blocks.js';
 import type { Source, Story } from './story.model.js';
@@ -11,8 +11,11 @@ export class StoriesService {
   constructor(private readonly cms: CmsClient) {}
 
   /** The story of each work, in the order asked, null where none is published: one CMS call. */
-  async forArtworks(artworkSlugs: readonly string[]): Promise<(Story | null)[]> {
-    const stories = await this.cms.storiesForArtworks(artworkSlugs);
+  async forArtworks(
+    artworkSlugs: readonly string[],
+    reading: CmsReading = {},
+  ): Promise<(Story | null)[]> {
+    const stories = await this.cms.storiesForArtworks(artworkSlugs, reading);
     const byArtwork = new Map(stories.map((story) => [story.artworkSlug, story]));
     return artworkSlugs.map((slug) => {
       const story = byArtwork.get(slug);

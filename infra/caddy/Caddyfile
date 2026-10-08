@@ -22,6 +22,9 @@
 		Referrer-Policy strict-origin-when-cross-origin
 		# The store asks for passkeys on its own origin, and for nothing else.
 		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), publickey-credentials-get=(self), publickey-credentials-create=(self)"
+		# Only the store itself and the CMS, whose live preview shows a draft in
+		# a frame, may put a page of the store in one.
+		Content-Security-Policy "frame-ancestors 'self' http://localhost:8081"
 		-Server
 	}
 
@@ -34,6 +37,9 @@
 	# itself. The gateway's /hooks and /internal routes are never matched here:
 	# only Docker's network reaches them.
 	handle /graphql {
+		# Reading drafts is for the store's server, on Docker's network; from
+		# outside, the header is dropped before the gateway sees it.
+		request_header -Deckle-Preview
 		reverse_proxy {
 			# Every replica Docker's DNS knows, looked up again every few seconds,
 			# so `GATEWAY_REPLICAS=2` needs no change here.

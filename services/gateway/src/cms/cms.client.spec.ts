@@ -54,6 +54,27 @@ describe('CmsClient', () => {
     expect(upstreams.requests.cms[1]?.query.get('where[_status][equals]')).toBe('published');
   });
 
+  it('asks for the newest version of everything, drafts kept, when the store previews', async () => {
+    upstreams.draftStory('melencolia-i', { title: 'An angel, rewritten' });
+
+    const stories = await cmsClient().storiesForArtworks(['melencolia-i', 'the-rhinoceros'], {
+      drafts: true,
+    });
+    const curation = await cmsClient().curationBySlug('animals-on-paper', { drafts: true });
+    const pages = await cmsClient().dropPages(['the-great-wave-numbered'], { drafts: true });
+
+    expect(stories.map((story) => story.title)).toEqual([
+      'An angel, rewritten',
+      'An animal nobody in Nuremberg had seen',
+    ]);
+    expect(curation?.title).toBe('Animals on paper');
+    expect(pages.map((page) => page.slug)).toEqual(['the-great-wave-numbered']);
+    for (const sent of upstreams.requests.cms) {
+      expect(sent.query.get('draft')).toBe('true');
+      expect(sent.query.has('where[_status][equals]')).toBe(false);
+    }
+  });
+
   it('does not call the CMS for no works', async () => {
     await expect(cmsClient().storiesForArtworks([])).resolves.toEqual([]);
     expect(upstreams.requests.cms).toHaveLength(0);

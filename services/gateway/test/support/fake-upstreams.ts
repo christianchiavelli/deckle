@@ -32,6 +32,11 @@ export class FakeUpstreams {
   readonly shop = new FakeShop();
   products = fixtures.products;
   stories = fixtures.stories;
+  /**
+   * Newer drafts of stories that are published, which Payload answers in their
+   * place only when asked with `draft=true`.
+   */
+  storyDrafts: typeof fixtures.stories = [];
   /** Answers drafts even to a published-only query, as a misconfigured CMS would. */
   ignoreStatusFilter = false;
 
@@ -53,6 +58,15 @@ export class FakeUpstreams {
     return this;
   }
 
+  /** Saves a newer draft of a published story, as an editor typing in the CMS would. */
+  draftStory(artworkSlug: string, changes: { readonly title: string }): void {
+    const story = this.stories.find((candidate) => candidate.artworkSlug === artworkSlug);
+    if (story === undefined) {
+      throw new Error(`The fake CMS has no story about ${artworkSlug}`);
+    }
+    this.storyDrafts = [...this.storyDrafts, { ...story, ...changes, _status: 'draft' }];
+  }
+
   reset(): void {
     this.requests.commerce.length = 0;
     this.requests.cms.length = 0;
@@ -62,6 +76,7 @@ export class FakeUpstreams {
     this.shop.reset();
     this.products = fixtures.products;
     this.stories = fixtures.stories;
+    this.storyDrafts = [];
     this.ignoreStatusFilter = false;
   }
 
@@ -220,7 +235,14 @@ export class FakeUpstreams {
     const limit = Number(query.get('limit') ?? 10);
     if (path === '/api/stories') {
       const slugs = (query.get('where[artworkSlug][in]') ?? '').split(',');
-      const docs = this.stories.filter(
+      const newest =
+        query.get('draft') === 'true'
+          ? this.stories.map(
+              (story) =>
+                this.storyDrafts.find((draft) => draft.artworkSlug === story.artworkSlug) ?? story,
+            )
+          : this.stories;
+      const docs = newest.filter(
         (story) =>
           slugs.includes(story.artworkSlug) && (status === null || story._status === status),
       );

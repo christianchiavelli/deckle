@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CmsClient } from '../cms/cms.client.js';
+import { CmsClient, type CmsReading } from '../cms/cms.client.js';
 import type { CmsCuration } from '../cms/cms.responses.js';
 import type { Curation } from './curation.model.js';
 
@@ -15,12 +15,12 @@ const toCuration = (curation: CmsCuration): Curation => ({
 export class CurationsService {
   constructor(private readonly cms: CmsClient) {}
 
-  async list(): Promise<Curation[]> {
-    return (await this.cms.curations()).map(toCuration);
+  async list(reading: CmsReading = {}): Promise<Curation[]> {
+    return (await this.cms.curations(reading)).map(toCuration);
   }
 
-  async bySlug(slug: string): Promise<Curation | null> {
-    const curation = await this.cms.curationBySlug(slug);
+  async bySlug(slug: string, reading: CmsReading = {}): Promise<Curation | null> {
+    const curation = await this.cms.curationBySlug(slug, reading);
     return curation === null ? null : toCuration(curation);
   }
 }

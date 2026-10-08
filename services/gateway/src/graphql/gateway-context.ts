@@ -23,6 +23,11 @@ export interface RequestLoaders {
 /** What every resolver receives as its GraphQL context. */
 export interface GatewayContext {
   readonly loaders: RequestLoaders;
+  /**
+   * Whether this operation reads the CMS's newest drafts instead of what is
+   * published: the store's, in preview, and never a browser's (see drafts.ts).
+   */
+  readonly drafts: boolean;
   /** This browser's session, read from its cookie the first time a resolver asks. */
   readonly session: RequestSession;
 }

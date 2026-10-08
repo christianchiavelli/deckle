@@ -8,6 +8,7 @@ import { Sessions } from '../sessions/sessions.service.js';
 import { SessionsModule } from '../sessions/sessions.module.js';
 import { armorProtection, MAX_TOKENS } from './armor.js';
 import { MAX_QUERY_COMPLEXITY } from './complexity.js';
+import { readsDrafts } from './drafts.js';
 import { errorLoggingPlugin, formatGatewayError } from './errors.js';
 import type { GatewayContext } from './gateway-context.js';
 import { complexityPlugin } from './query-complexity.js';
@@ -44,6 +45,7 @@ const upgradeRequestOf = (context: unknown): IncomingMessage | undefined => {
       ): ApolloDriverConfig => {
         const production = config.get('NODE_ENV', { infer: true }) === 'production';
         const armor = armorProtection(production);
+        const previewSecret = config.get('GATEWAY_PREVIEW_SECRET', { infer: true });
         return {
           path: GRAPHQL_PATH,
           autoSchemaFile: true,
@@ -60,16 +62,22 @@ const upgradeRequestOf = (context: unknown): IncomingMessage | undefined => {
           plugins: [complexityPlugin(MAX_QUERY_COMPLEXITY), errorLoggingPlugin(), ...armor.plugins],
           validationRules: armor.validationRules,
           formatError: formatGatewayError(production),
-          context: (operation: unknown): GatewayContext =>
-            isHttpOperation(operation)
-              ? {
-                  loaders: loaders.create({ cache: true }),
-                  session: sessions.forHttp(operation.req, operation.res),
-                }
-              : {
-                  loaders: loaders.create({ cache: false }),
-                  session: sessions.forSubscription(upgradeRequestOf(operation)),
-                },
+          context: (operation: unknown): GatewayContext => {
+            if (!isHttpOperation(operation)) {
+              // A subscription is a browser's, and only counts copies: never drafts.
+              return {
+                loaders: loaders.create({ cache: false, drafts: false }),
+                drafts: false,
+                session: sessions.forSubscription(upgradeRequestOf(operation)),
+              };
+            }
+            const drafts = readsDrafts(operation.req, previewSecret);
+            return {
+              loaders: loaders.create({ cache: true, drafts }),
+              drafts,
+              session: sessions.forHttp(operation.req, operation.res),
+            };
+          },
           subscriptions: {
             'graphql-ws': {
               path: GRAPHQL_PATH,

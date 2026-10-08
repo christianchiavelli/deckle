@@ -28,9 +28,10 @@ export class RequestLoadersFactory {
   /**
    * Fresh loaders for one operation. A query caches what it read for its own
    * duration; a subscription must not, because its context outlives every event
-   * and a cached artwork would go stale between them.
+   * and a cached artwork would go stale between them. In preview, the CMS's
+   * words come from its newest drafts.
    */
-  create({ cache }: { cache: boolean }): RequestLoaders {
+  create({ cache, drafts }: { cache: boolean; drafts: boolean }): RequestLoaders {
     const options = { cache, maxBatchSize: MAX_BATCH_SIZE };
     return {
       artworkBySlug: new DataLoader(
@@ -38,11 +39,13 @@ export class RequestLoadersFactory {
         options,
       ),
       storyByArtworkSlug: new DataLoader(
-        (slugs: readonly string[]) => this.stories.forArtworks(slugs),
+        (slugs: readonly string[]) => this.stories.forArtworks(slugs, { drafts }),
         options,
       ),
       dropPageBySlug: new DataLoader(async (slugs: readonly string[]) => {
-        const pages = new Map((await this.cms.dropPages(slugs)).map((page) => [page.slug, page]));
+        const pages = new Map(
+          (await this.cms.dropPages(slugs, { drafts })).map((page) => [page.slug, page]),
+        );
         return slugs.map((slug) => {
           const page = pages.get(slug);
           return page === undefined ? null : dropPageOf(page, this.logger);

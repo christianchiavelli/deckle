@@ -21,13 +21,16 @@ export class CurationsResolver {
     description: 'Every published curation, by title.',
     complexity: listOf(10),
   })
-  curations() {
-    return this.curationService.list();
+  curations(@Context() context: GatewayContext) {
+    return this.curationService.list({ drafts: context.drafts });
   }
 
   @Query(() => Curation, { nullable: true, description: 'Null when no curation has this slug.' })
-  curation(@Args('slug', { type: () => String }, new ArgsSchemaPipe(slugSchema)) slug: string) {
-    return this.curationService.bySlug(slug);
+  curation(
+    @Args('slug', { type: () => String }, new ArgsSchemaPipe(slugSchema)) slug: string,
+    @Context() context: GatewayContext,
+  ) {
+    return this.curationService.bySlug(slug, { drafts: context.drafts });
   }
 
   @ResolveField(() => [Artwork], {

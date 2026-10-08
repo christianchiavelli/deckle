@@ -1,7 +1,10 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { FakeUpstreams } from '../../test/support/fake-upstreams.js';
 import { graphql } from '../../test/support/graphql.js';
-import { createTestApp, type TestApp, testEnv } from '../../test/support/test-app.js';
+import { createTestApp, TEST_SECRETS, type TestApp, testEnv } from '../../test/support/test-app.js';
+
+/** What the store's server sends in preview: the header, with the secret only it holds. */
+const preview = { 'Deckle-Preview': TEST_SECRETS.GATEWAY_PREVIEW_SECRET };
 
 const STORY_FIELDS = /* GraphQL */ `
   title
@@ -139,6 +142,30 @@ describe('stories over GraphQL', () => {
 
     expect(response.data).toEqual({ artwork: { story: null } });
     expect(upstreams.requests.cms[0]?.query.get('where[_status][equals]')).toBe('published');
+  });
+
+  it('shows the store its newest draft in preview, and everyone else what is published', async () => {
+    upstreams.draftStory('melencolia-i', { title: 'An angel, rewritten' });
+    const query = '{ artwork(slug: "melencolia-i") { story { title } } }';
+
+    const previewed = await graphql(gateway, query, undefined, preview);
+    const browsed = await graphql(gateway, query);
+    const guessed = await graphql(gateway, query, undefined, {
+      'Deckle-Preview': `${TEST_SECRETS.GATEWAY_PREVIEW_SECRET.slice(0, -1)}x`,
+    });
+
+    expect(previewed.data).toEqual({ artwork: { story: { title: 'An angel, rewritten' } } });
+    expect(browsed.data).toEqual({ artwork: { story: { title: 'The angel who cannot act' } } });
+    expect(guessed.data).toEqual(browsed.data);
+  });
+
+  it('shows a story that was never published, in preview only', async () => {
+    const query = '{ artwork(slug: "the-rhinoceros") { story { title } } }';
+
+    expect((await graphql(gateway, query, undefined, preview)).data).toEqual({
+      artwork: { story: { title: 'An animal nobody in Nuremberg had seen' } },
+    });
+    expect((await graphql(gateway, query)).data).toEqual({ artwork: { story: null } });
   });
 
   it('costs one request to each upstream for a whole page of works and their stories', async () => {
