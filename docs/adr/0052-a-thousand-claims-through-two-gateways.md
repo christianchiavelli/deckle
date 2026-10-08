@@ -21,6 +21,7 @@ ADR 0049 puts the drop's lock in the database: a row per copy, claims under `FOR
 ## Consequences
 
 - On a 20-core machine, with two gateways: 1,000 people, the 38 to 40 copies open each time all held and the rest refused, the claims sent within 0.3 s of each other, and 95% answered within 0.7 to 0.8 s. Each gateway answered half of the 3,000 or so requests. Through one gateway, the 95th percentile was 1.3 s.
+- On CI's four-core runner, after the browser checks had sold one copy: the 49 open copies held by 49 people and 951 refused, the claims sent within 0.13 s of each other, 95% answered within 1.6 s, and 1,527 requests on each gateway.
 - Each run leaves a thousand accounts in the gateway's database, holding nothing. On a laptop they are invisible; CI starts from an empty stack every time.
 - The test needs the drop open and at least one copy open, and says so in setup otherwise. While it runs, anyone watching the drop sees its copies held for ten seconds.
 - The browser checks in CI now run across two gateways, which exercises the sessions, the passkey ceremonies and the live count's pub/sub between replicas on every push.
