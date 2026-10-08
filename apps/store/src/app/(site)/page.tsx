@@ -133,9 +133,12 @@ const Sizes = styled.ul`
   }
 `;
 
+// Doubled to outrank the grid's own columns, whose styles can stream in after these.
 const Three = styled(PrintGrid)`
   @media ${media.md} {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    && {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 `;
 

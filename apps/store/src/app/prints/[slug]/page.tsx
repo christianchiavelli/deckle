@@ -27,8 +27,14 @@ import { hrefOf, NO_CHOICE } from '../../../views/listing';
 import { morePrints } from '../../../views/more';
 import { defaultSize, factsOf, lifeOf, recordOf, tooSmallNote } from '../../../views/work';
 
+/*
+ * Doubled to outrank the band's own padding: a server component's styles stream
+ * in where it renders, so the band's can land after these and win.
+ */
 const Product = styled(Band)`
-  padding-block-start: ${t.space.gapLg};
+  && {
+    padding-block-start: ${t.space.gapLg};
+  }
 `;
 
 const Grid = styled.div`
