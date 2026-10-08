@@ -203,7 +203,8 @@ services:
       context: .
       dockerfile: services/gateway/Dockerfile
     deploy:
-      # Two replicas for the drop's load test: `GATEWAY_REPLICAS=2 docker compose up --wait`.
+      # Two replicas for the drop's load test, which `pnpm --filter @deckle/load test:load`
+      # starts with `--scale gateway=2`; `GATEWAY_REPLICAS=2` keeps them for every `up`.
       # Caddy finds every replica through Docker's DNS, so nothing else changes.
       replicas: ${GATEWAY_REPLICAS:-1}
     environment:
@@ -280,6 +281,22 @@ services:
         condition: service_healthy
       store:
         condition: service_healthy
+
+  # The drop's load test, run on demand and never by `up`: a thousand people
+  # claim its copies at once, through Caddy, as a browser would. It runs
+  # against the stack as it stands, with `run --no-deps`: starting what it
+  # depends on would set the gateway back to one replica.
+  # `pnpm --filter @deckle/load test:load` starts two gateways first. See load/drop.ts.
+  load:
+    image: grafana/k6:2.3.0@sha256:9c2dee7f8ed74d317e4027c06a10f169b625638189de8d4555d0b3486a5aeb34
+    profiles: [load]
+    working_dir: /load
+    command: [run, --quiet, drop.ts]
+    volumes:
+      - ./load:/load:ro
+    environment:
+      DECKLE_URL: http://caddy
+      DECKLE_ORIGIN: http://localhost:8080
 
 volumes:
   postgres:

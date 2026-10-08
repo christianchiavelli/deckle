@@ -4,6 +4,7 @@ packages:
   - packages/*
   - design/*
   - e2e
+  - load
 
 # One version of each dependency for the whole repository, checked at the
 # source on 5 October 2026. A package names `catalog:` instead of a range, so
@@ -47,6 +48,8 @@ catalog:
   playwright: 1.63.0
   '@playwright/test': 1.63.0
   '@axe-core/playwright': 4.13.0
+  # The drop's load test runs in k6 2.3.0's image (compose.yaml); these are its types.
+  '@types/k6': 2.3.0
 
   # Contracts and data
   zod: 4.6.5

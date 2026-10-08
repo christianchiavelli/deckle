@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "rootDir": ".",
+    "noEmit": true,
+    // k6 runs the TypeScript as written, so imports name the .ts files it reads.
+    "allowImportingTsExtensions": true,
+    "types": ["k6"]
+  },
+  "include": ["*.ts", "support"]
+}

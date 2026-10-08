@@ -1,0 +1,23 @@
+{
+  "name": "@deckle/load",
+  "version": "0.0.0",
+  "description": "The drop's load test: a thousand people claim its copies in the same second, through two gateways",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --coverage",
+    "test:load": "docker compose up --wait --no-build --scale gateway=2 && docker compose run --rm --no-deps load"
+  },
+  "devDependencies": {
+    "@deckle/eslint-config": "workspace:*",
+    "@simplewebauthn/server": "catalog:",
+    "@types/k6": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}
