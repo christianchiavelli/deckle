@@ -98,33 +98,39 @@ export default function SizesPage() {
         <PageHead id="sizes-title" title={text.title} lede={text.lede(ppi)} />
       </Band>
 
-      <Suspense fallback={null}>
+      {/* The rules come in with the scans, so nothing under them moves when they do. */}
+      <Suspense fallback={<Band aria-busy="true" />}>
         <Scans />
+        <Rules />
       </Suspense>
-
-      <Band tone="band" aria-labelledby="rules-title">
-        <SectionHead id="rules-title" title={text.rules} />
-        <Columns>
-          <div>
-            <h3>{text.density(ppi)}</h3>
-            <p>{text.densityText}</p>
-          </div>
-          <div>
-            <h3>{text.upscaled}</h3>
-            <p>{text.upscaledText}</p>
-          </div>
-          <div>
-            <h3>{text.file}</h3>
-            <p>{text.fileText}</p>
-          </div>
-        </Columns>
-        <Closing>
-          <ButtonLink href="/prints" icon="arrow">
-            {text.browse}
-          </ButtonLink>
-        </Closing>
-      </Band>
     </>
+  );
+}
+
+function Rules() {
+  return (
+    <Band tone="band" aria-labelledby="rules-title">
+      <SectionHead id="rules-title" title={text.rules} />
+      <Columns>
+        <div>
+          <h3>{text.density(ppi)}</h3>
+          <p>{text.densityText}</p>
+        </div>
+        <div>
+          <h3>{text.upscaled}</h3>
+          <p>{text.upscaledText}</p>
+        </div>
+        <div>
+          <h3>{text.file}</h3>
+          <p>{text.fileText}</p>
+        </div>
+      </Columns>
+      <Closing>
+        <ButtonLink href="/prints" icon="arrow">
+          {text.browse}
+        </ButtonLink>
+      </Closing>
+    </Band>
   );
 }
 

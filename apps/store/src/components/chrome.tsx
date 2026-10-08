@@ -21,6 +21,16 @@ const Skip = styled.a`
   }
 `;
 
+/* A page whose content is still on its way marks its placeholder busy, and
+   the footer waits with it: drawn under the placeholder, it would be pushed
+   down the moment the content lands, a jump the reader sees and the layout
+   shift metric counts. */
+const Main = styled.main`
+  &:has(> [aria-busy='true']) + footer {
+    display: none;
+  }
+`;
+
 const { chrome } = copy;
 
 /** The parts of the shop the menu names. */
@@ -77,7 +87,7 @@ export function Chrome({ current, announcement = true, children }: ChromeProps) 
         suggestionsLabel={copy.search.suggest.label}
         menu={{ open: chrome.menuOpen, close: chrome.menuClose }}
       />
-      <main id="main">{children}</main>
+      <Main id="main">{children}</Main>
       <SiteFooter
         home={{ href: '/', label: chrome.home }}
         label={chrome.footer}

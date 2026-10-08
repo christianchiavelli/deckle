@@ -52,29 +52,33 @@ export const metadata: Metadata = { title: text.title };
 /** Every print, narrowed by technique, century and size, as approved. */
 export default function PrintsPage({ searchParams }: PageProps<'/prints'>) {
   return (
-    <>
-      <Suspense
-        fallback={
-          <Band aria-labelledby="prints-title" aria-busy="true">
-            <PageHead id="prints-title" title={text.title} />
-          </Band>
-        }
-      >
-        <Prints searchParams={searchParams} />
-      </Suspense>
+    // The note on sizes comes in with the prints, so nothing under them moves when they do.
+    <Suspense
+      fallback={
+        <Band aria-labelledby="prints-title" aria-busy="true">
+          <PageHead id="prints-title" title={text.title} />
+        </Band>
+      }
+    >
+      <Prints searchParams={searchParams} />
+      <SizesNote />
+    </Suspense>
+  );
+}
 
-      <Band tone="band" aria-labelledby="sizes-title">
-        <Aside>
-          <div>
-            <h2 id="sizes-title">{text.asideTitle}</h2>
-            <p>{text.aside}</p>
-          </div>
-          <TextLink href="/about/sizes" icon="arrow">
-            {text.howWeSize}
-          </TextLink>
-        </Aside>
-      </Band>
-    </>
+function SizesNote() {
+  return (
+    <Band tone="band" aria-labelledby="sizes-title">
+      <Aside>
+        <div>
+          <h2 id="sizes-title">{text.asideTitle}</h2>
+          <p>{text.aside}</p>
+        </div>
+        <TextLink href="/about/sizes" icon="arrow">
+          {text.howWeSize}
+        </TextLink>
+      </Aside>
+    </Band>
   );
 }
 

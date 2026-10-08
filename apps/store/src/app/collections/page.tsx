@@ -24,7 +24,7 @@ export default function CollectionsPage() {
   return (
     <>
       <Head />
-      <Suspense fallback={null}>
+      <Suspense fallback={<Band aria-busy="true" />}>
         <Collections />
       </Suspense>
     </>

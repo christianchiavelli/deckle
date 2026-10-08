@@ -153,7 +153,7 @@ export default function HomePage() {
 /** What the page says before the gateway has answered: the same words, without the numbers. */
 function Opening() {
   return (
-    <Band aria-labelledby="home-title">
+    <Band aria-labelledby="home-title" aria-busy="true">
       <Hero>
         <HeroCopy>
           <h1 id="home-title">{home.title}</h1>
