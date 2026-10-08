@@ -28,6 +28,11 @@ const pages = [
   ['how drops work', '/about/drops'],
   ['the cart', '/cart'],
   ['the way in', '/account'],
+  // Portuguese runs longer, so its lines wrap in other places as the fonts come in.
+  ['the front page in Portuguese', '/pt-br'],
+  ['a print in Portuguese', '/pt-br/prints/melencolia-i'],
+  ['a drop in Portuguese', '/pt-br/drops/melencolia-i-numbered'],
+  ['how prints are sized, in Portuguese', '/pt-br/about/sizes'],
 ] as const;
 
 /** The part of a Layout Instability API entry this file reads. */
@@ -36,8 +41,14 @@ interface LayoutShift extends PerformanceEntry {
   readonly hadRecentInput: boolean;
 }
 
-/** Every shift the page makes as it loads, added up as Core Web Vitals does for one load. */
+/**
+ * Every shift the page makes as it loads, added up as Core Web Vitals does for
+ * one load. A page React cannot hydrate as the server drew it is drawn again in
+ * the browser, which moves it, so an error as it loads fails the page too.
+ */
 async function shiftAsItLoads(page: Page, path: string): Promise<number> {
+  const thrown: string[] = [];
+  page.on('pageerror', (error) => thrown.push(error.message));
   await page.addInitScript(() => {
     const seen: PerformanceEntry[] = [];
     const observer = new PerformanceObserver((list) => {
@@ -50,7 +61,7 @@ async function shiftAsItLoads(page: Page, path: string): Promise<number> {
   await page.goto(`${store}${path}`);
   // The footer shows once the page's content is in, and not before.
   await expect(page.getByRole('contentinfo')).toBeVisible();
-  return page.evaluate(async () => {
+  const shift = await page.evaluate(async () => {
     // React reveals streamed content in batches up to 300 ms apart, so the
     // count runs for the page's first two seconds, whatever showed when.
     await new Promise((settled) => setTimeout(settled, Math.max(0, 2000 - performance.now())));
@@ -61,6 +72,8 @@ async function shiftAsItLoads(page: Page, path: string): Promise<number> {
       .filter((shift) => !shift.hadRecentInput)
       .reduce((sum, shift) => sum + shift.value, 0);
   });
+  expect(thrown, `${path} threw as it loaded`).toEqual([]);
+  return shift;
 }
 
 for (const [device, viewport] of [

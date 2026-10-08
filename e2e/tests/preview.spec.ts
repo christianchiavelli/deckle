@@ -7,14 +7,24 @@ const store = process.env['STORE_URL'] ?? 'http://localhost:8080';
 const gatewayPreviewSecret =
   process.env['GATEWAY_PREVIEW_SECRET'] ?? 'local-only-gateway-preview-secret-not-for-production';
 
-/** Opens the story of a work in the CMS, as an editor would. */
-async function openStory(page: Page, work: string): Promise<void> {
-  await page.goto(`${cms}/admin/collections/stories`);
+/**
+ * Opens the story of a work in the CMS, as an editor would, in one of its
+ * languages. The admin remembers the editor's last language, and every test
+ * signs in as the same editor, so each names its own.
+ */
+async function openStory(page: Page, work: string, locale: 'en' | 'pt' = 'en'): Promise<void> {
+  await page.goto(`${cms}/admin/collections/stories?locale=${locale}`);
   await page.getByRole('textbox', { name: 'Buscar por Slug da obra' }).fill(work);
   // The list puts the search in its address a moment later, which would undo an earlier click.
   await expect(page).toHaveURL(new RegExp(`[?&]search=${work}`));
   await page.getByRole('link', { name: work, exact: true }).click();
   await expect(page.getByRole('textbox', { name: /^Título/ })).toBeVisible();
+  const document = new URL(page.url());
+  if (document.searchParams.get('locale') !== locale) {
+    document.searchParams.set('locale', locale);
+    await page.goto(document.toString());
+    await expect(page.getByRole('textbox', { name: /^Título/ })).toBeVisible();
+  }
 }
 
 /** A title no run has used, so what shows can only be this run's draft. */
@@ -65,6 +75,43 @@ test.describe('a draft in preview', () => {
     await expect(tab.getByRole('heading', { level: 2, name: 'About the woodcut' })).toBeVisible();
     await expect(proof).toHaveCount(0);
     await expect(tab).toHaveURL(`${store}/prints/the-rhinoceros#story`);
+  });
+
+  test('opens a draft written in Portuguese in the Portuguese edition', async ({
+    page,
+    context,
+  }) => {
+    await openStory(page, 'south-wind-clear-sky', 'pt');
+    const title = page.getByRole('textbox', { name: /^Título/ });
+    await expect(title).toHaveValue('Sobre a gravura');
+
+    const draft = draftTitle('Sobre a gravura');
+    const kept = page.waitForResponse(
+      (response) =>
+        /\/api\/stories\/\d+\?/.test(response.url()) &&
+        new URL(response.url()).searchParams.get('autosave') === 'true' &&
+        new URL(response.url()).searchParams.get('locale') === 'pt' &&
+        response.request().method() === 'PATCH' &&
+        response.ok(),
+    );
+    await title.fill(draft);
+    await kept;
+
+    const [tab] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('link', { name: 'Pré-visualização', exact: true }).click(),
+    ]);
+    await expect(tab).toHaveURL(`${store}/pt-br/prints/south-wind-clear-sky#story`);
+    await expect(tab.getByRole('heading', { level: 2, name: draft })).toBeVisible();
+    const proof = tab.getByRole('complementary', { name: 'Prova de estado' });
+    await expect(proof).toBeVisible();
+
+    await proof.getByRole('link', { name: 'Ver a página publicada' }).click();
+    await expect(
+      tab.getByRole('heading', { level: 2, name: 'Sobre a gravura', exact: true }),
+    ).toBeVisible();
+    await expect(proof).toHaveCount(0);
+    await expect(tab).toHaveURL(`${store}/pt-br/prints/south-wind-clear-sky#story`);
   });
 
   test("follows what the editor types, in the CMS's live preview", async ({ page, browser }) => {
