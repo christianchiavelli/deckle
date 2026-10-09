@@ -87,7 +87,10 @@ test.describe('a copy of a drop', () => {
       page.getByRole('heading', { level: 2, name: `Melencolia I, copy ${String(number)} of 50` }),
     ).toBeVisible();
     const code = page.url().split('/').at(-1) ?? '';
-    expect(await receiptFor(email)).toContain(code);
+    const receipt = await receiptFor(email);
+    expect(receipt.subject).toBe(`Your receipt for order ${code}`);
+    // Named by its work and its number, though its product is named after the drop.
+    expect(receipt.html).toContain(`Melencolia I, copy ${String(number)} of 50`);
 
     await page.goto(`${store}/account`);
     await expect(page.getByRole('heading', { level: 1, name: 'Your account' })).toBeVisible();

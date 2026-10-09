@@ -8,7 +8,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | --- | --- |
 | `apps/store` | The store: Next.js 16 with Cache Components, rendering on the server from tagged reads of the gateway, built from the design system's sections, in two editions: English at the root, Brazilian Portuguese under `/pt-br` (ADR 0054). What is one visitor's (the cart, the account, a held copy, a drop's live count) is read in the browser by Apollo Client, under `src/live` |
 | `apps/cms` | Payload 3 in its own Next.js app: each work's story, curated collections, drop pages, draft preview |
-| `services/commerce` | Vendure 3.7.4, server and worker: catalogue, cart, checkout and orders. Only the gateway talks to it |
+| `services/commerce` | Vendure 3.7.4, server and worker: catalogue, cart, checkout and orders, and the receipt each order mails, from its own template in `templates/email` (ADR 0057). Only the gateway talks to it |
 | `services/gateway` | NestJS 12 GraphQL gateway: one schema over commerce, CMS and drops. Owns identity and drops |
 | `packages/met` | The Met's API client, the curated list of works, and the importer that writes `data/met` |
 | `packages/print-sizes` | Which paper sizes a scan can print, and at what ppi. Plain TypeScript, no I/O |
@@ -73,6 +73,7 @@ Everything runs on one Docker network. The browser only ever sees Caddy.
 - **Commerce and CMS changes reach the gateway as signed webhooks.** `POST /hooks/commerce` and `POST /hooks/cms`, JSON, with `Deckle-Signature: t=<unix seconds>,v1=<hex HMAC-SHA256 of "<t>.<raw body>">` and a five-minute tolerance. The gateway turns each event into cache tags for the store.
 - **The gateway asks the store to drop cache tags.** `POST http://store:3000/api/revalidate`, with `Authorization: Bearer <STORE_REVALIDATE_SECRET>` and `{ "tags": [...], "profile": "expire" | "max" }`. Tags come from `@deckle/cache-tags`, and the store refuses any other with a 400.
 - **The CMS's words come in the request's language.** The gateway reads the CMS in Portuguese when `Accept-Language` ranks `pt` above `en`, with English for any field not translated, and in English otherwise. The store names its page's edition with every read, on the server and from the browser (ADR 0054).
+- **An order carries the language it was placed in.** The gateway sets the order's `receiptLanguage` (`en` or `pt-BR`) from the request's language when it places an order or pays for a copy, and commerce writes the receipt in it (ADR 0057).
 - **Only the store reads drafts.** In draft mode, which the CMS's preview links turn on, the store sends `Deckle-Preview: <GATEWAY_PREVIEW_SECRET>` with its reads, and the gateway reads the CMS's newest drafts for that request alone. Caddy drops the header from every request from outside (ADR 0053).
 - **The gateway vouches for its users to commerce.** It signs a short-lived EdDSA JWT (`iss` `deckle-gateway`, `aud` `deckle-commerce`, `sub` the Deckle user id) and publishes its keys at `GET /internal/jwks.json`. Commerce verifies it in a Vendure `AuthenticationStrategy` named `deckle`, so it holds no secret that could mint a login.
 - **The gateway calls the Admin API with an API key, never a session.**

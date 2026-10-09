@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { expectAccessible } from '../support/accessibility.js';
+import { receiptFor } from '../support/mailpit.js';
 
 const store = process.env['STORE_URL'] ?? 'http://localhost:8080';
 
@@ -230,7 +231,11 @@ test.describe('the Portuguese edition', () => {
     await expect(technique).toHaveAttribute('href', '/pt-br/prints?technique=lithographs');
   });
 
-  test('sells a print in Portuguese, from its page to the order', async ({ page }) => {
+  test('sells a print in Portuguese, from its page to the order and its receipt', async ({
+    page,
+  }) => {
+    // An address no other run has used, so its receipt is this run's alone.
+    const email = `ana.${String(Date.now())}.${String(Math.random()).slice(2, 8)}@example.com`;
     await page.goto(`${store}/pt-br/prints/melencolia-i`);
     await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click();
     const sheet = page.getByRole('region', { name: 'Adicionada ao carrinho' });
@@ -241,7 +246,7 @@ test.describe('the Portuguese edition', () => {
     // Commerce names its countries in English; the edition names them by their code.
     const country = page.getByRole('combobox', { name: 'País' });
     await expect(country.locator('option:checked')).toHaveText('Estados Unidos');
-    await page.getByRole('textbox', { name: 'E-mail' }).fill('ana@example.com');
+    await page.getByRole('textbox', { name: 'E-mail' }).fill(email);
     await page.getByRole('textbox', { name: 'Nome completo' }).fill('Ana Souza');
     await page
       .getByRole('textbox', { name: 'Endereço', exact: true })
@@ -256,5 +261,19 @@ test.describe('the Portuguese edition', () => {
     await expect(
       page.getByText('Ana Souza, Avenida Paulista, 1578, São Paulo 01310-200, Brasil'),
     ).toBeVisible();
+
+    // The receipt is written in the edition the order was placed in.
+    const code = page.url().split('/').at(-1) ?? '';
+    const receipt = await receiptFor(email);
+    expect(receipt.subject).toBe(`Seu recibo do pedido ${code}`);
+    for (const words of [
+      'Obrigado, Ana',
+      'Melencolia I',
+      'Albrecht Dürer, 1514',
+      'Frete, enrolada em tubo',
+      'São Paulo 01310-200, Brasil',
+    ]) {
+      expect(receipt.html).toContain(words);
+    }
   });
 });

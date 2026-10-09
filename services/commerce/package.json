@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "scripts": {
     "build": "pnpm run build:server && pnpm run build:dashboard",
@@ -26,6 +27,7 @@
     "@deckle/drops": "workspace:*",
     "@deckle/met": "workspace:*",
     "@deckle/print-sizes": "workspace:*",
+    "@deckle/tokens": "workspace:*",
     "@nestjs/common": "catalog:vendure",
     "@vendure/asset-server-plugin": "catalog:",
     "@vendure/common": "catalog:",
@@ -41,7 +43,6 @@
   "devDependencies": {
     "@deckle/brand": "workspace:*",
     "@deckle/eslint-config": "workspace:*",
-    "@deckle/tokens": "workspace:*",
     "@testcontainers/postgresql": "catalog:",
     "@types/node": "catalog:",
     "@types/pg": "catalog:",

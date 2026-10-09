@@ -85,7 +85,7 @@ test.describe('the cart', () => {
     await expect(page.getByRole('link', { name: 'Cart, 0 prints' })).toBeVisible();
 
     const code = page.url().split('/').at(-1) ?? '';
-    expect(await receiptFor(email)).toContain(code);
+    expect((await receiptFor(email)).subject).toBe(`Your receipt for order ${code}`);
   });
 
   for (const scheme of ['light', 'dark'] as const) {

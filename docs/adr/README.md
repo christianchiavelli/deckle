@@ -60,3 +60,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0054](0054-a-portuguese-edition-of-the-store.md) | A Portuguese edition of the store |
 | [0055](0055-the-stack-serves-a-built-storybook.md) | The stack serves a built Storybook |
 | [0056](0056-the-story-shows-its-detail.md) | The story shows its detail |
+| [0057](0057-the-receipt-is-deckles-in-the-orders-language.md) | The receipt is Deckle's, in the order's language |

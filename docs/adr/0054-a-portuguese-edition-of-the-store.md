@@ -25,7 +25,7 @@ The owner asked for the store in Brazilian Portuguese. A page carries three kind
 ## Consequences
 
 - Every page is prerendered twice, and the build and the image grow with it.
-- The receipt is written by commerce in English, whatever edition the order was placed in. Two sets of templates in Vendure's email plugin, and the order's language kept to choose between them, are left for later.
+- The receipt is written by commerce in English, whatever edition the order was placed in. Two sets of templates in Vendure's email plugin, and the order's language kept to choose between them, are left for later. ADR 0057 writes it in the order's language.
 - Next 16 renders a page's `notFound()` as a recovery shell, which the browser fills from the page's payload: an unknown address answers 404 in its edition's words, but only once scripts run. Before, `app/not-found.tsx` at the root made it a static page, a route Next cannot build once the root layout sits under `[lang]`.
 - A story's title in Portuguese can name a work its record names in English ("São Jerônimo em seu gabinete" beside "Saint Jerome in His Study").
 - The journal puts the story edited last first, so translating a story moves it up, in both editions.

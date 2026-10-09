@@ -24,3 +24,5 @@ services/commerce/schema/shop-api.graphql
 # Written by GraphQL Codegen from the gateway's schema, and checked against it in CI
 apps/store/src/gateway/generated.ts
 apps/store/src/live/generated.ts
+# MJML inside Handlebars, which Prettier's Handlebars parser does not read
+services/commerce/templates

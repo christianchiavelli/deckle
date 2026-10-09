@@ -43,10 +43,8 @@ export const paths = {
   assets: `${packageRoot}assets`,
   /** The dashboard's build output, served at `/dashboard`. */
   dashboard: `${packageRoot}dist/dashboard`,
-  /** The email plugin's own templates; the order confirmation is the only one Deckle sends. */
-  emailTemplates: fileURLToPath(
-    new URL('templates', import.meta.resolve('@vendure/email-plugin/package.json')),
-  ),
+  /** Deckle's email templates: the order confirmation, the only mail it sends, and its partials. */
+  emailTemplates: `${packageRoot}templates/email`,
 };
 
 export type CommerceProcess = 'server' | 'worker' | 'seed' | 'tool';
