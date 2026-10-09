@@ -59,3 +59,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0053](0053-a-draft-is-previewed-behind-a-trial-proof.md) | A draft is previewed behind a trial proof |
 | [0054](0054-a-portuguese-edition-of-the-store.md) | A Portuguese edition of the store |
 | [0055](0055-the-stack-serves-a-built-storybook.md) | The stack serves a built Storybook |
+| [0056](0056-the-story-shows-its-detail.md) | The story shows its detail |

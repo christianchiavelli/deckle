@@ -73,6 +73,19 @@ test.describe("a work's page", () => {
     await expect(
       page.getByRole('heading', { level: 2, name: 'About the engraving' }),
     ).toBeVisible();
+    // Beside it, the detail it talks about, cut from the whole master, not the page's 1,280 px.
+    const detail = page
+      .getByRole('region', { name: 'About the engraving' })
+      .getByRole('figure', {
+        name: /^The magic square: every row, column and diagonal adds up to 34/,
+      })
+      .getByRole('img', { name: /^The magic square set into the wall/ });
+    await detail.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        detail.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth),
+      )
+      .toBeGreaterThan(1280);
     const record = page.getByRole('region', { name: 'From the museum’s record' });
     await expect(record).toContainText('Harris Brisbane Dick Fund, 1943');
     await expect(record).toContainText('2,820 × 3,561 px, read from the file');

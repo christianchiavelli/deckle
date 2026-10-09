@@ -117,7 +117,7 @@ export type WorkQueryVariables = Exact<{
 }>;
 
 
-export type WorkQuery = { artwork: { slug: string, title: string, fullTitle: string, date: string | null, technique: string | null, medium: string | null, dimensions: Array<string>, classification: string | null, department: string | null, culture: string | null, period: string | null, creditLine: string | null, accessionNumber: string | null, museumUrl: string, artist: { name: string, bio: string | null, nationality: string | null, beginYear: number | null, endYear: number | null } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }>, story: { title: string, lede: string | null, blocks: Array<
+export type WorkQuery = { artwork: { slug: string, title: string, fullTitle: string, date: string | null, technique: string | null, medium: string | null, dimensions: Array<string>, classification: string | null, department: string | null, culture: string | null, period: string | null, creditLine: string | null, accessionNumber: string | null, museumUrl: string, artist: { name: string, bio: string | null, nationality: string | null, beginYear: number | null, endYear: number | null } | null, image: { url: string, width: number, height: number, scanWidth: number, scanHeight: number } | null, sizes: Array<{ size: PaperSize, available: boolean, ppi: number, requiredPixels: number | null, unavailableReason: PrintSizeUnavailableReason | null, variantId: string | null, paper: { width: number, height: number }, image: { width: number, height: number }, price: { amount: number, currencyCode: string } | null }>, story: { title: string, lede: string | null, detail: { x: number, y: number, zoom: number, alt: string | null, caption: string | null } | null, blocks: Array<
         | { __typename: 'HeadingBlock', level: number, text: Array<{ text: string, bold: boolean, italic: boolean, href: string | null }> }
         | { __typename: 'ParagraphBlock', text: Array<{ text: string, bold: boolean, italic: boolean, href: string | null }> }
         | { __typename: 'QuoteBlock', text: Array<{ text: string, bold: boolean, italic: boolean, href: string | null }> }
@@ -781,6 +781,13 @@ export const WorkDocument = new TypedDocumentString(`
     story {
       title
       lede
+      detail {
+        x
+        y
+        zoom
+        alt
+        caption
+      }
       blocks {
         __typename
         ... on ParagraphBlock {

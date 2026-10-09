@@ -10,6 +10,7 @@ import {
   recordOf,
   sizeOfOriginal,
   smallestFirst,
+  storyFigureOf,
   tooSmallNote,
 } from './work';
 
@@ -149,5 +150,43 @@ describe('recordOf', () => {
       copy,
     );
     expect(nameOnly[0]?.detail).toBe('Albrecht Dürer');
+  });
+});
+
+describe('storyFigureOf', () => {
+  const words = {
+    alt: 'The magic square set into the wall, with the bell above it.',
+    caption: 'Every row, column and diagonal adds up to 34',
+  };
+  const told = (
+    detail: {
+      x: number;
+      y: number;
+      zoom: number;
+      alt: string | null;
+      caption: string | null;
+    } | null,
+  ) => ({
+    ...melencolia,
+    story: { title: 'About the engraving', lede: null, detail, blocks: [], sources: [] },
+  });
+
+  it('cuts the detail out of the whole master, with its words', () => {
+    expect(storyFigureOf(told({ x: 74, y: 22, zoom: 3, ...words }))).toEqual({
+      src: `${melencolia.image?.url ?? ''}?preset=zoom&format=webp`,
+      width: 1901,
+      height: 2400,
+      ...words,
+      detail: { x: 74, y: 22, zoom: 3 },
+    });
+  });
+
+  it('shows none until both its words are written, nor for a story without a detail', () => {
+    const point = { x: 74, y: 22, zoom: 3 };
+    expect(storyFigureOf(told({ ...point, ...words, alt: null }))).toBeUndefined();
+    expect(storyFigureOf(told({ ...point, ...words, caption: null }))).toBeUndefined();
+    expect(storyFigureOf(told(null))).toBeUndefined();
+    expect(storyFigureOf(melencolia)).toBeUndefined();
+    expect(storyFigureOf({ ...told({ ...point, ...words }), image: null })).toBeUndefined();
   });
 });

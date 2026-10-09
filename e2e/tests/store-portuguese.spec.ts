@@ -168,6 +168,16 @@ test.describe('the Portuguese edition', () => {
     const record = page.getByRole('region', { name: 'Do registro do museu' });
     await expect(record.getByText('Woodcut', { exact: true })).toHaveAttribute('lang', 'en');
 
+    // The detail beside a story, described and captioned in Portuguese too. Not the
+    // rhinoceros's: where these checks ran before the detail had words, the preview's left
+    // a draft of it, and the seed writes over no draft.
+    await page.goto(`${store}/pt-br/prints/melencolia-i`);
+    await expect(
+      page
+        .getByRole('figure', { name: /^O quadrado mágico: cada linha, coluna e diagonal soma 34/ })
+        .getByRole('img', { name: /^O quadrado mágico na parede/ }),
+    ).toBeAttached();
+
     // The browser's own setting chooses the language for anyone asking the gateway directly.
     const ask = (headers: Record<string, string>) =>
       request

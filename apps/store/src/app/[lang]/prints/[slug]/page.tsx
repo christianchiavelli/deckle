@@ -25,7 +25,14 @@ import { readCatalogue, readDrops, readWork } from '../../../../gateway/reads';
 import { imageAt } from '../../../../views/images';
 import { hrefOf, NO_CHOICE } from '../../../../views/listing';
 import { morePrints } from '../../../../views/more';
-import { defaultSize, factsOf, lifeOf, recordOf, tooSmallNote } from '../../../../views/work';
+import {
+  defaultSize,
+  factsOf,
+  lifeOf,
+  recordOf,
+  storyFigureOf,
+  tooSmallNote,
+} from '../../../../views/work';
 
 /*
  * Doubled to outrank the band's own padding: a server component's styles stream
@@ -185,6 +192,7 @@ async function Work({ params }: Pick<PageProps<'/[lang]/prints/[slug]'>, 'params
             id="story-title"
             title={story.title}
             lede={story.lede}
+            figure={storyFigureOf(artwork)}
             source={
               <>
                 {text.source}:{' '}

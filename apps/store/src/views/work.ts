@@ -1,6 +1,8 @@
+import type { StoryFigure } from '@deckle/ui';
 import { formatPpi, MISSING } from '@deckle/ui/format';
 import type { Copy } from '../copy';
 import type { PaperOptionFragment, WorkQuery } from '../gateway/generated';
+import { imageAt } from './images';
 
 /** A work as its page reads it. */
 export type Work = NonNullable<WorkQuery['artwork']>;
@@ -135,4 +137,25 @@ export function recordOf(work: Work, copy: Copy): RecordEntry[] {
         : null,
     },
   ];
+}
+
+/**
+ * The detail beside the story, once the editor has written both what it shows
+ * and its caption. It is cut from the whole master, which a close look needs.
+ */
+export function storyFigureOf(work: Pick<Work, 'image' | 'story'>): StoryFigure | undefined {
+  const detail = work.story?.detail ?? null;
+  const alt = detail?.alt ?? null;
+  const caption = detail?.caption ?? null;
+  if (work.image === null || detail === null || alt === null || caption === null) {
+    return undefined;
+  }
+  return {
+    src: imageAt(work.image.url, 'zoom'),
+    width: work.image.width,
+    height: work.image.height,
+    alt,
+    caption,
+    detail: { x: detail.x, y: detail.y, zoom: detail.zoom },
+  };
 }

@@ -35,6 +35,13 @@ query Work($slug: String!) {
     story {
       title
       lede
+      detail {
+        x
+        y
+        zoom
+        alt
+        caption
+      }
       blocks {
         __typename
         ... on ParagraphBlock {
