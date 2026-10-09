@@ -1,3 +1,4 @@
+import { setTimeout as sleep } from 'node:timers/promises';
 import { getPayload, handleEndpoints, type Payload } from 'payload';
 
 export const testSecrets = {
@@ -32,4 +33,21 @@ export async function startPayload(env: {
     handleEndpoints({ config, request: new Request(input, init) });
 
   return { payload, fetch: fetchFromPayload };
+}
+
+/**
+ * Stops Payload once the queue's runner is idle. `destroy()` stops the runner
+ * without waiting for a run under way and clears the adapter's tables beneath
+ * it: the run then fails between beginning a transaction and committing it,
+ * and stopping Postgres breaks the connection it holds, which nothing hears.
+ */
+export async function stopPayload(payload: Payload): Promise<void> {
+  const crons = payload.crons.splice(0);
+  for (const cron of crons) {
+    cron.stop();
+  }
+  while (crons.some((cron) => cron.isBusy())) {
+    await sleep(50);
+  }
+  await payload.destroy();
 }

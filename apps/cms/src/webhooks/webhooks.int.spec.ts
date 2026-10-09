@@ -10,7 +10,7 @@ import { migrations } from '../migrations';
 import type { Story } from '../payload-types';
 import { proseFromParagraphs } from '../rich-text/prose';
 import { type HookReceiver, signatureIsValid, startHookReceiver } from '../test/hook-receiver';
-import { startPayload, testSecrets } from '../test/payload';
+import { startPayload, stopPayload, testSecrets } from '../test/payload';
 import { startPostgres } from '../test/postgres';
 import { type CmsEvent, cmsEventSchema } from './event';
 import { cmsEventsQueue, deliverCmsEventTaskSlug } from './task';
@@ -29,7 +29,7 @@ aroundAll(async (runSuite) => {
   try {
     await runSuite();
   } finally {
-    await payload.destroy();
+    await stopPayload(payload);
   }
 }, 600_000);
 

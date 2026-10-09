@@ -2,7 +2,7 @@ import { sql } from '@payloadcms/db-postgres';
 import type { Payload } from 'payload';
 import { aroundAll, describe, expect, it } from 'vitest';
 import { type HookReceiver, signatureIsValid, startHookReceiver } from '../test/hook-receiver';
-import { startPayload, testSecrets } from '../test/payload';
+import { startPayload, stopPayload, testSecrets } from '../test/payload';
 import { startPostgres } from '../test/postgres';
 import { cmsEventSchema } from '../webhooks/event';
 import { createCmsClient } from './cms-client';
@@ -24,7 +24,7 @@ aroundAll(async (runSuite) => {
   try {
     await runSuite();
   } finally {
-    await payload.destroy();
+    await stopPayload(payload);
   }
 }, 600_000);
 
