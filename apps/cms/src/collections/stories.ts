@@ -90,8 +90,8 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
         label: { en: 'Detail', pt: 'Detalhe' },
         admin: {
           description: {
-            en: 'The part of the print the story’s card shows up close: a point, in percent of the print’s width and height, and how close. Left empty, the card shows the whole print.',
-            pt: 'A parte da gravura que o card da história mostra de perto: um ponto, em porcentagem da largura e da altura da gravura, e o quão perto. Vazio, o card mostra a gravura inteira.',
+            en: 'The part of the print the story talks about, shown up close on its card and beside it on the work’s page: a point, in percent of the print’s width and height, and how close. Left empty, the card shows the whole print and the story stands alone.',
+            pt: 'A parte da gravura de que a história fala, mostrada de perto no card e ao lado dela na página da obra: um ponto, em porcentagem da largura e da altura da gravura, e o quão perto. Vazio, o card mostra a gravura inteira e a história fica sozinha.',
           },
         },
         fields: [
@@ -119,6 +119,30 @@ export function stories({ previewLink }: ContentCollectionOptions): CollectionCo
               description: {
                 en: '1 fills the card with the whole print; 3 is three times closer.',
                 pt: '1 preenche o card com a gravura inteira; 3 é três vezes mais perto.',
+              },
+            },
+          },
+          {
+            name: 'alt',
+            type: 'text',
+            localized: true,
+            label: { en: 'What it shows', pt: 'O que mostra' },
+            admin: {
+              description: {
+                en: 'The detail in a sentence, for whoever cannot see it. The work’s page shows the detail beside the story only once this and the caption are written.',
+                pt: 'O detalhe numa frase, para quem não pode vê-lo. A página da obra só mostra o detalhe ao lado da história depois que isto e a legenda estão escritos.',
+              },
+            },
+          },
+          {
+            name: 'caption',
+            type: 'text',
+            localized: true,
+            label: { en: 'Caption', pt: 'Legenda' },
+            admin: {
+              description: {
+                en: 'The line under the detail, beside the story.',
+                pt: 'A linha embaixo do detalhe, ao lado da história.',
               },
             },
           },

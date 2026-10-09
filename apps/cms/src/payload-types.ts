@@ -196,7 +196,7 @@ export interface Story {
     [k: string]: unknown;
   };
   /**
-   * The part of the print the story’s card shows up close: a point, in percent of the print’s width and height, and how close. Left empty, the card shows the whole print.
+   * The part of the print the story talks about, shown up close on its card and beside it on the work’s page: a point, in percent of the print’s width and height, and how close. Left empty, the card shows the whole print and the story stands alone.
    */
   detail?: {
     x?: number | null;
@@ -205,6 +205,14 @@ export interface Story {
      * 1 fills the card with the whole print; 3 is three times closer.
      */
     zoom?: number | null;
+    /**
+     * The detail in a sentence, for whoever cannot see it. The work’s page shows the detail beside the story only once this and the caption are written.
+     */
+    alt?: string | null;
+    /**
+     * The line under the detail, beside the story.
+     */
+    caption?: string | null;
   };
   /**
    * Every story cites where its facts come from.
@@ -518,6 +526,8 @@ export interface StoriesSelect<T extends boolean = true> {
         x?: T;
         y?: T;
         zoom?: T;
+        alt?: T;
+        caption?: T;
       };
   sources?:
     | T

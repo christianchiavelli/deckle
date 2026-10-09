@@ -30,7 +30,8 @@ export class SeedError extends Error {
  * the admin exists, the gateway's user reads with `gatewayApiKey`, and the
  * starter curations, stories and drop pages exist, in English and Portuguese.
  * Content an editor has since changed is kept as it is, but for a document
- * with no Portuguese yet, which gets it; only the API key is set every time,
+ * with no Portuguese yet, which gets it, and a story with no words for its
+ * detail, which gets them; only the API key is set every time,
  * so the CMS always matches the key the gateway was given.
  */
 export async function seed(cms: CmsClient, input: SeedInput): Promise<SeedStep[]> {
@@ -111,7 +112,7 @@ async function ensureLocalized(
     /** A field the Portuguese always has, which reads null until it is written. */
     readonly translated: string;
   },
-): Promise<SeedOutcome> {
+): Promise<{ id: number; outcome: SeedOutcome }> {
   const { collection, key, english, portuguese, translated } = document;
   const existing = await cms.findIdBy(session, collection, ...key);
   const id = existing ?? (await cms.create(session, collection, { ...english, _status: 'draft' }));
@@ -119,11 +120,11 @@ async function ensureLocalized(
     const current = await cms.readInLocale(session, collection, existing, 'pt');
     const written = current[translated] !== null && current[translated] !== undefined;
     if (written || current._status === 'draft') {
-      return 'kept';
+      return { id, outcome: 'kept' };
     }
   }
   await cms.update(session, collection, id, { ...portuguese, _status: 'published' }, 'pt');
-  return existing === null ? 'created' : 'updated';
+  return { id, outcome: existing === null ? 'created' : 'updated' };
 }
 
 async function ensureCuration(
@@ -131,7 +132,7 @@ async function ensureCuration(
   session: Session,
   curation: CurationSeed,
 ): Promise<SeedStep> {
-  const outcome = await ensureLocalized(cms, session, {
+  const { outcome } = await ensureLocalized(cms, session, {
     collection: 'curations',
     key: ['slug', curation.slug],
     english: {
@@ -147,25 +148,71 @@ async function ensureCuration(
 }
 
 async function ensureStory(cms: CmsClient, session: Session, story: StorySeed): Promise<SeedStep> {
-  const outcome = await ensureLocalized(cms, session, {
+  const what = `story ${story.artworkSlug}`;
+  const { id, outcome } = await ensureLocalized(cms, session, {
     collection: 'stories',
     key: ['artworkSlug', story.artworkSlug],
     english: {
       artworkSlug: story.artworkSlug,
       title: story.title,
       lede: story.lede,
-      detail: story.detail,
+      detail: { ...story.detail, ...story.figure },
       body: proseFromParagraphs(story.paragraphs),
       sources: story.sources,
     },
     portuguese: {
       title: story.pt.title,
       lede: story.pt.lede,
+      detail: { ...story.detail, ...story.pt.figure },
       body: proseFromParagraphs(story.pt.paragraphs),
     },
     translated: 'title',
   });
-  return { what: `story ${story.artworkSlug}`, outcome };
+  if (outcome === 'kept' && (await ensureStoryFigure(cms, session, id, story))) {
+    return { what, outcome: 'updated' };
+  }
+  return { what, outcome };
+}
+
+/**
+ * The words for a story's detail, which older seeds did not write, given in
+ * both languages to a story that has none. Only while the detail is still the
+ * seed's own, since they describe that part of the print, and never over a
+ * draft an editor has pending.
+ */
+async function ensureStoryFigure(
+  cms: CmsClient,
+  session: Session,
+  id: number,
+  story: StorySeed,
+): Promise<boolean> {
+  const current = await cms.readInLocale(session, 'stories', id, 'en');
+  const detail = current['detail'] as
+    | { x?: number | null; y?: number | null; zoom?: number | null; alt?: string | null }
+    | null
+    | undefined;
+  const ours =
+    detail?.x === story.detail.x &&
+    detail.y === story.detail.y &&
+    detail.zoom === story.detail.zoom;
+  if (!ours || (detail.alt ?? null) !== null || current._status === 'draft') {
+    return false;
+  }
+  await cms.update(
+    session,
+    'stories',
+    id,
+    { detail: { ...story.detail, ...story.figure }, _status: 'published' },
+    'en',
+  );
+  await cms.update(
+    session,
+    'stories',
+    id,
+    { detail: { ...story.detail, ...story.pt.figure }, _status: 'published' },
+    'pt',
+  );
+  return true;
 }
 
 async function ensureDropPage(
@@ -173,7 +220,7 @@ async function ensureDropPage(
   session: Session,
   page: DropPageSeed,
 ): Promise<SeedStep> {
-  const outcome = await ensureLocalized(cms, session, {
+  const { outcome } = await ensureLocalized(cms, session, {
     collection: 'drop-pages',
     key: ['slug', page.slug],
     english: {

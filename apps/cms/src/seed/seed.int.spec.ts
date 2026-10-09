@@ -88,11 +88,11 @@ describe('the seed', () => {
         status: story._status,
       })),
     ).toEqual(
-      storySeeds.map(({ artworkSlug, title, lede, detail, paragraphs, sources }) => ({
+      storySeeds.map(({ artworkSlug, title, lede, detail, figure, paragraphs, sources }) => ({
         artworkSlug,
         title,
         lede,
-        detail,
+        detail: { ...detail, ...figure },
         paragraphs,
         sources,
         status: 'published',
@@ -168,6 +168,7 @@ describe('the seed', () => {
       stories.docs.map((story) => ({
         title: story.title,
         lede: story.lede,
+        figure: { alt: story.detail?.alt, caption: story.detail?.caption },
         paragraphs: paragraphsOf(story.body),
       })),
     ).toEqual(storySeeds.map(({ pt }) => pt));
@@ -246,6 +247,55 @@ describe('the seed', () => {
       fallbackLocale: false,
     });
     expect(translated.title).toBe(first!.pt.title);
+  });
+
+  it('gives a story the words for its detail where an older seed wrote none, unless its detail has moved', async () => {
+    const [first, second] = storySeeds;
+    const idOf = async (artworkSlug: string) =>
+      (
+        await payload.find({
+          collection: 'stories',
+          where: { artworkSlug: { equals: artworkSlug } },
+        })
+      ).docs[0]!.id;
+    const ours = await idOf(first!.artworkSlug);
+    const moved = await idOf(second!.artworkSlug);
+    // As a stack seeded before the work's page showed the detail has them: no words for it.
+    await payload.db.drizzle.execute(
+      sql`UPDATE "stories_locales" SET "detail_alt" = NULL, "detail_caption" = NULL
+          WHERE "_parent_id" IN (${ours}, ${moved})`,
+    );
+    await payload.db.drizzle.execute(
+      sql`UPDATE "_stories_v_locales" SET "version_detail_alt" = NULL, "version_detail_caption" = NULL
+          WHERE "_parent_id" IN (SELECT "id" FROM "_stories_v" WHERE "parent_id" IN (${ours}, ${moved}))`,
+    );
+    // And an editor has since pointed the second story's detail at another part of the print.
+    await payload.db.drizzle.execute(
+      sql`UPDATE "stories" SET "detail_x" = 10 WHERE "id" = ${moved}`,
+    );
+    await payload.db.drizzle.execute(
+      sql`UPDATE "_stories_v" SET "version_detail_x" = 10 WHERE "parent_id" = ${moved}`,
+    );
+
+    const steps = await seed(createCmsClient(base, api), input);
+    const outcomeOf = (artworkSlug: string) =>
+      steps.find(({ what }) => what === `story ${artworkSlug}`)?.outcome;
+    expect(outcomeOf(first!.artworkSlug)).toBe('updated');
+    expect(outcomeOf(second!.artworkSlug)).toBe('kept');
+    for (const [locale, words] of [
+      ['en', first!.figure],
+      ['pt', first!.pt.figure],
+    ] as const) {
+      const story = await payload.findByID({
+        collection: 'stories',
+        id: ours,
+        locale,
+        fallbackLocale: false,
+      });
+      expect({ alt: story.detail?.alt, caption: story.detail?.caption }).toEqual(words);
+    }
+    const elsewhere = await payload.findByID({ collection: 'stories', id: moved, locale: 'en' });
+    expect(elsewhere.detail?.alt ?? null).toBeNull();
   });
 
   it('lets the gateway read by API key, published or draft', async () => {

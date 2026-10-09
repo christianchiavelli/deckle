@@ -61,4 +61,16 @@ describe('the starter content', () => {
       expect(detail.zoom, artworkSlug).toBeLessThanOrEqual(8);
     }
   });
+
+  it('describes each detail in both languages: a sentence for whoever cannot see it, and a caption', () => {
+    for (const { artworkSlug, figure, pt } of storySeeds) {
+      for (const { alt, caption } of [figure, pt.figure]) {
+        expect(alt, artworkSlug).toMatch(/^\p{Lu}.+\.$/u);
+        // A caption is a line, not a sentence: no full stop.
+        expect(caption, artworkSlug).toMatch(/^\p{Lu}.+[^.]$/u);
+      }
+      expect(pt.figure.alt, artworkSlug).not.toBe(figure.alt);
+      expect(pt.figure.caption, artworkSlug).not.toBe(figure.caption);
+    }
+  });
 });
