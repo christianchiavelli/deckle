@@ -345,7 +345,11 @@ describe('drops over GraphQL', () => {
     ]);
     // Commerce knows the customer by the account, and the order by its copy and receipt.
     const [order] = upstreams.shop.placed;
-    expect(order?.customFields).toEqual({ copyNumber: 1, receiptEmail: 'ana@example.com' });
+    expect(order?.customFields).toEqual({
+      receiptLanguage: 'en',
+      copyNumber: 1,
+      receiptEmail: 'ana@example.com',
+    });
     expect(order?.customerEmail).toMatch(/@users\.deckle\.invalid$/);
     const customer = [...upstreams.shop.sessions.values()].find(
       (session) => session.userId !== null,

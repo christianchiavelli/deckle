@@ -48,7 +48,11 @@ interface Order {
   customerEmail: string | null;
   address: Record<string, string | null> | null;
   shipping: (typeof SHIPPING)[number] | null;
-  customFields: { copyNumber: number | null; receiptEmail: string | null };
+  customFields: {
+    receiptLanguage: string | null;
+    copyNumber: number | null;
+    receiptEmail: string | null;
+  };
   placedAt: string | null;
 }
 
@@ -249,9 +253,10 @@ export class FakeShop {
       case 'SetOrderFields': {
         if (active === null) return ok({ result: refusal('NO_ACTIVE_ORDER_ERROR') });
         const { customFields } = variables['input'] as {
-          customFields: { copyNumber: number; receiptEmail: string };
+          customFields: Partial<Order['customFields']>;
         };
-        active.customFields = customFields;
+        // Commerce sets the fields named and leaves the others as they were.
+        active.customFields = { ...active.customFields, ...customFields };
         return changed(active);
       }
       case 'EligibleShipping':
@@ -314,7 +319,7 @@ export class FakeShop {
       customerEmail: session.userId === null ? null : `${session.userId}@users.deckle.invalid`,
       address: null,
       shipping: null,
-      customFields: { copyNumber: null, receiptEmail: null },
+      customFields: { receiptLanguage: null, copyNumber: null, receiptEmail: null },
       placedAt: null,
     };
     if (session.userId === null) session.active = order;

@@ -46,13 +46,12 @@ export class Browser {
   async graphql<TData = Record<string, unknown>>(
     query: string,
     variables?: Record<string, unknown>,
+    headers: Record<string, string> = {},
   ): Promise<GraphQLResponse<TData>> {
-    const response = await graphql<TData>(
-      this.gateway,
-      query,
-      variables,
-      this.cookie === null ? {} : { cookie: `${SESSION_COOKIE}=${this.cookie}` },
-    );
+    const response = await graphql<TData>(this.gateway, query, variables, {
+      ...headers,
+      ...(this.cookie === null ? {} : { cookie: `${SESSION_COOKIE}=${this.cookie}` }),
+    });
     const header: unknown = (response.headers as Record<string, unknown>)['set-cookie'];
     const lines = Array.isArray(header)
       ? header.filter((line): line is string => typeof line === 'string')

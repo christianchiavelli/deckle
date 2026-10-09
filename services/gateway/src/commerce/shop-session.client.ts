@@ -60,6 +60,16 @@ export class CommerceRefusal extends Error {
   }
 }
 
+/**
+ * What the gateway marks an order with: the language its receipt is written in,
+ * and for a numbered copy, the copy's number and where its receipt goes.
+ */
+export interface OrderFields {
+  readonly receiptLanguage: 'en' | 'pt-BR';
+  readonly copyNumber?: number;
+  readonly receiptEmail?: string;
+}
+
 export interface CustomerDetails {
   readonly emailAddress: string;
   readonly firstName: string;
@@ -136,7 +146,7 @@ export class ShopSessionClient {
     });
   }
 
-  setOrderFields(token: string, customFields: { copyNumber: number; receiptEmail: string }) {
+  setOrderFields(token: string, customFields: OrderFields) {
     return this.change(token, 'SetOrderFields', SET_ORDER_FIELDS, { input: { customFields } });
   }
 

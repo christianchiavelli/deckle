@@ -127,7 +127,7 @@ export class CartResolver {
     @Args('input', { type: () => CheckoutInput }) input: CheckoutInput,
     @Context() context: GatewayContext,
   ): Promise<PlacedOrder> {
-    return this.carts.checkout(context.session, input);
+    return this.carts.checkout(context.session, input, context.language);
   }
 
   @ResolveField(() => Artwork, {

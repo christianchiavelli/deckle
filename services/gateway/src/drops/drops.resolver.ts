@@ -83,7 +83,7 @@ export class DropsResolver {
     @Args('input', { type: () => CheckoutInput }) input: CheckoutInput,
     @Context() context: GatewayContext,
   ): Promise<PlacedOrder> {
-    return this.service.pay(context.session, drop, input);
+    return this.service.pay(context.session, drop, input, context.language);
   }
 
   @Subscription(() => DropStock, {

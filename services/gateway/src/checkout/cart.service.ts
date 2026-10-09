@@ -1,6 +1,7 @@
 import type { PaperSize } from '@deckle/print-sizes';
 import { Injectable } from '@nestjs/common';
 import { ArtworksService } from '../catalog/artworks.service.js';
+import type { CmsLanguage } from '../cms/cms.client.js';
 import type { ShopOrder } from '../commerce/shop-orders.responses.js';
 import {
   CommerceRefusal,
@@ -96,7 +97,11 @@ export class CartService {
   }
 
   /** Pays for the cart as a guest. The order it places is what the confirmation shows. */
-  async checkout(session: RequestSession, input: CheckoutInput): Promise<PlacedOrder> {
+  async checkout(
+    session: RequestSession,
+    input: CheckoutInput,
+    language: CmsLanguage,
+  ): Promise<PlacedOrder> {
     const details = checkoutDetails(input);
     const order = await this.startedCart(session);
     if (order === null) throw refusal('CART_EMPTY', 'The cart is empty');
@@ -106,6 +111,7 @@ export class CartService {
     }
     const paid = await asShopper(() =>
       payForOrder(this.shop, required(order.current), active, {
+        language,
         customer: customerOf(details),
         address: details.address,
         shippingMethod: SHIPPING.standard,

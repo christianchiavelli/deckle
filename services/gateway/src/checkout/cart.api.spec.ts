@@ -282,12 +282,25 @@ describe('the cart over GraphQL', () => {
     const code = placed.data?.placeOrder.code ?? '';
     const [order] = upstreams.shop.placed;
     expect(order?.customerEmail).toBe('ana@example.com');
+    // A browser that names no language places the order in English, as the store's root does.
+    expect(order?.customFields.receiptLanguage).toBe('en');
 
     expect((await browser.graphql<{ cart: CartView }>(READ)).data?.cart.lines).toEqual([]);
     const mine = await browser.graphql<{ order: { code: string } | null }>(ORDER, { code });
     expect(mine.data?.order?.code).toBe(code);
     const someoneElse = await new Browser(gateway).graphql<{ order: null }>(ORDER, { code });
     expect(someoneElse.data?.order).toBeNull();
+  });
+
+  it("marks the order with the edition's language, which its receipt is written in", async () => {
+    await add();
+    const placed = await browser.graphql(
+      PLACE,
+      { input: ana },
+      { 'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8' },
+    );
+    expect(placed.errors).toBeUndefined();
+    expect(upstreams.shop.placed[0]?.customFields.receiptLanguage).toBe('pt-BR');
   });
 
   it('names every field of the form that is wrong, and asks commerce nothing', async () => {

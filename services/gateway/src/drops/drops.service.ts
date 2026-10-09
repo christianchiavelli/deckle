@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import type { CmsLanguage } from '../cms/cms.client.js';
 import type { Edition } from '../commerce/shop-api.client.js';
 import { ShopApiClient } from '../commerce/shop-api.client.js';
 import type { ShopOrder } from '../commerce/shop-orders.responses.js';
@@ -79,7 +80,12 @@ export class DropsService {
    * The copy stays locked in the database until commerce has taken the payment,
    * and is recorded as sold with commerce's order code.
    */
-  async pay(session: RequestSession, slug: string, input: CheckoutInput): Promise<PlacedOrder> {
+  async pay(
+    session: RequestSession,
+    slug: string,
+    input: CheckoutInput,
+    language: CmsLanguage,
+  ): Promise<PlacedOrder> {
     const userId = await signedInAccount(session);
     const details = checkoutDetails(input);
     const [edition] = await this.catalogue.editions([slug]);
@@ -89,7 +95,7 @@ export class DropsService {
     const result: { paid?: ShopOrder } = {};
     const outcome = await this.store.sell(slug, userId, async (copy) => {
       result.paid = await asShopper(() =>
-        this.payInCommerce(session, userId, edition, copy, details),
+        this.payInCommerce(session, userId, edition, copy, details, language),
       );
       return result.paid.code;
     });
@@ -116,10 +122,12 @@ export class DropsService {
     edition: Edition,
     copy: OwnedCopy,
     details: CheckoutDetails,
+    language: CmsLanguage,
   ): Promise<ShopOrder> {
     const { token, active } = await this.customerOrder(session, userId);
     const order = await this.copyAlone(token, active, edition);
     return payForOrder(this.shop, token, order, {
+      language,
       copy: { copyNumber: copy.number, receiptEmail: details.email },
       address: details.address,
       shippingMethod: SHIPPING.numberedCopy,

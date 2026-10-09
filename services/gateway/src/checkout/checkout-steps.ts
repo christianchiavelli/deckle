@@ -1,3 +1,4 @@
+import type { CmsLanguage } from '../cms/cms.client.js';
 import type { ShopOrder } from '../commerce/shop-orders.responses.js';
 import {
   CommerceRefusal,
@@ -16,7 +17,15 @@ export const SHIPPING = {
   numberedCopy: 'numbered-copy-shipping',
 } as const;
 
+/** The language each of the store's editions writes its receipts in, as commerce keeps it. */
+export const RECEIPT_LANGUAGES = { en: 'en', pt: 'pt-BR' } as const satisfies Record<
+  CmsLanguage,
+  string
+>;
+
 export interface Checkout {
+  /** The language the order is placed in, from the page's edition; its receipt is written in it. */
+  readonly language: CmsLanguage;
   /** A guest's contact; a signed-in customer has theirs already. */
   readonly customer?: CustomerDetails;
   /** What a numbered copy's order carries: its number, and where the receipt goes. */
@@ -38,7 +47,10 @@ export async function payForOrder(
 ): Promise<ShopOrder> {
   if (order.state === 'ArrangingPayment') await shop.transition(token, 'AddingItems');
   if (checkout.customer !== undefined) await shop.setCustomer(token, checkout.customer);
-  if (checkout.copy !== undefined) await shop.setOrderFields(token, checkout.copy);
+  await shop.setOrderFields(token, {
+    ...checkout.copy,
+    receiptLanguage: RECEIPT_LANGUAGES[checkout.language],
+  });
   await shop.setShippingAddress(token, checkout.address);
   await shipBy(shop, token, checkout.shippingMethod);
   await shop.transition(token, 'ArrangingPayment');
