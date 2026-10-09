@@ -122,9 +122,13 @@ describe('createVendureConfig', () => {
     });
   });
 
-  it("lets the gateway mark a drop's order with its copy and its receipt's address", () => {
+  it("lets the gateway mark an order with its receipt's language, and a drop's with its copy and its receipt's address", () => {
     const order = config.customFields?.Order ?? [];
-    expect(order.map(({ name }) => name)).toEqual(['copyNumber', 'receiptEmail']);
+    expect(order.map(({ name }) => name)).toEqual([
+      'receiptLanguage',
+      'copyNumber',
+      'receiptEmail',
+    ]);
     for (const field of order) {
       expect(field, field.name).toMatchObject({ nullable: true });
       expect(field.readonly, field.name).not.toBe(true);

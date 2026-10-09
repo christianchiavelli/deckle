@@ -2372,6 +2372,7 @@ type OrderAddress {
 type OrderCustomFields {
   copyNumber: Int
   receiptEmail: String
+  receiptLanguage: String
 }
 
 input OrderFilterParameter {
@@ -2396,6 +2397,7 @@ input OrderFilterParameter {
   """
   orderPlacedAt: DateOperators
   receiptEmail: StringOperators
+  receiptLanguage: StringOperators
   shipping: NumberOperators
   shippingWithTax: NumberOperators
   state: StringOperators
@@ -2576,6 +2578,7 @@ input OrderSortParameter {
   """
   orderPlacedAt: SortOrder
   receiptEmail: SortOrder
+  receiptLanguage: SortOrder
   shipping: SortOrder
   shippingWithTax: SortOrder
   state: SortOrder
@@ -4002,6 +4005,7 @@ type UpdateMultipleOrderItemsResult {
 input UpdateOrderCustomFieldsInput {
   copyNumber: Int
   receiptEmail: String
+  receiptLanguage: String
 }
 
 input UpdateOrderInput {

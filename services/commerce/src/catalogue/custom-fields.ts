@@ -298,13 +298,32 @@ export const productVariantCustomFields: CustomFieldConfig[] = [
 
 const drop = { tab: 'Drop' };
 
+/** The languages a receipt is written in: the store's two editions. */
+export const RECEIPT_LANGUAGES = ['en', 'pt-BR'] as const;
+export type ReceiptLanguage = (typeof RECEIPT_LANGUAGES)[number];
+
 /**
- * What an order for a drop's numbered copy carries besides its lines. The gateway
- * sets both through the Shop API, which only it can reach: the copy's number for
- * whoever pencils it, and where the receipt goes, since a customer who signed in
- * with a passkey has no address of their own.
+ * What an order carries besides its lines. The gateway sets these through the
+ * Shop API, which only it can reach: the language the order was placed in, which
+ * its receipt is written in; and for a drop's numbered copy, the copy's number
+ * for whoever pencils it, and where the receipt goes, since a customer who
+ * signed in with a passkey has no address of their own.
  */
 export const orderCustomFields: CustomFieldConfig[] = [
+  {
+    name: 'receiptLanguage',
+    type: 'string',
+    nullable: true,
+    options: [
+      { value: 'en', label: label('English', 'Inglês') },
+      { value: 'pt-BR', label: label('Brazilian Portuguese', 'Português do Brasil') },
+    ] satisfies { value: ReceiptLanguage; label: unknown }[],
+    label: label('Receipt language', 'Idioma do recibo'),
+    description: label(
+      'The language the order was placed in, which its receipt is written in; English when empty',
+      'O idioma em que o pedido foi feito, e em que o recibo é escrito; inglês quando vazio',
+    ),
+  },
   {
     name: 'copyNumber',
     type: 'int',
@@ -366,6 +385,7 @@ declare module '@vendure/core/dist/entity/custom-entity-fields.js' {
   }
 
   interface CustomOrderFields {
+    receiptLanguage: ReceiptLanguage | null;
     copyNumber: number | null;
     receiptEmail: string | null;
   }
