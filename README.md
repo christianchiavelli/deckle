@@ -35,7 +35,7 @@ Next.js 16, React 19.3, styled-components and Apollo Client 4 in front, a NestJS
 
 **A work's story in Brazilian Portuguese**
 
-![The story of Melencolia I in Portuguese, above the museum's record, whose entries stay in English as The Met wrote them](docs/screenshots/work-pt-light.png)
+![The story of Melencolia I in Portuguese, beside the detail of the magic square it describes, captioned in Portuguese](docs/screenshots/work-pt-light.png)
 
 **A draft in Payload, previewed on the store**
 
