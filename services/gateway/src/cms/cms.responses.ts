@@ -25,20 +25,24 @@ const optionalNumber = (min: number, max: number) =>
     .transform((value) => value ?? null);
 
 /**
- * What the story's card shows up close. Payload sends the group with every
- * field null when the editor left it empty; a detail missing a part is no detail.
+ * What the story shows up close, and the words for it. Payload sends the group
+ * with every field null when the editor left it empty; a detail missing a part
+ * of its point is no detail. Its words may still be missing, as in a story
+ * written before the work's page showed the detail.
  */
 const storyDetail = z
   .object({
     x: optionalNumber(0, 100),
     y: optionalNumber(0, 100),
     zoom: optionalNumber(1, 8),
+    alt: optionalText,
+    caption: optionalText,
   })
   .nullish()
   .transform((detail) => {
     if (!detail) return null;
-    const { x, y, zoom } = detail;
-    return x === null || y === null || zoom === null ? null : { x, y, zoom };
+    const { x, y, zoom, alt, caption } = detail;
+    return x === null || y === null || zoom === null ? null : { x, y, zoom, alt, caption };
   });
 
 export const cmsStorySchema = z.object({

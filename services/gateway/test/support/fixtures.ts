@@ -279,7 +279,13 @@ export const stories = [
     artworkSlug: 'melencolia-i',
     title: 'The angel who cannot act',
     lede: 'Why a winged figure sits idle among tools.',
-    detail: { x: 74, y: 22, zoom: 3 },
+    detail: {
+      x: 74,
+      y: 22,
+      zoom: 3,
+      alt: 'The magic square set into the wall, with the bell above it.',
+      caption: 'Every row, column and diagonal adds up to 34',
+    },
     body: melencoliaBody,
     sources: [
       {

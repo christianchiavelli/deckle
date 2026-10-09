@@ -92,7 +92,7 @@ describe('stories over GraphQL', () => {
     });
   });
 
-  it("gives the detail the editor chose for the story's card, and none for an empty one", async () => {
+  it('gives the detail the editor chose for the story, with its words, and none for an empty one', async () => {
     const response = await graphql(
       gateway,
       `
@@ -103,6 +103,8 @@ describe('stories over GraphQL', () => {
                 x
                 y
                 zoom
+                alt
+                caption
               }
             }
           }
@@ -121,8 +123,47 @@ describe('stories over GraphQL', () => {
 
     expect(response.errors).toBeUndefined();
     expect(response.data).toEqual({
-      durer: { story: { detail: { x: 74, y: 22, zoom: 3 } } },
+      durer: {
+        story: {
+          detail: {
+            x: 74,
+            y: 22,
+            zoom: 3,
+            alt: 'The magic square set into the wall, with the bell above it.',
+            caption: 'Every row, column and diagonal adds up to 34',
+          },
+        },
+      },
       wave: { story: { detail: null } },
+    });
+  });
+
+  it('gives a detail nobody has written words for, as a story written before them has it', async () => {
+    upstreams.stories = upstreams.stories.map((story) =>
+      story.artworkSlug === 'melencolia-i'
+        ? { ...story, detail: { x: 74, y: 22, zoom: 3 } }
+        : story,
+    ) as typeof upstreams.stories;
+    const response = await graphql(
+      gateway,
+      `
+        {
+          artwork(slug: "melencolia-i") {
+            story {
+              detail {
+                zoom
+                alt
+                caption
+              }
+            }
+          }
+        }
+      `,
+    );
+
+    expect(response.errors).toBeUndefined();
+    expect(response.data).toEqual({
+      artwork: { story: { detail: { zoom: 3, alt: null, caption: null } } },
     });
   });
 

@@ -568,7 +568,9 @@ type Source {
 type Story {
   blocks: [StoryBlock!]!
 
-  """Null when the editor chose none: the card then shows the whole print."""
+  """
+  Null when the editor chose none: the card then shows the whole print, and the story stands alone.
+  """
   detail: StoryDetail
   lede: String
   sources: [Source!]!
@@ -580,9 +582,19 @@ type Story {
 union StoryBlock = HeadingBlock | ParagraphBlock | QuoteBlock
 
 """
-A point of the print and how close to look at it, as the story's card shows it.
+A point of the print and how close to look at it: on the story's card, and beside the story on the work's page.
 """
 type StoryDetail {
+  """
+  The detail in a sentence, for whoever cannot see it. Null until an editor writes it, and the work’s page shows no detail without it.
+  """
+  alt: String
+
+  """
+  The line under the detail beside the story; null until an editor writes it.
+  """
+  caption: String
+
   """Across, in percent of the print's width."""
   x: Float!
 

@@ -76,7 +76,8 @@ export class Source {
 }
 
 @ObjectType({
-  description: "A point of the print and how close to look at it, as the story's card shows it.",
+  description:
+    "A point of the print and how close to look at it: on the story's card, and beside the story on the work's page.",
 })
 export class StoryDetail {
   @Field(() => Float, { description: "Across, in percent of the print's width." })
@@ -89,6 +90,19 @@ export class StoryDetail {
     description: '1 fills the frame with the whole print; 3 is three times closer.',
   })
   zoom!: number;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'The detail in a sentence, for whoever cannot see it. Null until an editor writes it, and the work’s page shows no detail without it.',
+  })
+  alt!: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'The line under the detail beside the story; null until an editor writes it.',
+  })
+  caption!: string | null;
 }
 
 @ObjectType({ description: 'What the CMS tells about a work.' })
@@ -101,7 +115,8 @@ export class Story {
 
   @Field(() => StoryDetail, {
     nullable: true,
-    description: 'Null when the editor chose none: the card then shows the whole print.',
+    description:
+      'Null when the editor chose none: the card then shows the whole print, and the story stands alone.',
   })
   detail!: StoryDetail | null;
 
