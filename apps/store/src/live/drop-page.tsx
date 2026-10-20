@@ -13,6 +13,7 @@ import {
   EditionFacts,
   PasskeyDialog,
   Stage,
+  type StageImage,
   Tally,
   TextButton,
   TextLink,
@@ -157,12 +158,7 @@ export interface DropLiveProps {
   readonly price: string;
   /** "Thu 15 Oct, 18:00 UTC". */
   readonly opening: string;
-  readonly image: {
-    readonly src: string;
-    readonly width: number;
-    readonly height: number;
-    readonly alt: string;
-  } | null;
+  readonly image: StageImage | null;
   /** The copies as the server read them, a second old at most, until the browser has its own. */
   readonly stock: Stock | null;
   /** When the server drew the page. */
@@ -442,7 +438,7 @@ export function DropLive(props: DropLiveProps) {
             {!held && !sold && !signedIn && <Small>{text.small}</Small>}
           </Words>
           {props.image && (
-            <Stage image={props.image}>
+            <Stage image={props.image} priority>
               <Pencil aria-hidden="true">
                 {number ?? <Blank />}/{editionSize}
               </Pencil>

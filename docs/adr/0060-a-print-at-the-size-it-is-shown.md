@@ -2,7 +2,7 @@
 
 - Status: accepted
 - Date: 2026-10-20
-- Scope: `apps/store/src/views/images.ts`, `packages/ui/src/sections/stage.tsx`, the work's page and the front page
+- Scope: `apps/store/src/views/images.ts`, `packages/ui/src/sections/stage.tsx`, the work's page, the front page and a drop's page
 
 ## Context
 
@@ -11,15 +11,16 @@ The first Web Vitals baseline (ADR 0058) put a print's page at 5.51 s of LCP on 
 ## Decision
 
 - **The stage offers the print at two presets, `card` and `page`, in a `srcset`** named by the width each file comes out at: commerce fits a master inside a square, so a print taller than wide comes out narrower than its preset.
-- **`sizes` says how wide the print is drawn**, from the grid the work's page and the front page share: square and the page's width on a phone, 7 of 12 columns from `md`, narrowed by the print's proportions when it is taller than wide. `sizes` is read before any CSS, so the numbers are written out; a test holds the layout's widest content to the token that sets it.
-- **The print on its stage is fetched first** (`fetchpriority="high"`), on the work's page and the front page, where it is the first screen's picture.
+- **`sizes` says how wide the print is drawn**, from the grid of the page it is on: square and the page's width on a phone, and from `md` 7 of 12 columns on the work's page and the front page, 5 of 11 on a drop's, narrowed by the print's proportions when it is taller than wide. `sizes` is read before any CSS, so the numbers are written out; a test holds the layout's widest content to the token that sets it.
+- **The print on its stage is fetched first** (`fetchpriority="high"`), on the work's page, the front page and a drop's page, where it is the first screen's picture.
 - No new preset: `card` and `page` were already made and cached for every master.
 
 ## Consequences
 
 - On the measuring phone, Melencolia I comes as the 507 px `card`, 76 KB, and its LCP falls from 5.51 s to 1.69 s in CI. A phone at 3x still takes `page`, and a laptop at 2x too.
 - At 1.75x, `card` is a little softer than `page` when magnified; at its drawn size the two look the same.
-- The layout's numbers live in two places, the styles and `stageSizes`. A change to the stage's insets or the grid's columns has to change both; only the widest content is held by a test.
+- A drop's page sent `page` to every screen too; it takes the same files by the same rule, from its own columns.
+- The layout's numbers live in two places, the styles and `stageSizes`. A change to the stage's insets or a grid's columns has to change both; only the widest content is held by a test.
 
 ## Alternatives considered
 

@@ -25,6 +25,14 @@ describe('stageSizes', () => {
     expect(stageSizes(WAVE)).toMatch(/calc\(\(100vw - 7rem\) \* 1\.000\)$/);
   });
 
+  it('takes the share of the content its page gives the stage', () => {
+    expect(stageSizes(MELENCOLIA, [5, 11])).toBe(
+      '(min-width: 83rem) calc(((80rem - 4rem) * 5 / 11 - 8rem) * 0.792), ' +
+        '(min-width: 64rem) calc((((100vw - 3rem) - 4rem) * 5 / 11 - 8rem) * 0.792), ' +
+        'calc((100vw - 7rem) * 0.792)',
+    );
+  });
+
   it('knows the layout’s widest content as the tokens set it', () => {
     const css = readFileSync(
       new URL('../../../../packages/tokens/dist/tokens.css', import.meta.url),

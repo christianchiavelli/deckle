@@ -41,17 +41,21 @@ export function imageSet(
 export const MAX_WIDTH_REM = 80;
 
 /**
- * How wide a print is drawn on a stage that takes 7 of 12 columns beside its
- * words, as on a work's page and the front page, for `sizes`, which is read
- * before any CSS. On a phone the stage is square and the page's width, less
- * the gutters (1.5rem a side) and its insets (2rem); from `md` its column is
- * 7/12 of the content, less the gap between columns (4rem) and its insets
- * (4rem). A print taller than wide is drawn narrower by its proportions, so a
- * phone asks for the smallest file that is still sharp on it.
+ * How wide a print is drawn on a stage beside its words, for `sizes`, which is
+ * read before any CSS. On a phone the stage is square and the page's width,
+ * less the gutters (1.5rem a side) and its insets (2rem); from `md` it takes
+ * its share of the content (7 of 12 on a work's page and the front page, 5 of
+ * 11 on a drop's), less the gap between columns (4rem) and its insets (4rem).
+ * A print taller than wide is drawn narrower by its proportions, so a phone
+ * asks for the smallest file that is still sharp on it.
  */
-export function stageSizes(master: { readonly width: number; readonly height: number }): string {
+export function stageSizes(
+  master: { readonly width: number; readonly height: number },
+  [takes, of]: readonly [takes: number, of: number] = [7, 12],
+): string {
   const ratio = Math.min(1, master.width / master.height).toFixed(3);
-  const column = (content: string) => `calc(((${content} - 4rem) * 7 / 12 - 8rem) * ${ratio})`;
+  const column = (content: string) =>
+    `calc(((${content} - 4rem) * ${String(takes)} / ${String(of)} - 8rem) * ${ratio})`;
   return [
     `(min-width: ${String(MAX_WIDTH_REM + 3)}rem) ${column(`${String(MAX_WIDTH_REM)}rem`)}`,
     `(min-width: 64rem) ${column('(100vw - 3rem)')}`,

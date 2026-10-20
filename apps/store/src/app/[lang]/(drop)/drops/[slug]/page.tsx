@@ -14,7 +14,7 @@ import {
   recordOf,
   stocksBySlug,
 } from '../../../../../views/drops';
-import { imageAt } from '../../../../../views/images';
+import { imageAt, imageSet, stageSizes } from '../../../../../views/images';
 
 export async function generateMetadata({
   params,
@@ -66,6 +66,9 @@ async function Drop({ params }: Pick<PageProps<'/[lang]/drops/[slug]'>, 'params'
           image
             ? {
                 src: imageAt(image.url, 'page'),
+                srcSet: imageSet(image.url, image, ['card', 'page']),
+                // The stage takes 5 of the 11 columns, beside the edition's words.
+                sizes: stageSizes(image, [5, 11]),
                 width: image.width,
                 height: image.height,
                 alt: [drop.artwork?.title, drop.artwork?.artist?.name].filter(Boolean).join(', '),
