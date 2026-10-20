@@ -161,8 +161,14 @@ Every push to `main` also measures LCP, CLS and INP on the phone and connection 
 
 <!-- web-vitals -->
 
-No baseline yet: the first is accepted from CI's runs.
+| Page           | LCP    | CLS   | INP   |
+| -------------- | ------ | ----- | ----- |
+| The front page | 1.67 s | 0.000 | 40 ms |
+| The prints     | 1.63 s | 0.001 | 32 ms |
+| A print        | 5.51 s | 0.000 | 56 ms |
+| The search     | 1.57 s | 0.001 | 32 ms |
 
+Measured on October 20, 2026, the median of two runs in CI ([1](https://github.com/christianchiavelli/deckle/actions/runs/39371022740), [2](https://github.com/christianchiavelli/deckle/actions/runs/39372996212)).
 <!-- /web-vitals -->
 
 ---
