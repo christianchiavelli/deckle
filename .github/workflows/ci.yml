@@ -12,16 +12,40 @@ concurrency:
   cancel-in-progress: true
 
 # Reading the code is all most jobs do; the one that publishes images widens this for itself.
+# No checkout keeps the token in .git, where a later step or an artifact could pick it up.
 permissions:
   contents: read
 
 jobs:
+  workflows:
+    name: Workflow audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Expressions, job graphs and every run script, through the image's shellcheck.
+      - name: Lint workflows
+        run: >-
+          docker run --rm --volume "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 -color
+
+      # Injection, excessive permissions, persisted credentials, and actions
+      # pinned to a commit their repository does not have, which takes the token.
+      - name: Audit workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: pipx run zizmor==1.31.1 --format github .github/workflows
+
   verify:
-    name: Format, lint, types, unit tests and build
+    name: Lint, test and build
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
@@ -32,10 +56,10 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Install
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Checks and unit tests
+      - name: Lint and test
         run: pnpm run ci
 
       # Last, because it is the slowest and a failure above already says more.
@@ -51,11 +75,13 @@ jobs:
           retention-days: 7
 
   integration:
-    name: Integration tests against Postgres
+    name: Integration
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
@@ -64,16 +90,16 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Install
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       # Testcontainers starts a real Postgres 18 on the runner's Docker for each suite.
       # Every package runs to the end, so one failure does not stop the others mid-test.
-      - name: Integration tests
+      - name: Test
         run: pnpm -r --if-present --no-bail run test:integration
 
   contract:
-    name: GraphQL contract
+    name: Contract
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -81,6 +107,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
@@ -89,17 +116,17 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Install
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       # Each committed schema, the gateway's and the Shop API it reads, is what the
       # code generates, not a hand-edited copy.
-      - name: Schema matches the code
+      - name: Check schemas
         run: pnpm -r --if-present run schema:check
 
       # Changes go straight to main, so a push is compared with the commit before
       # it, and a pull request with its base. A first push has nothing to compare.
-      - name: No breaking change
+      - name: Check for breaking changes
         env:
           BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
@@ -110,11 +137,13 @@ jobs:
           fi
 
   stories:
-    name: Stories in Chromium, audited in both themes
+    name: Storybook
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
@@ -123,14 +152,14 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Install
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Chromium
+      - name: Install Playwright
         run: pnpm --filter @deckle/ui exec playwright install --with-deps chromium
 
       # Each story renders, plays its interactions and passes axe, light and dark side by side.
-      - name: Stories
+      - name: Test stories
         run: pnpm --filter @deckle/ui test:stories
 
   images:
@@ -163,16 +192,21 @@ jobs:
       IMAGE: ghcr.io/${{ github.repository_owner }}/deckle-${{ matrix.service }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
-      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: meta
+      - name: Tag image
+        id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ${{ env.IMAGE }}
@@ -180,7 +214,8 @@ jobs:
             type=raw,value=latest
             type=sha
 
-      - id: build
+      - name: Build and push
+        id: build
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
@@ -191,14 +226,15 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}
 
-      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+      - name: Attest provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-name: ${{ env.IMAGE }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
   stack:
-    name: The stack from the published images
+    name: E2E and load
     needs: images
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -207,8 +243,11 @@ jobs:
       packages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -216,13 +255,13 @@ jobs:
 
       # The images this run published, by the tag metadata-action gave them, with
       # two gateways: the browser checks run across both, and so does the load.
-      - name: Start
+      - name: Start stack
         run: |
           echo "DECKLE_TAG=sha-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
           DECKLE_TAG="sha-${GITHUB_SHA::7}" docker compose up --wait --wait-timeout 300 --no-build \
             --scale gateway=2
 
-      - name: Answer through the front door
+      - name: Smoke test
         run: |
           curl --fail --silent --show-error http://localhost:8080/healthz
           curl --fail --silent --show-error http://localhost:8082/health
@@ -246,17 +285,17 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Install the browser checks
+      - name: Install Playwright
         run: |
           pnpm install --frozen-lockfile --filter @deckle/e2e
           pnpm --filter @deckle/e2e exec playwright install --with-deps chromium
 
-      - name: Check in a browser
+      - name: Test
         run: pnpm --filter @deckle/e2e test:e2e
 
       # A thousand people claim the drop's copies in the same second, through both
       # gateways. Each gateway must have answered its share, or two proved nothing.
-      - name: Load the drop through two gateways
+      - name: Load test
         run: |
           since="$(date --utc +%Y-%m-%dT%H:%M:%SZ)"
           docker compose run --rm --no-deps load
@@ -265,7 +304,7 @@ jobs:
             | cut --delimiter '|' --fields 1 | sort | uniq --count | tee answered
           test "$(wc --lines < answered)" -eq 2
 
-      - name: Upload the browser report
+      - name: Upload report
         if: ${{ failure() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -273,7 +312,7 @@ jobs:
           path: e2e/playwright-report/
           retention-days: 7
 
-      - name: Logs
+      - name: Save stack logs
         if: ${{ failure() }}
         run: docker compose logs --no-color --timestamps > compose.log
 
@@ -285,6 +324,6 @@ jobs:
           path: compose.log
           retention-days: 7
 
-      - name: Stop
+      - name: Stop stack
         if: ${{ always() }}
         run: docker compose down --volumes
