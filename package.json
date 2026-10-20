@@ -24,7 +24,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
-    "screenshots": "pnpm --filter @deckle/e2e run screenshots"
+    "screenshots": "pnpm --filter @deckle/e2e run screenshots",
+    "vitals": "pnpm --filter @deckle/e2e run vitals",
+    "vitals:accept": "node e2e/vitals/accept.ts"
   },
   "devDependencies": {
     "prettier": "catalog:",

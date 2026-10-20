@@ -48,6 +48,8 @@ catalog:
   playwright: 1.63.0
   '@playwright/test': 1.63.0
   '@axe-core/playwright': 4.13.0
+  # The Core Web Vitals, measured in the page by the end-to-end package (ADR 0058).
+  web-vitals: 6.2.3
   # The drop's load test runs in k6 2.3.0's image (compose.yaml); these are its types.
   '@types/k6': 2.3.0
 

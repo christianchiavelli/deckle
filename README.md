@@ -150,11 +150,20 @@ pnpm -r --if-present run schema:check        # each committed schema matches the
 pnpm --filter @deckle/ui test:stories        # every story in both themes, played and audited by axe
 pnpm --filter @deckle/e2e test:e2e           # in a browser, against the running stack
 pnpm --filter @deckle/load test:load         # a thousand passkeys claim one drop in the same second
+pnpm run vitals                              # the Core Web Vitals of each page, on a slow phone
 ```
 
 Anything that touches the database runs against a real one, never a mock: migrations racing across replicas, a webhook delivered twice at once, an event that must not leave a rolled-back transaction, a thousand claims on fifty copies. The browser checks cover what only a browser shows: every page in both themes and both editions, audited by axe; a passkey made by Playwright's virtual authenticator; a receipt read back from Mailpit; a draft opened from Payload; and each page holding still as it streams in.
 
 CI builds the five images and runs the whole stack from them with two gateways, then the browser checks and the load test against it, and fails unless both gateways answered.
+
+Every push to `main` also measures LCP, CLS and INP on the phone and connection Lighthouse emulates for mobile, five visits to each page, each one loaded cold, read to the end and used, against the images it published, and fails when a page measures worse than its baseline. `pnpm run vitals:accept` takes the next baseline from CI's runs ([ADR 0058](docs/adr/0058-web-vitals-on-the-published-images.md)). actionlint and zizmor check the workflow itself, for mistakes and for the ways a workflow leaks its token.
+
+<!-- web-vitals -->
+
+No baseline yet: the first is accepted from CI's runs.
+
+<!-- /web-vitals -->
 
 ---
 

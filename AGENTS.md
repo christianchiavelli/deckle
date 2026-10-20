@@ -19,7 +19,7 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 | `packages/ui` | The components, on the semantic tokens, and the Storybook that shows and tests them, which the stack serves built (ADR 0055) |
 | `packages/eslint-config` | The lint rules every package shares |
 | `data/met` | The imported data set: `catalog.json` and the reduced images, baked into the published images |
-| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes and both editions, a passkey made with a virtual authenticator, a page that holds still as it loads, a draft opened from the CMS, the admin panels in Portuguese, and the Storybook the stack serves |
+| `e2e` | Playwright checks against the running stack: what only a browser shows, such as the store's pages in both themes and both editions, a passkey made with a virtual authenticator, a page that holds still as it loads, a draft opened from the CMS, the admin panels in Portuguese, and the Storybook the stack serves; in `vitals`, the Core Web Vitals of each page on a slow phone (ADR 0058) |
 | `load` | The drop's load test in k6: a thousand people, each with a passkey made in software, claim its copies in the same second through two gateways (ADR 0052) |
 | `design/art-direction` | The art directions compared before the choice, in static HTML: the record of how the copper plate palette was picked |
 | `design/logo` | The logo options compared the same way, and the record of the chosen one: the studio seal, with the name set as an imprint |
@@ -46,6 +46,8 @@ A headless print shop for public-domain works from The Met, with numbered drops 
 - `pnpm --filter @deckle/brand favicon`: rewrites `assets/favicon.svg` from the seal and the accent copper, after either changes. A unit test fails while it is stale.
 - `pnpm --filter @deckle/e2e test:e2e`: the browser checks, against the stack `docker compose up --wait` started. The first time, `pnpm --filter @deckle/e2e exec playwright install chromium` fetches the browser.
 - `pnpm run screenshots`: takes the README's screens again from the running stack, into `docs/screenshots`, and puts back whatever it changed; `pnpm run screenshots <name>` takes one. Look at each before committing it.
+- `pnpm run vitals`: the Core Web Vitals of each page on the phone and connection of Lighthouse's mobile run, against the running stack. Only CI's numbers are judged against `e2e/vitals/baseline.json`; `pnpm run vitals:accept [run id…]` makes the median of CI runs the next baseline and the README's table (ADR 0058).
+- `docker run --rm --volume "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.12` and `uvx zizmor@1.31.1 .github/workflows`: after a change to the workflow.
 - `pnpm --filter @deckle/load test:load`: scales the gateway to two replicas and runs the drop's load test in k6's image, against the running stack. It leaves the drop as it found it, and a thousand empty accounts behind.
 - `pnpm --filter @deckle/gateway schema:generate`: after any change to a resolver or GraphQL type. `schema.gql` is the committed contract, and CI fails when it is stale or when a change breaks a client.
 - `pnpm --filter @deckle/store codegen`: after a change to an operation under `apps/store/src/gateway/operations` (the server's reads) or `apps/store/src/live/operations` (the browser's, through Apollo Client), or to the gateway's schema. Commit both `generated.ts`, as written: CI fails when either is stale (`schema:check`), and Prettier leaves them alone.

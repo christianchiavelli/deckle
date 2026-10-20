@@ -4,7 +4,8 @@
     "module": "nodenext",
     "rootDir": ".",
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    "allowImportingTsExtensions": true
   },
-  "include": ["tests", "support", "*.config.ts", "screenshots.ts"]
+  "include": ["tests", "support", "vitals", "*.config.ts", "screenshots.ts"]
 }

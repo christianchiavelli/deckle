@@ -15,6 +15,7 @@ design/art-direction/assets
 design/art-direction/shots
 test-results
 playwright-report
+vitals-report
 # Written by Payload's generators, committed as generated
 apps/cms/src/payload-types.ts
 apps/cms/src/migrations
