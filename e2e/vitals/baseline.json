@@ -1,35 +1,35 @@
 {
   "measured": "2026-10-20",
   "runs": [
-    "https://github.com/christianchiavelli/deckle/actions/runs/39371022740",
-    "https://github.com/christianchiavelli/deckle/actions/runs/39372996212"
+    "https://github.com/christianchiavelli/deckle/actions/runs/39377847600",
+    "https://github.com/christianchiavelli/deckle/actions/runs/39491378185"
   ],
   "pages": {
     "front": {
       "name": "The front page",
       "path": "/",
-      "LCP": 1668,
+      "LCP": 1708,
       "CLS": 0.0001,
-      "INP": 40
+      "INP": 48
     },
     "prints": {
       "name": "The prints",
       "path": "/prints",
-      "LCP": 1632,
+      "LCP": 1678,
       "CLS": 0.0006,
-      "INP": 32
+      "INP": 36
     },
     "print": {
       "name": "A print",
       "path": "/prints/melencolia-i",
-      "LCP": 5506,
+      "LCP": 1690,
       "CLS": 0.0002,
-      "INP": 56
+      "INP": 60
     },
     "search": {
       "name": "The search",
       "path": "/search",
-      "LCP": 1574,
+      "LCP": 1582,
       "CLS": 0.0011,
       "INP": 32
     }

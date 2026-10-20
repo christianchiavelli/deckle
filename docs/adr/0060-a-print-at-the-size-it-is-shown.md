@@ -17,7 +17,7 @@ The first Web Vitals baseline (ADR 0058) put a print's page at 5.51 s of LCP on 
 
 ## Consequences
 
-- On the measuring phone, Melencolia I comes as the 507 px `card`, 76 KB, and its LCP falls from 5.5 s to about 1.8 s. A phone at 3x still takes `page`, and a laptop at 2x too.
+- On the measuring phone, Melencolia I comes as the 507 px `card`, 76 KB, and its LCP falls from 5.51 s to 1.69 s in CI. A phone at 3x still takes `page`, and a laptop at 2x too.
 - At 1.75x, `card` is a little softer than `page` when magnified; at its drawn size the two look the same.
 - The layout's numbers live in two places, the styles and `stageSizes`. A change to the stage's insets or the grid's columns has to change both; only the widest content is held by a test.
 
