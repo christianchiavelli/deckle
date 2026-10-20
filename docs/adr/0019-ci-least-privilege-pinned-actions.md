@@ -1,6 +1,6 @@
 # 19. CI with least privilege and pinned actions
 
-- Status: accepted
+- Status: accepted; extended by [ADR 0059](0059-the-workflow-is-audited-too.md), which audits the workflow
 - Date: 2026-10-05
 
 ## Context
