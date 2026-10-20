@@ -63,3 +63,4 @@ One file per decision that had a trade-off, version pins included. Each says wha
 | [0057](0057-the-receipt-is-deckles-in-the-orders-language.md) | The receipt is Deckle's, in the order's language |
 | [0058](0058-web-vitals-on-the-published-images.md) | Web Vitals, measured on the published images |
 | [0059](0059-the-workflow-is-audited-too.md) | The workflow is audited too |
+| [0060](0060-a-print-at-the-size-it-is-shown.md) | A print at the size it is shown |

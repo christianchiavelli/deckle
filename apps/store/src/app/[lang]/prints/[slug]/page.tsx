@@ -22,7 +22,7 @@ import { ScrollToFragment } from '../../../../components/scroll-to-fragment';
 import { StoryBody } from '../../../../components/story-body';
 import { getCopy } from '../../../../copy/server';
 import { readCatalogue, readDrops, readWork } from '../../../../gateway/reads';
-import { imageAt } from '../../../../views/images';
+import { imageAt, imageSet, stageSizes } from '../../../../views/images';
 import { hrefOf, NO_CHOICE } from '../../../../views/listing';
 import { morePrints } from '../../../../views/more';
 import {
@@ -126,8 +126,11 @@ async function Work({ params }: Pick<PageProps<'/[lang]/prints/[slug]'>, 'params
         <Grid>
           {artwork.image && (
             <Stage
+              priority
               image={{
                 src: imageAt(artwork.image.url, 'page'),
+                srcSet: imageSet(artwork.image.url, artwork.image, ['card', 'page']),
+                sizes: stageSizes(artwork.image),
                 width: artwork.image.width,
                 height: artwork.image.height,
                 alt: [artwork.title, artwork.artist?.name].filter(Boolean).join(', '),

@@ -154,6 +154,10 @@ export function TrimMarks() {
 
 export interface StageImage {
   readonly src: string;
+  /** The same print at other sizes, for the browser to pick the least that is sharp. */
+  readonly srcSet?: string | undefined;
+  /** How wide the print is drawn, which the page knows from its own grid. */
+  readonly sizes?: string | undefined;
   readonly width: number;
   readonly height: number;
   readonly alt: string;
@@ -167,16 +171,26 @@ export interface StageProps {
   zoom?: string;
   /** Pencil marks under the image, as on a numbered copy. */
   children?: ReactNode;
+  /** The print is what the page is about, the largest thing in its first screen: it is fetched first. */
+  priority?: boolean;
   className?: string;
 }
 
 /** The print on its stage, in its own proportions, with a proof's trim marks at the corners. */
-export function Stage({ image, caption, zoom, children, className }: StageProps) {
+export function Stage({ image, caption, zoom, children, priority, className }: StageProps) {
   return (
     <Figure className={className}>
       <Area>
         <Print style={{ '--ratio': image.width / image.height }}>
-          <img src={image.src} width={image.width} height={image.height} alt={image.alt} />
+          <img
+            src={image.src}
+            srcSet={image.srcSet}
+            sizes={image.sizes}
+            width={image.width}
+            height={image.height}
+            alt={image.alt}
+            fetchPriority={priority ? 'high' : undefined}
+          />
           <TrimMarks />
           {children}
         </Print>

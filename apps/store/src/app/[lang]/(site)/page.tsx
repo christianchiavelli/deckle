@@ -32,7 +32,7 @@ import {
 } from '../../../gateway/reads';
 import { listedCurations, picturesOf } from '../../../views/collections';
 import { featuredDrop, stocksBySlug } from '../../../views/drops';
-import { imageAt } from '../../../views/images';
+import { imageAt, imageSet, stageSizes } from '../../../views/images';
 import { journalOf, storyHref } from '../../../views/journal';
 import { sizingOf } from '../../../views/sizing';
 import { smallestFirst } from '../../../views/work';
@@ -207,8 +207,11 @@ async function Home() {
           </HeroCopy>
           {hero?.image && (
             <Stage
+              priority
               image={{
                 src: imageAt(hero.image.url, 'page'),
+                srcSet: imageSet(hero.image.url, hero.image, ['card', 'page']),
+                sizes: stageSizes(hero.image),
                 width: hero.image.width,
                 height: hero.image.height,
                 alt: [hero.title, hero.artist?.name].filter(Boolean).join(', '),
